@@ -1,0 +1,5 @@
+*.meta
+*.scc
+*.shader
+*.js
+*.controller
