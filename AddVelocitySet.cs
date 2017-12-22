@@ -8,9 +8,9 @@ public class AddVelocitySet : MonoBehaviour
 	{
 		if(other.tag == "player")
 		{
-            if (PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu
-                || PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi
-                || PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.JiaSuFengShan)
+            if (PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu
+                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi
+                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.JiaSuFengShan)
             {
             }
             else

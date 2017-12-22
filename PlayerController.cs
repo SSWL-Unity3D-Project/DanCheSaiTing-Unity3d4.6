@@ -5,6 +5,16 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 玩家磁铁道具状态.
+    /// </summary>
+    [HideInInspector]
+    public bool IsOpenCiTieDaoJu;
+    float TimeLastCiTie;
+    /// <summary>
+    /// 磁铁激活时长.
+    /// </summary>
+    public float TimeOpenCiTie = 5f;
+    /// <summary>
     /// 导弹射击npc的有效距离.
     /// </summary>
     public float DaoDanDisNpc = 100f;
@@ -60,8 +70,11 @@ public class PlayerController : MonoBehaviour
     /// 主角加速风扇运动速度.
     /// </summary>
     public float PlayerMvSpeedJiaSuFengShan = 80f;
+    /// <summary>
+    /// 玩家速度相关道具状态.
+    /// </summary>
     [HideInInspector]
-    public DaoJuCtrl.DaoJuType mDaoJuState;
+    public DaoJuCtrl.DaoJuType mSpeedDaoJuState;
     float TimeLastDaoJuBianXing;
     /// <summary>
     /// 道具变型时长.
@@ -388,11 +401,19 @@ public class PlayerController : MonoBehaviour
 		}
 		else
 		{
-            if (mDaoJuState != DaoJuCtrl.DaoJuType.Null)
+            if (IsOpenCiTieDaoJu)
+            {
+                if (Time.time - TimeLastCiTie >= TimeOpenCiTie)
+                {
+                    IsOpenCiTieDaoJu = false;
+                }
+            }
+
+            if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.Null)
             {
                 if (Time.time - TimeLastDaoJuBianXing >= DaoJuBianXingTime)
                 {
-                    ClosePlayerDaoJuAni(mDaoJuState);
+                    ClosePlayerDaoJuAni(mSpeedDaoJuState);
                 }
             }
 
@@ -1209,7 +1230,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void ClosePlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
     {
-        mDaoJuState = DaoJuCtrl.DaoJuType.Null;
+        mSpeedDaoJuState = DaoJuCtrl.DaoJuType.Null;
         m_pTopSpeed = PlayerMvSpeedMin;
         m_ParameterForEfferct = m_StartForEfferct;
         switch (daoJuState)
@@ -1255,18 +1276,18 @@ public class PlayerController : MonoBehaviour
     public void OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
     {
         TimeLastDaoJuBianXing = Time.time;
-        if (mDaoJuState == daoJuState)
+        if (mSpeedDaoJuState == daoJuState)
         {
             return;
         }
 
-        if (mDaoJuState != DaoJuCtrl.DaoJuType.Null)
+        if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.Null)
         {
-            ClosePlayerDaoJuAni(mDaoJuState);
+            ClosePlayerDaoJuAni(mSpeedDaoJuState);
         }
 
-        mDaoJuState = daoJuState;
-        switch (mDaoJuState)
+        mSpeedDaoJuState = daoJuState;
+        switch (mSpeedDaoJuState)
         {
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
                 {
@@ -1378,5 +1399,11 @@ public class PlayerController : MonoBehaviour
                 ammoMoveCom.InitMoveAmmo(ammoDt);
             }
         }
+    }
+
+    public void OpenPlayerCiTieDaoJu()
+    {
+        IsOpenCiTieDaoJu = true;
+        TimeLastCiTie = Time.time;
     }
 }

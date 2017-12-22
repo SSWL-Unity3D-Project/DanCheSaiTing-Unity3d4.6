@@ -49,6 +49,43 @@ public class DaoJuCtrl : MonoBehaviour
     /// 道具宝箱预置.
     /// </summary>
     public GameObject BaoXiangPrefab;
+    /// <summary>
+    /// 是否被玩家的磁铁吸附.
+    /// </summary>
+    bool IsMoveToPlayerByCiTie = false;
+    void Update()
+    {
+        if (IsMoveToPlayerByCiTie)
+        {
+            Transform playerTr = PlayerController.GetInstance().transform;
+            transform.position = Vector3.Lerp(transform.position, playerTr.position, Time.deltaTime * 10f);
+            if (Vector3.Distance(transform.position, playerTr.position) <= 1.5f)
+            {
+                OnDestoryThis();
+            }
+            return;
+        }
+
+        switch (DaoJuState)
+        {
+            case DaoJuType.JinBi:
+            case DaoJuType.TangGuo:
+            case DaoJuType.BaoXiang:
+                {
+                    if (PlayerController.GetInstance().IsOpenCiTieDaoJu)
+                    {
+                        Transform playerTr = PlayerController.GetInstance().transform;
+                        if (!IsMoveToPlayerByCiTie && Vector3.Distance(playerTr.position, transform.position) <= 10f)
+                        {
+                            IsMoveToPlayerByCiTie = true;
+                        }
+                    }
+                    break;
+                }
+
+        }
+    }
+
     public void OnDestoryThis()
     {
         if (IsDestoryThis)
@@ -96,6 +133,11 @@ public class DaoJuCtrl : MonoBehaviour
                         destroyCom.InitInfo(LiZiPrefab, BaoXiangPrefab, i * 0.4f);
                     }
                     transform.DetachChildren(); //将子集从自身解除.
+                    break;
+                }
+            case DaoJuType.CiTie:
+                {
+                    PlayerController.GetInstance().OpenPlayerCiTieDaoJu();
                     break;
                 }
         }
