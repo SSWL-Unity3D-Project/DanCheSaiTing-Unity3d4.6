@@ -20,8 +20,9 @@ public class PlayerController : MonoBehaviour
     public float DaoDanDisNpc = 100f;
     /// <summary>
     /// 道具掉落点.
+    /// DaoJuDiaoLuoTr[x]: 0 喷气道具, 1 飞行翼道具, 2 风框道具.
     /// </summary>
-    public Transform DaoJuDiaoLuoTr;
+    public Transform[] DaoJuDiaoLuoTr;
     /// <summary>
     /// 喷气动画列表.
     /// </summary>
@@ -1267,7 +1268,7 @@ public class PlayerController : MonoBehaviour
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
                 {
                     SetAcitveChuanTouShuiHuaTX(false);
-                    Instantiate(PenQiPrefab, DaoJuDiaoLuoTr.position, DaoJuDiaoLuoTr.rotation);
+                    Instantiate(PenQiPrefab, DaoJuDiaoLuoTr[0].position, DaoJuDiaoLuoTr[0].rotation);
                     for (int i = 0; i < PenQiAniAy.Length; i++)
                     {
                         PenQiAniAy[i].transform.localScale = Vector3.zero;
@@ -1278,7 +1279,7 @@ public class PlayerController : MonoBehaviour
             case DaoJuCtrl.DaoJuType.FeiXingYi:
                 {
                     m_pChuan.localPosition -= new Vector3(0f, PlayerHightFeiXing, 0f);
-                    Instantiate(FeiXingYiPrefab, DaoJuDiaoLuoTr.position, DaoJuDiaoLuoTr.rotation);
+                    Instantiate(FeiXingYiPrefab, DaoJuDiaoLuoTr[1].position, DaoJuDiaoLuoTr[1].rotation);
                     for (int i = 0; i < FiXingYiAniAy.Length; i++)
                     {
                         FiXingYiAniAy[i].transform.localScale = Vector3.zero;
@@ -1291,7 +1292,7 @@ public class PlayerController : MonoBehaviour
                     FengKuangTwRot.enabled = false;
                     FengKuangAni.enabled = true;
                     SetAcitveChuanTouShuiHuaTX(false);
-                    Instantiate(FenKuangPrefab, DaoJuDiaoLuoTr.position, DaoJuDiaoLuoTr.rotation);
+                    Instantiate(FenKuangPrefab, DaoJuDiaoLuoTr[2].position, DaoJuDiaoLuoTr[2].rotation);
                     FengKuangAni.transform.localScale = Vector3.zero;
                     FengKuangAni.SetBool("IsPlay", false);
                     break;
