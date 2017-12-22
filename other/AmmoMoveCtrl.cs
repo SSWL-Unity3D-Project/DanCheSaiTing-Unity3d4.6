@@ -15,7 +15,7 @@ public class AmmoMoveCtrl : MonoBehaviour
         /// <summary>
         /// 子弹要击中的目标.
         /// </summary>
-        public Transform AimObj;
+        public Transform AimTr;
         /// <summary>
         /// 子弹击中的坐标.
         /// </summary>
@@ -56,6 +56,11 @@ public class AmmoMoveCtrl : MonoBehaviour
             if (Vector3.Distance(GenZongTr.position, transform.position) <= mvDis)
             {
                 //子弹击中目标.
+                NpcController npcCom = GenZongTr.GetComponent<NpcController>();
+                if (npcCom != null)
+                {
+                    npcCom.OnDaoDanHit(transform.position);
+                }
                 OnDestoryThis();
                 return;
             }
@@ -97,7 +102,7 @@ public class AmmoMoveCtrl : MonoBehaviour
                 }
             case AmmoType.GenZongDan:
                 {
-                    GenZongTr = ammoInfo.AimObj;
+                    GenZongTr = ammoInfo.AimTr;
                     break;
                 }
         }
@@ -108,9 +113,9 @@ public class AmmoMoveCtrl : MonoBehaviour
     {
         if (AmmoType.Null == AmmoState)
         {
-            if (mAmmoInfo.AimObj != null)
+            if (mAmmoInfo.AimTr != null)
             {
-                DaoJuCtrl daoJuCom = mAmmoInfo.AimObj.GetComponent<DaoJuCtrl>();
+                DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
                 if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
                 {
                     //障碍物爆炸. 

@@ -5,6 +5,10 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 导弹射击npc的有效距离.
+    /// </summary>
+    public float DaoDanDisNpc = 100f;
+    /// <summary>
     /// 道具掉落点.
     /// </summary>
     public Transform DaoJuDiaoLuoTr;
@@ -1334,13 +1338,45 @@ public class PlayerController : MonoBehaviour
     {
         bool isFollowNpc = false;
         GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr.position, SpawnDaoDanTr.rotation);
+        AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
+        AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
+        Transform AimNpcTr = null;
+        if(Vector3.Distance(npc1Pos.position, transform.position) <= DaoDanDisNpc
+            && Vector3.Dot(npc1Pos.forward, npc1Pos.position - transform.position) > 0f)
+        {
+            isFollowNpc = true;
+            AimNpcTr = npc1Pos;
+        }
+
+        if (!isFollowNpc && Vector3.Distance(npc2Pos.position, transform.position) <= DaoDanDisNpc
+            && Vector3.Dot(npc2Pos.forward, npc2Pos.position - transform.position) > 0f)
+        {
+            isFollowNpc = true;
+            AimNpcTr = npc2Pos;
+        }
+
         if (isFollowNpc)
         {
-
+            ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.GenZongDan;
+            ammoDt.PosHit = AimNpcTr.position;
+            ammoDt.AimTr = AimNpcTr;
+            ammoMoveCom.InitMoveAmmo(ammoDt);
         }
         else
         {
-
+            if (mZhangAiWuObj != null)
+            {
+                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.Null;
+                ammoDt.PosHit = mZhangAiWuObj.transform.position;
+                ammoDt.AimTr = mZhangAiWuObj.transform;
+                ammoMoveCom.InitMoveAmmo(ammoDt);
+            }
+            else
+            {
+                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.Null;
+                ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(120f, 200f)) + ammo.transform.position;
+                ammoMoveCom.InitMoveAmmo(ammoDt);
+            }
         }
     }
 }
