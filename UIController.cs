@@ -2,8 +2,12 @@
 using System.Collections;
 using System;
 
-public class UIController : MonoBehaviour 
+public class UIController : MonoBehaviour
 {
+    /// <summary>
+    /// 结算积分图集列表.
+    /// </summary>
+    public UISprite[] JieSuanJiFenSpriteArray;
     /// <summary>
     /// 积分图集列表.
     /// </summary>
@@ -72,9 +76,10 @@ public class UIController : MonoBehaviour
 		m_pScale.enabled = false;
 		m_totalTime = (int)m_pGameTime;
 		XkGameCtrl.IsLoadingLevel = false;
+        ShowJiFenInfo(0);
 
-		//InputEventCtrl.GetInstance().ClickPlayerYouMenBtEvent += ClickPlayerYouMenBtEvent;
-	}
+        //InputEventCtrl.GetInstance().ClickPlayerYouMenBtEvent += ClickPlayerYouMenBtEvent;
+    }
 
 	bool IsCloseYouMenTiShi;
 	/*void ClickPlayerYouMenBtEvent(ButtonState val)
@@ -389,11 +394,23 @@ public class UIController : MonoBehaviour
     public void ShowJiFenInfo(int jiFen)
     {
         int jiFenTmp = 0;
+        string jiFenStr = jiFen.ToString();
         for (int i = 0; i < 6; i++)
         {
-            jiFenTmp = jiFen % 10;
-            JiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
-            jiFen = (int)(jiFenTmp / 10f);
+            if (jiFenStr.Length > i)
+            {
+                jiFenTmp = jiFen % 10;
+                JiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
+                JieSuanJiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
+                jiFen = (int)(jiFenTmp / 10f);
+                JiFenSpriteArray[i].enabled = true;
+                JieSuanJiFenSpriteArray[i].enabled = true;
+            }
+            else
+            {
+                JiFenSpriteArray[i].enabled = false;
+                JieSuanJiFenSpriteArray[i].enabled = false;
+            }
         }
     }
 }
