@@ -4,6 +4,10 @@ using System;
 
 public class UIController : MonoBehaviour 
 {
+    /// <summary>
+    /// 积分图集列表.
+    /// </summary>
+    public UISprite[] JiFenSpriteArray;
 	public float m_pGameTime = 300.0f;
 	public UISprite m_pMiaoBaiwei;
 	public UISprite m_pMiaoshiwei;
@@ -378,4 +382,18 @@ public class UIController : MonoBehaviour
 		m_Position.enabled = true;
 		m_JiashiTexture.SetActive (false);
 	}
+
+    /// <summary>
+    /// 显示玩家积分.
+    /// </summary>
+    public void ShowJiFenInfo(int jiFen)
+    {
+        int jiFenTmp = 0;
+        for (int i = 0; i < 6; i++)
+        {
+            jiFenTmp = jiFen % 10;
+            JiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
+            jiFen = (int)(jiFenTmp / 10f);
+        }
+    }
 }

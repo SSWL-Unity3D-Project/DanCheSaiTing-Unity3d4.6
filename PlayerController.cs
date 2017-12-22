@@ -4,6 +4,81 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    /// <summary>
+    /// 道具掉落点.
+    /// </summary>
+    public Transform DaoJuDiaoLuoTr;
+    /// <summary>
+    /// 喷气动画列表.
+    /// </summary>
+    public Animator[] PenQiAniAy;
+    /// <summary>
+    /// 喷气道具掉落预置.
+    /// </summary>
+    public GameObject PenQiPrefab;
+    /// <summary>
+    /// 飞机翅膀动画列表.
+    /// </summary>
+    public Animator[] FiXingYiAniAy;
+    /// <summary>
+    /// 飞行翅膀道具掉落预置.
+    /// </summary>
+    public GameObject FeiXingYiPrefab;
+    /// <summary>
+    /// 风框动画.
+    /// </summary>
+    public Animator FengKuangAni;
+    /// <summary>
+    /// 风框道具掉落预置.
+    /// </summary>
+    public GameObject FenKuangPrefab;
+    /// <summary>
+    /// 道具风框转动脚本.
+    /// </summary>
+    public TweenRotation FengKuangTwRot;
+    /// <summary>
+    /// 主角飞行高度.
+    /// </summary>
+    public float PlayerHightFeiXing = 1f;
+    /// <summary>
+    /// 主角普通运动速度.
+    /// </summary>
+    public float PlayerMvSpeedMin = 50f;
+    /// <summary>
+    /// 主角喷气运动速度.
+    /// </summary>
+    public float PlayerMvSpeedPenQi = 90f;
+    /// <summary>
+    /// 主角飞行运动速度.
+    /// </summary>
+    public float PlayerMvSpeedFeiXing = 100f;
+    /// <summary>
+    /// 主角加速风扇运动速度.
+    /// </summary>
+    public float PlayerMvSpeedJiaSuFengShan = 80f;
+    [HideInInspector]
+    public DaoJuCtrl.DaoJuType mDaoJuState;
+    float TimeLastDaoJuBianXing;
+    /// <summary>
+    /// 道具变型时长.
+    /// </summary>
+    public float DaoJuBianXingTime = 5f;
+    /// <summary>
+    /// 积分.
+    /// </summary>
+    [HideInInspector]
+    public int PlayerJiFen = 0;
+    /// <summary>
+    /// 积分产生点.
+    /// </summary>
+    public Transform SpawnJiFenTr;
+    /// <summary>
+    /// 产生道具积分.
+    /// </summary>
+    public void SpawnDaoJuJiFen(GameObject jiFenPrefab)
+    {
+        Instantiate(jiFenPrefab, SpawnJiFenTr.position, SpawnJiFenTr.rotation);
+    }
 	public static float m_pTopSpeed = 100.0f;
 	private float throttle = 0.0f;
 	public bool canDrive = true;
@@ -62,11 +137,33 @@ public class PlayerController : MonoBehaviour
 
 	//jingtoumohu
 	public RadialBlur m_RadialBlurEffect;
+    /// <summary>
+    /// 开始虚化的初始速度.
+    /// </summary>
 	public float m_SpeedForEffectStar = 0.0f;
+    /// <summary>
+    /// 虚化强度控制.
+    /// </summary>
 	public float m_ParameterForEfferct = 1.0f;
+    /// <summary>
+    /// 初始虚化参数.
+    /// </summary>
+    float m_StartForEfferct = 1.0f;
+    /// <summary>
+    /// 喷气虚化强度控制.
+    /// </summary>
+	public float m_ForEfferctPenQi = 1.0f;
+    /// <summary>
+    /// 飞行翼虚化强度控制.
+    /// </summary>
+	public float m_ForEfferctFeiXing = 1.0f;
+    /// <summary>
+    /// 加速风扇虚化强度控制.
+    /// </summary>
+	public float m_ForEfferctJiaSuFenShan = 1.0f;
 
-	//yangjiaokongzhi
-	public float m_SpeedForXangle = 0.0f;
+    //yangjiaokongzhi
+    public float m_SpeedForXangle = 0.0f;
 	public float m_ParameterForXangle = 1.0f;
 
 	//zuoyouxuanzhuansudu
@@ -130,7 +227,8 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
 	{
-		PlayerMinSpeedVal = (float)ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
+        m_StartForEfferct = m_ParameterForEfferct;
+        PlayerMinSpeedVal = (float)ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
 		Loading.m_HasBegin = false;
 		pcvr.ShaCheBtLight = StartLightState.Liang;
 		pcvr.IsSlowLoopCom = false;
@@ -286,6 +384,14 @@ public class PlayerController : MonoBehaviour
 		}
 		else
 		{
+            if (mDaoJuState != DaoJuCtrl.DaoJuType.Null)
+            {
+                if (Time.time - TimeLastDaoJuBianXing >= DaoJuBianXingTime)
+                {
+                    ClosePlayerDaoJuAni(mDaoJuState);
+                }
+            }
+
 			if(SpeedObj > 105f && !m_IsFinished)
 			{
 				if (!m_IsHitshake) {
@@ -700,7 +806,14 @@ public class PlayerController : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		if(other.tag == "bianxian")
+        DaoJuCtrl daoJuCom = other.GetComponent<DaoJuCtrl>();
+        if (daoJuCom != null)
+        {
+            daoJuCom.OnDestoryThis();
+            return;
+        }
+
+        if (other.tag == "bianxian")
 		{
 			m_IsJiasu = false;
 		}
@@ -960,11 +1073,17 @@ public class PlayerController : MonoBehaviour
 	{
 		if(rigidbody.velocity.magnitude*3.6f >= m_SpeedForEffectStar)
 		{
-			m_RadialBlurEffect.SampleStrength = m_ParameterForEfferct*rigidbody.velocity.magnitude*3.6f*3.6f*rigidbody.velocity.magnitude;
+            //m_RadialBlurEffect.SampleStrength = m_ParameterForEfferct*rigidbody.velocity.magnitude*3.6f*3.6f*rigidbody.velocity.magnitude;
+            float rv = m_ParameterForEfferct * Mathf.Pow(rigidbody.velocity.magnitude * 3.6f, 2f);
+            if (Mathf.Abs(rv - m_RadialBlurEffect.SampleStrength) >= 0.05f)
+            {
+                m_RadialBlurEffect.SampleStrength = m_ParameterForEfferct * Mathf.Pow(rigidbody.velocity.magnitude * 3.6f, 2f);
+            }
 		}
 		else
 		{
-			m_RadialBlurEffect.SampleStrength = 0.0f;
+			//m_RadialBlurEffect.SampleStrength = 0.0f;
+			m_RadialBlurEffect.SampleStrength = Mathf.Lerp(m_RadialBlurEffect.SampleStrength, 0f, 10f * Time.deltaTime);
 		}
 	}
 	void UpdateShuihua()
@@ -1068,4 +1187,160 @@ public class PlayerController : MonoBehaviour
 	{
 		IsIntoFeiBan = false;
 	}
+
+    /// <summary>
+    /// 船头水花特效.
+    /// </summary>
+    public GameObject ChuanTouShuiHuaTX;
+    /// <summary>
+    /// 当速度增大时,打开水花; 当速度变回初始值时,关闭水花; 
+    /// </summary>
+    void SetAcitveChuanTouShuiHuaTX(bool isActive)
+    {
+        ChuanTouShuiHuaTX.SetActive(isActive);
+    }
+
+    /// <summary>
+    /// 使玩家道具掉落.
+    /// </summary>
+    void ClosePlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
+    {
+        mDaoJuState = DaoJuCtrl.DaoJuType.Null;
+        m_pTopSpeed = PlayerMvSpeedMin;
+        m_ParameterForEfferct = m_StartForEfferct;
+        switch (daoJuState)
+        {
+            case DaoJuCtrl.DaoJuType.PenQiJiaSu:
+                {
+                    SetAcitveChuanTouShuiHuaTX(false);
+                    Instantiate(PenQiPrefab, DaoJuDiaoLuoTr.position, DaoJuDiaoLuoTr.rotation);
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.zero;
+                        PenQiAniAy[i].SetBool("IsPlay", false);
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.FeiXingYi:
+                {
+                    m_pChuan.localPosition -= new Vector3(0f, PlayerHightFeiXing, 0f);
+                    Instantiate(FeiXingYiPrefab, DaoJuDiaoLuoTr.position, DaoJuDiaoLuoTr.rotation);
+                    for (int i = 0; i < FiXingYiAniAy.Length; i++)
+                    {
+                        FiXingYiAniAy[i].transform.localScale = Vector3.zero;
+                        FiXingYiAniAy[i].SetBool("IsPlay", false);
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.JiaSuFengShan:
+                {
+                    FengKuangTwRot.enabled = false;
+                    FengKuangAni.enabled = true;
+                    SetAcitveChuanTouShuiHuaTX(false);
+                    Instantiate(FenKuangPrefab, DaoJuDiaoLuoTr.position, DaoJuDiaoLuoTr.rotation);
+                    FengKuangAni.transform.localScale = Vector3.zero;
+                    FengKuangAni.SetBool("IsPlay", false);
+                    break;
+                }
+        }
+    }
+
+    /// <summary>
+    /// 打开玩家变型动画.
+    /// </summary>
+    public void OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
+    {
+        TimeLastDaoJuBianXing = Time.time;
+        if (mDaoJuState == daoJuState)
+        {
+            return;
+        }
+
+        if (mDaoJuState != DaoJuCtrl.DaoJuType.Null)
+        {
+            ClosePlayerDaoJuAni(mDaoJuState);
+        }
+
+        mDaoJuState = daoJuState;
+        switch (mDaoJuState)
+        {
+            case DaoJuCtrl.DaoJuType.PenQiJiaSu:
+                {
+                    m_ParameterForEfferct = m_ForEfferctPenQi;
+                    m_pTopSpeed = PlayerMvSpeedPenQi;
+                    SetAcitveChuanTouShuiHuaTX(true);
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.one;
+                        PenQiAniAy[i].SetBool("IsPlay", true);
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.FeiXingYi:
+                {
+                    m_ParameterForEfferct = m_ForEfferctFeiXing;
+                    m_pChuan.localPosition += new Vector3(0f, PlayerHightFeiXing, 0f);
+                    m_pTopSpeed = PlayerMvSpeedFeiXing;
+                    for (int i = 0; i < FiXingYiAniAy.Length; i++)
+                    {
+                        FiXingYiAniAy[i].transform.localScale = Vector3.one;
+                        FiXingYiAniAy[i].SetBool("IsPlay", true);
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.JiaSuFengShan:
+                {
+                    m_ParameterForEfferct = m_ForEfferctJiaSuFenShan;
+                    m_pTopSpeed = PlayerMvSpeedJiaSuFengShan;
+                    FengKuangTwRot.enabled = false;
+                    FengKuangAni.enabled = true;
+                    SetAcitveChuanTouShuiHuaTX(true);
+                    FengKuangAni.transform.localScale = Vector3.one;
+                    FengKuangAni.SetBool("IsPlay", true);
+                    break;
+                }
+        }
+    }
+
+    public void OnDaoJuFengKuangAniOver()
+    {
+        FengKuangAni.enabled = false;
+        FengKuangTwRot.enabled = true;
+    }
+
+    /// <summary>
+    /// 导弹预置.
+    /// </summary>
+    public GameObject DaoDanPrefab;
+    /// <summary>
+    /// 导弹产生点.
+    /// </summary>
+    public Transform SpawnDaoDanTr;
+    /// <summary>
+    /// 障碍物道具.
+    /// </summary>
+    GameObject mZhangAiWuObj;
+    /// <summary>
+    /// 当主角吃上导弹道具.
+    /// </summary>
+    public void OnPlayerHitDaoDanDaoJu(GameObject zhangAiWu)
+    {
+        mZhangAiWuObj = zhangAiWu;
+        SpawnDaoDanAmmo();
+        Invoke("SpawnDaoDanAmmo", 1f);
+    }
+
+    void SpawnDaoDanAmmo()
+    {
+        bool isFollowNpc = false;
+        GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr.position, SpawnDaoDanTr.rotation);
+        if (isFollowNpc)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
 }

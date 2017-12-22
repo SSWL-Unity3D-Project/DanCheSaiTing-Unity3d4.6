@@ -6,8 +6,16 @@ public class ResetCameraEffect : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag == "player")
-		{
-			PlayerController.GetInstance().m_ParameterForEfferct = m_ParameterForEffect;
+        {
+            if (PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu
+                || PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi
+                || PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.JiaSuFengShan)
+            {
+            }
+            else
+            {
+                PlayerController.GetInstance().m_ParameterForEfferct = m_ParameterForEffect;
+            }
 		}
 	}
 }

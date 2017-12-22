@@ -4,19 +4,19 @@ using System.Collections;
 public class AddVelocitySet : MonoBehaviour
 {
 	public float m_TopSpeedSet = 0.0f;
-	void Start ()
-	{
-	
-	}
-	void Update () 
-	{
-	
-	}
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag == "player")
 		{
-			PlayerController.m_pTopSpeed = m_TopSpeedSet;
+            if (PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu
+                || PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi
+                || PlayerController.GetInstance().mDaoJuState == DaoJuCtrl.DaoJuType.JiaSuFengShan)
+            {
+            }
+            else
+            {
+                PlayerController.m_pTopSpeed = m_TopSpeedSet;
+            }
 		}
 	}
 }

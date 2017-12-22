@@ -171,4 +171,22 @@ public class NpcController : MonoBehaviour
 			m_IsEnd = true;
 		}
 	}
+
+    /// <summary>
+    /// 当导弹击中npc时.
+    /// </summary>
+    public void OnDaoDanHit(Vector3 posDaoDan)
+    {
+        if (Vector3.Dot(posDaoDan, transform.position) > 0f)
+        {
+            m_PlayerHit = transform.position;
+            m_NpcPos = posDaoDan;
+        }
+        else
+        {
+            m_PlayerHit = posDaoDan;
+            m_NpcPos = transform.position;
+        }
+        m_IsHit = true;
+    }
 }

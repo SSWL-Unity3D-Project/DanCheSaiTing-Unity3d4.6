@@ -6,7 +6,8 @@ public class lookcamera : MonoBehaviour
 	private Transform Mycamera;
 	void Start () 
 	{
-		Mycamera = GameObject.Find ("Main Camera").transform;
+        Mycamera = PlayerController.GetInstance().m_CameraShake.transform;
+        //Mycamera = GameObject.Find ("Main Camera").transform;
 	}
 
 	void Update () 
