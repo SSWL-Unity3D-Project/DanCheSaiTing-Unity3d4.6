@@ -1389,7 +1389,7 @@ public class PlayerController : MonoBehaviour
         Invoke("SpawnDaoDanAmmo", 1f);
     }
 
-    void SpawnDaoDanAmmo()
+    public void SpawnDaoDanAmmo()
     {
         bool isFollowNpc = false;
         GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation);

@@ -140,6 +140,11 @@ public class DaoJuCtrl : MonoBehaviour
                     PlayerController.GetInstance().OpenPlayerCiTieDaoJu();
                     break;
                 }
+            case DaoJuType.DaoDan:
+                {
+                    PlayerController.GetInstance().OnPlayerHitDaoDanDaoJu(ZhangAiWuObj);
+                    break;
+                }
         }
         Destroy(gameObject);
     }
