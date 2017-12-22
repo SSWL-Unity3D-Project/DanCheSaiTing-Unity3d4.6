@@ -941,13 +941,29 @@ public class PlayerController : MonoBehaviour
 			npc2.m_IsHit = true;
 			npc2.m_PlayerHit = transform.position;
 			npc2.m_NpcPos = npc2Pos.position;
-		}
-	}
+        }
+        if (other.tag == "npc3p")
+        {
+            if (/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude * 3.6f > 30.0f)
+            {
+                m_IsHitshake = true;
+                m_PlayerAnimator.SetTrigger("IsZhuang");
+                m_CameraShake.setCameraShakeImpulseValue();
+                m_HitStone.Play();
+                Instantiate(m_HitEffectObj, transform.position, transform.rotation);
+            }
+            npc3.m_IsHit = true;
+            npc3.m_PlayerHit = transform.position;
+            npc3.m_NpcPos = npc3Pos.position;
+        }
+    }
 	public NpcController npc1;
 	public NpcController npc2;
-	public Transform npc1Pos;
+	public NpcController npc3;
+    public Transform npc1Pos;
 	public Transform npc2Pos;
-	void OnTriggerExit(Collider other)
+	public Transform npc3Pos;
+    void OnTriggerExit(Collider other)
 	{
 		if(other.tag == "water")
 		{
@@ -1205,8 +1221,16 @@ public class PlayerController : MonoBehaviour
 				//Debug.Log("22222222222222222222222222");
 				rigidbody.AddForce(Vector3.Normalize(npc2.m_PlayerHit - npc2.m_NpcPos )*80000.0f,ForceMode.Force);
 			}
-		}
-	}
+        }
+        if (npc3.m_IsHit)
+        {
+            if (npc3.m_HitTimmer < 0.4f)
+            {
+                //Debug.Log("333333333333333333333333333");
+                rigidbody.AddForce(Vector3.Normalize(npc3.m_PlayerHit - npc3.m_NpcPos) * 80000.0f, ForceMode.Force);
+            }
+        }
+    }
 	float TimeFeiBan;
 	void ResetIsIntoFeiBan()
 	{
@@ -1374,6 +1398,13 @@ public class PlayerController : MonoBehaviour
         {
             isFollowNpc = true;
             AimNpcTr = npc2Pos;
+        }
+
+        if (!isFollowNpc && Vector3.Distance(npc3Pos.position, transform.position) <= DaoDanDisNpc
+            && Vector3.Dot(npc3Pos.forward, npc3Pos.position - transform.position) > 0f)
+        {
+            isFollowNpc = true;
+            AimNpcTr = npc3Pos;
         }
 
         if (isFollowNpc)
