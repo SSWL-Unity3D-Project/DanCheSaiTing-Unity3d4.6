@@ -1369,16 +1369,18 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 导弹产生点.
     /// </summary>
-    public Transform SpawnDaoDanTr;
+    public Transform[] SpawnDaoDanTr;
     /// <summary>
     /// 障碍物道具.
     /// </summary>
     GameObject mZhangAiWuObj;
+    int DaoDanSpawnCount = 0;
     /// <summary>
     /// 当主角吃上导弹道具.
     /// </summary>
     public void OnPlayerHitDaoDanDaoJu(GameObject zhangAiWu)
     {
+        DaoDanSpawnCount = 0;
         mZhangAiWuObj = zhangAiWu;
         SpawnDaoDanAmmo();
         Invoke("SpawnDaoDanAmmo", 1f);
@@ -1387,7 +1389,7 @@ public class PlayerController : MonoBehaviour
     void SpawnDaoDanAmmo()
     {
         bool isFollowNpc = false;
-        GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr.position, SpawnDaoDanTr.rotation);
+        GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation);
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         Transform AimNpcTr = null;
@@ -1435,6 +1437,7 @@ public class PlayerController : MonoBehaviour
                 ammoMoveCom.InitMoveAmmo(ammoDt);
             }
         }
+        DaoDanSpawnCount++;
     }
 
     public void OpenPlayerCiTieDaoJu()
