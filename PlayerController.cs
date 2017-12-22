@@ -1317,6 +1317,8 @@ public class PlayerController : MonoBehaviour
         }
 
         mSpeedDaoJuState = daoJuState;
+        m_IsJiasu = true;
+        m_JiasuTimmer = 0f;
         switch (mSpeedDaoJuState)
         {
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
