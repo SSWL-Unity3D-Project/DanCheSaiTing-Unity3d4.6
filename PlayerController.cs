@@ -536,17 +536,21 @@ public class PlayerController : MonoBehaviour
 	float SteerOffset = 0.05f;
 	void GetInput()
 	{
-		throttle = pcvr.mGetPower;
-//		if (!IsClickShaCheBt) {
-//			throttle = pcvr.mGetPower;
-//		}
-//		else {
-//			throttle = 0f;
-//			if (!m_IsJiasu && !IsIntoFeiBan) {
-//				rigidbody.velocity =  Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime * 3f);
-//			}
-//		}
-		mSteer = pcvr.mGetSteer;
+		throttle = 1f;
+        //throttle = pcvr.mGetPower;
+        //if (!IsClickShaCheBt)
+        //{
+        //    throttle = pcvr.mGetPower;
+        //}
+        //else
+        //{
+        //    throttle = 0f;
+        //    if (!m_IsJiasu && !IsIntoFeiBan)
+        //    {
+        //        rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime * 3f);
+        //    }
+        //}
+        mSteer = pcvr.mGetSteer;
 
 		if (mSteer < -SteerOffset)
 		{
@@ -779,7 +783,8 @@ public class PlayerController : MonoBehaviour
 	public static float PlayerMinSpeedVal = 80f;
 	void CalculateEnginePower(bool canDrive)
 	{
-		if(throttle > 0f && SpeedObj <= m_pTopSpeed && !m_IsPubu) {
+		//if(throttle > 0f && SpeedObj <= m_pTopSpeed && !m_IsPubu) {
+		if(SpeedObj <= m_pTopSpeed && !m_IsPubu) {
 			float speedVal = (m_pTopSpeed * throttle);
 			float tmp = (m_pTopSpeed - PlayerMinSpeedVal) / (1f - pcvr.YouMemnMinVal);
 			speedVal = m_pTopSpeed - (1f - throttle) * tmp;
