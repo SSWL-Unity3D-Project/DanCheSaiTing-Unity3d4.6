@@ -176,7 +176,8 @@ public class UIController : MonoBehaviour
 				m_JindutiaoObj.SetActive(false);
 				m_daojishiObj.SetActive(false);
 				m_biaodituObj.SetActive(false);
-			}
+                HiddenJiFen();
+            }
 			if(m_IsCongratulate)
 			{
 				m_CongratulateTimmer+=Time.deltaTime;
@@ -411,6 +412,14 @@ public class UIController : MonoBehaviour
                 JiFenSpriteArray[i].enabled = false;
                 JieSuanJiFenSpriteArray[i].enabled = false;
             }
+        }
+    }
+
+    void HiddenJiFen()
+    {
+        for (int i = 0; i < JiFenSpriteArray.Length; i++)
+        {
+            JiFenSpriteArray[i].gameObject.SetActive(false);
         }
     }
 }
