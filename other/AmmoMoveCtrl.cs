@@ -76,11 +76,13 @@ public class AmmoMoveCtrl : MonoBehaviour
         {
             return;
         }
+        IsDestroyThis = true;
 
         if (LiZiPrefab != null)
         {
             Instantiate(LiZiPrefab, transform.position, transform.rotation);
         }
+        Destroy(gameObject);
     }
 
     public void InitMoveAmmo(AmmoDt ammoInfo)
