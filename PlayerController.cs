@@ -1150,7 +1150,7 @@ public class PlayerController : MonoBehaviour
 		else
 		{
 			//m_RadialBlurEffect.SampleStrength = 0.0f;
-			m_RadialBlurEffect.SampleStrength = Mathf.Lerp(m_RadialBlurEffect.SampleStrength, 0f, 10f * Time.deltaTime);
+			m_RadialBlurEffect.SampleStrength = Mathf.Lerp(m_RadialBlurEffect.SampleStrength, 0f, 30f * Time.deltaTime);
 		}
 	}
 	void UpdateShuihua()
