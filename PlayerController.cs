@@ -236,18 +236,20 @@ public class PlayerController : MonoBehaviour
 	public AudioSource m_JiashiAudio;
 	public AudioSource m_EatJiashiAudio;
 	public AudioSource LaBaAudio;
-    public static int PlayerIndexRand = 0;
+    public static int PlayerIndexRand = -1;
     public GameObject[] PlayerObjArray;
     void Awake()
     {
         if (PlayerIndexRand >= PlayerObjArray.Length)
         {
-            PlayerIndexRand = 0;
+            PlayerIndexRand = -1;
         }
+        PlayerIndexRand++;
+        NpcController.NpcIndexVal = PlayerIndexRand;
 
         for (int i = 0; i < PlayerObjArray.Length; i++)
         {
-            PlayerObjArray[PlayerIndexRand].SetActive(PlayerIndexRand == i ? true : false);
+            PlayerObjArray[i].SetActive(PlayerIndexRand == i ? true : false);
             if (PlayerDt[i] != null)
             {
                 m_pChuan = PlayerObjArray[PlayerIndexRand].transform;
@@ -258,7 +260,6 @@ public class PlayerController : MonoBehaviour
                 FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
             }
         }
-        PlayerIndexRand++;
     }
 
 	void Start()

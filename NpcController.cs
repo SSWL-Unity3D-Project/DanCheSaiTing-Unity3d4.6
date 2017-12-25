@@ -29,11 +29,18 @@ public class NpcController : MonoBehaviour
 	public float m_HitTimmer = 0.0f;
 	public Vector3 m_PlayerHit;
 	public Vector3 m_NpcPos;
+    public static int NpcIndexVal = 0;
 	void Start ()
     {
+        if (NpcIndexVal >= NpcObjArray.Length)
+        {
+            NpcIndexVal = -1;
+        }
+        NpcIndexVal++;
+
         for (int i = 0; i < NpcObjArray.Length; i++)
         {
-            NpcObjArray[PlayerController.PlayerIndexRand].SetActive(PlayerController.PlayerIndexRand == i ? true : false);
+            NpcObjArray[i].SetActive(NpcIndexVal == i ? true : false);
         }
 
         m_NpcPathPoint = new Vector3[m_NpcPath.childCount];
