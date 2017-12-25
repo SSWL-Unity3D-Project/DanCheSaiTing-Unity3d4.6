@@ -233,16 +233,18 @@ public class Loading : MonoBehaviour
 			m_HasBegin = true;
 		}
 	}
+    static int LoadSceneCount;
 	void OnLoadingClicked()
 	{
 		if(timmerstar)
 		{
-			timmerforstar+=Time.deltaTime;
-			if(timmerforstar>1.5f)
+			timmerforstar += Time.deltaTime;
+			if(timmerforstar > 1.5f)
 			{
-				StartCoroutine (loadScene(1));
+                StartCoroutine (loadScene((LoadSceneCount % (Application.levelCount - 2)) + 1));
 				timmerstar = false;
-			}
+                LoadSceneCount++;
+            }
 		}
 	}
 }
