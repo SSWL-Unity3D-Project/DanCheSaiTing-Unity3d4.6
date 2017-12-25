@@ -5,6 +5,10 @@ using System;
 public class UIController : MonoBehaviour
 {
     /// <summary>
+    /// 结算积分对象.
+    /// </summary>
+    public GameObject JieSuanJiFenObj;
+    /// <summary>
     /// 结算积分图集列表.
     /// </summary>
     public UISprite[] JieSuanJiFenSpriteArray;
@@ -177,6 +181,7 @@ public class UIController : MonoBehaviour
 				m_daojishiObj.SetActive(false);
 				m_biaodituObj.SetActive(false);
                 HiddenJiFen();
+                JieSuanJiFenObj.SetActive(true);
             }
 			if(m_IsCongratulate)
 			{
