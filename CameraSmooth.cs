@@ -12,18 +12,12 @@ public class CameraSmooth : MonoBehaviour
 	public float PositionForward = 6.0f;
 	public float PositionUp = 5.0f;
 	public float speed = 3.0f;
-	void Start () 
-	{
-
-        PositionForward = 5.0f; //gzknu
-        PositionUp = 2.0f;
-        speed = 25.0f;
-    }
-
-	void Update () 
-	{
-
-	}
+	//void Start () 
+	//{
+        //PositionForward = 5.0f; //gzknu
+        //PositionUp = 2.0f;
+        //speed = 25.0f;
+    //}
 	void FixedUpdate()
 	{
 		if (!target)
@@ -31,13 +25,18 @@ public class CameraSmooth : MonoBehaviour
 		transform.position = Vector3.Lerp(transform.position,target.position - target.forward*PositionForward+target.up*PositionUp,speed*Time.deltaTime);
 		transform.LookAt (target.position + target.forward*LookAtIndex);
 	}
-	void LateUpdate()
-	{
+
+    public void SetCameraUpPos(float offsetUp)
+    {
+        PositionUp += offsetUp;
+    }
+	//void LateUpdate()
+	//{
 //		if (!target)
 //			return;
 //		transform.position = Vector3.Lerp(transform.position,target.position - target.forward*PositionForward+target.up*PositionUp,speed*Time.deltaTime);
 //		transform.LookAt (target.position + target.forward*LookAtIndex);
-	}
+	//}
 	//public Transform target = null;  
 
 
