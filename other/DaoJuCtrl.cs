@@ -49,6 +49,7 @@ public class DaoJuCtrl : MonoBehaviour
     /// 道具宝箱预置.
     /// </summary>
     public GameObject BaoXiangPrefab;
+    public float TimeDestroyZhangAiWu = 0.4f;
     /// <summary>
     /// 是否被玩家的磁铁吸附.
     /// </summary>
@@ -86,7 +87,6 @@ public class DaoJuCtrl : MonoBehaviour
         }
     }
 
-    public float TimeDestroyZhangAiWu = 0.4f;
     public void OnDestroyThis()
     {
         if (IsDestroyThis)
@@ -131,7 +131,7 @@ public class DaoJuCtrl : MonoBehaviour
                     {
                         childObj = transform.GetChild(i).gameObject;
                         destroyCom = childObj.AddComponent<DestroyThisTimed>();
-                        destroyCom.InitInfo(LiZiPrefab, BaoXiangPrefab, i * 0.4f);
+                        destroyCom.InitInfo(LiZiPrefab, BaoXiangPrefab, i * TimeDestroyZhangAiWu);
                     }
                     transform.DetachChildren(); //将子集从自身解除.
                     break;
