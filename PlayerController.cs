@@ -1457,7 +1457,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.Null;
-                ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(120f, 200f)) + ammo.transform.position;
+                ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(50f, 120f)) + ammo.transform.position;
                 ammoMoveCom.InitMoveAmmo(ammoDt);
             }
         }
