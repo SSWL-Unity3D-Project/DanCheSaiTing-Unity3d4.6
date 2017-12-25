@@ -1388,7 +1388,7 @@ public class PlayerController : MonoBehaviour
         DaoDanSpawnCount = 0;
         mZhangAiWuObj = zhangAiWu;
         SpawnDaoDanAmmo();
-        Invoke("SpawnDaoDanAmmo", 1f);
+        Invoke("SpawnDaoDanAmmo", 0.5f);
     }
 
     public void SpawnDaoDanAmmo()
