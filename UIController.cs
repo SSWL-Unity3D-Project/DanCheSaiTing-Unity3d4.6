@@ -402,7 +402,7 @@ public class UIController : MonoBehaviour
                 jiFenTmp = jiFen % 10;
                 JiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
                 JieSuanJiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
-                jiFen = (int)(jiFenTmp / 10f);
+                jiFen = (int)(jiFen / 10f);
                 JiFenSpriteArray[i].enabled = true;
                 JieSuanJiFenSpriteArray[i].enabled = true;
             }
