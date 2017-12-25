@@ -1138,14 +1138,15 @@ public class PlayerController : MonoBehaviour
 	void UpdateCameraEffect()
 	{
 		if(rigidbody.velocity.magnitude*3.6f >= m_SpeedForEffectStar)
-		{
+        {
+            m_RadialBlurEffect.SampleStrength = Mathf.Lerp(m_RadialBlurEffect.SampleStrength, m_ParameterForEfferct, 10f * Time.deltaTime);
             //m_RadialBlurEffect.SampleStrength = m_ParameterForEfferct*rigidbody.velocity.magnitude*3.6f*3.6f*rigidbody.velocity.magnitude;
-            float rv = m_ParameterForEfferct * Mathf.Pow(rigidbody.velocity.magnitude * 3.6f, 2f);
-            if (Mathf.Abs(rv - m_RadialBlurEffect.SampleStrength) >= 0.05f)
-            {
-                m_RadialBlurEffect.SampleStrength = m_ParameterForEfferct * Mathf.Pow(rigidbody.velocity.magnitude * 3.6f, 2f);
-            }
-		}
+            //float rv = m_ParameterForEfferct * Mathf.Pow(rigidbody.velocity.magnitude * 3.6f, 2f);
+            //if (Mathf.Abs(rv - m_RadialBlurEffect.SampleStrength) >= 0.05f)
+            //{
+            //    m_RadialBlurEffect.SampleStrength = m_ParameterForEfferct * Mathf.Pow(rigidbody.velocity.magnitude * 3.6f, 2f);
+            //}
+        }
 		else
 		{
 			//m_RadialBlurEffect.SampleStrength = 0.0f;
