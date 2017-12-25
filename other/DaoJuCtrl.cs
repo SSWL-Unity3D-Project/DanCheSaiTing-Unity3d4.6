@@ -28,7 +28,7 @@ public class DaoJuCtrl : MonoBehaviour
         ZhangAiWu,
     }
     public DaoJuType DaoJuState = DaoJuType.Null;
-    bool IsDestoryThis = false;
+    bool IsDestroyThis = false;
     /// <summary>
     /// 粒子特效预置,需要挂上自销毁脚本.
     /// </summary>
@@ -61,7 +61,7 @@ public class DaoJuCtrl : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, playerTr.position, Time.deltaTime * 10f);
             if (Vector3.Distance(transform.position, playerTr.position) <= 1.5f)
             {
-                OnDestoryThis();
+                OnDestroyThis();
             }
             return;
         }
@@ -86,13 +86,14 @@ public class DaoJuCtrl : MonoBehaviour
         }
     }
 
-    public void OnDestoryThis()
+    public float TimeDestroyZhangAiWu = 0.4f;
+    public void OnDestroyThis()
     {
-        if (IsDestoryThis)
+        if (IsDestroyThis)
         {
             return;
         }
-        IsDestoryThis = true;
+        IsDestroyThis = true;
 
         if (LiZiPrefab != null)
         {

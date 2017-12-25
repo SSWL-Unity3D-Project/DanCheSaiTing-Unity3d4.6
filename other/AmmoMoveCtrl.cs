@@ -40,7 +40,7 @@ public class AmmoMoveCtrl : MonoBehaviour
     /// 子弹速度.
     /// </summary>
     public float AmmoSpeed;
-    bool IsDestoryThis = false;
+    bool IsDestroyThis = false;
     /// <summary>
     /// 子弹爆炸粒子特效,需要挂上自销毁脚本.
     /// </summary>
@@ -61,7 +61,7 @@ public class AmmoMoveCtrl : MonoBehaviour
                 {
                     npcCom.OnDaoDanHit(transform.position);
                 }
-                OnDestoryThis();
+                OnDestroyThis();
                 return;
             }
             Vector3 vecForward = Vector3.Normalize(GenZongTr.position - transform.position);
@@ -70,9 +70,9 @@ public class AmmoMoveCtrl : MonoBehaviour
         }
 	}
 
-    void OnDestoryThis()
+    void OnDestroyThis()
     {
-        if (IsDestoryThis)
+        if (IsDestroyThis)
         {
             return;
         }
@@ -119,10 +119,10 @@ public class AmmoMoveCtrl : MonoBehaviour
                 if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
                 {
                     //障碍物爆炸. 
-                    daoJuCom.OnDestoryThis();
+                    daoJuCom.OnDestroyThis();
                 }
             }
         }
-        OnDestoryThis();
+        OnDestroyThis();
     }
 }

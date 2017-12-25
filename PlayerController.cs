@@ -840,7 +840,7 @@ public class PlayerController : MonoBehaviour
         DaoJuCtrl daoJuCom = other.GetComponent<DaoJuCtrl>();
         if (daoJuCom != null)
         {
-            daoJuCom.OnDestoryThis();
+            daoJuCom.OnDestroyThis();
             return;
         }
 
