@@ -4,6 +4,10 @@ using System;
 
 public class NpcController : MonoBehaviour 
 {
+    /// <summary>
+    /// 用于npc随机.
+    /// </summary>
+    public GameObject[] NpcObjArray = new GameObject[4];
 	public float m_NpcSpeed = 10.0f;
 	private int m_NpcIndex = 0;
 	public Transform m_NpcPath;
@@ -25,9 +29,14 @@ public class NpcController : MonoBehaviour
 	public float m_HitTimmer = 0.0f;
 	public Vector3 m_PlayerHit;
 	public Vector3 m_NpcPos;
-	void Start () 
-	{
-		m_NpcPathPoint = new Vector3[m_NpcPath.childCount];
+	void Start ()
+    {
+        for (int i = 0; i < NpcObjArray.Length; i++)
+        {
+            NpcObjArray[PlayerController.PlayerIndexRand].SetActive(PlayerController.PlayerIndexRand == i ? true : false);
+        }
+
+        m_NpcPathPoint = new Vector3[m_NpcPath.childCount];
 		for(int i = 0;i<m_NpcPath.childCount;i++)
 		{
 			string str = (i+1).ToString();

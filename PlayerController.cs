@@ -4,6 +4,7 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    public PlayerData[] PlayerDt = new PlayerData[4];
     /// <summary>
     /// 玩家磁铁道具状态.
     /// </summary>
@@ -90,13 +91,6 @@ public class PlayerController : MonoBehaviour
     /// 积分产生点.
     /// </summary>
     public Transform SpawnJiFenTr;
-    /// <summary>
-    /// 产生道具积分.
-    /// </summary>
-    public void SpawnDaoJuJiFen(GameObject jiFenPrefab)
-    {
-        Instantiate(jiFenPrefab, SpawnJiFenTr.position, SpawnJiFenTr.rotation);
-    }
 	public static float m_pTopSpeed = 100.0f;
 	private float throttle = 0.0f;
 	public bool canDrive = true;
@@ -242,6 +236,30 @@ public class PlayerController : MonoBehaviour
 	public AudioSource m_JiashiAudio;
 	public AudioSource m_EatJiashiAudio;
 	public AudioSource LaBaAudio;
+    public static int PlayerIndexRand = 0;
+    public GameObject[] PlayerObjArray;
+    void Awake()
+    {
+        if (PlayerIndexRand >= PlayerObjArray.Length)
+        {
+            PlayerIndexRand = 0;
+        }
+
+        for (int i = 0; i < PlayerObjArray.Length; i++)
+        {
+            PlayerObjArray[PlayerIndexRand].SetActive(PlayerIndexRand == i ? true : false);
+            if (PlayerDt[i] != null)
+            {
+                m_pChuan = PlayerObjArray[PlayerIndexRand].transform;
+                m_PlayerAnimator = PlayerObjArray[PlayerIndexRand].GetComponent<Animator>();
+                PenQiAniAy = PlayerDt[i].PenQiAniAy;
+                FiXingYiAniAy = PlayerDt[i].FiXingYiAniAy;
+                FengKuangAni = PlayerDt[i].FengKuangAni;
+                FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
+            }
+        }
+        PlayerIndexRand++;
+    }
 
 	void Start()
 	{
@@ -1449,5 +1467,12 @@ public class PlayerController : MonoBehaviour
     {
         IsOpenCiTieDaoJu = true;
         TimeLastCiTie = Time.time;
+    }
+    /// <summary>
+    /// 产生道具积分.
+    /// </summary>
+    public void SpawnDaoJuJiFen(GameObject jiFenPrefab)
+    {
+        Instantiate(jiFenPrefab, SpawnJiFenTr.position, SpawnJiFenTr.rotation);
     }
 }
