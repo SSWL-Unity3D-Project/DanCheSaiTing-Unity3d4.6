@@ -56,28 +56,28 @@ public class DaoJuCtrl : MonoBehaviour
     bool IsMoveToPlayerByCiTie = false;
     float TimeLastUpdate = 0f;
     /// <summary>
-    /// 道具的旋转控制脚本.
+    /// 道具的子集.
     /// </summary>
-    public TweenRotation TweenRot;
+    public GameObject DaoJuChild;
     void Update()
     {
-        if (TweenRot != null)
+        if (DaoJuChild != null)
         {
             if (Time.time - TimeLastUpdate >= 0.5f)
             {
                 TimeLastUpdate = Time.time;
                 if (Vector3.Distance(transform.position, PlayerController.GetInstance().transform.position) >= 200f)
                 {
-                    if (TweenRot.gameObject.activeInHierarchy)
+                    if (DaoJuChild.activeInHierarchy)
                     {
-                        TweenRot.gameObject.SetActive(false);
+                        DaoJuChild.SetActive(false);
                     }
                 }
                 else
                 {
-                    if (!TweenRot.gameObject.activeInHierarchy)
+                    if (!DaoJuChild.activeInHierarchy)
                     {
-                        TweenRot.gameObject.SetActive(true);
+                        DaoJuChild.SetActive(true);
                     }
                 }
             }
