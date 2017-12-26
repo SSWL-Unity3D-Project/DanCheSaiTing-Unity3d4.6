@@ -72,12 +72,14 @@ public class PlayerControllerForMoiew : MonoBehaviour
 		pcvr.CloseFangXiangPanPower();
 		Screen.showCursor = false;
 		if (IsThreeScreen) {
-			Screen.SetResolution(1360*3, 768, true);
-			//Screen.SetResolution((int)(1360*0.5), (int)(768*0.5), false);
-		}
+			//Screen.SetResolution(1360*3, 768, true);
+            Screen.SetResolution(1280 * 3, 720, true);
+            //Screen.SetResolution((int)(1360*0.5), (int)(768*0.5), false);
+        }
 		else {
-			Screen.SetResolution(1360, 768, true);
-		}
+			//Screen.SetResolution(1360, 768, true);
+            Screen.SetResolution(1280, 720, true);
+        }
 
 		m_BeijingAudio.Play();
 		Instance = this;
