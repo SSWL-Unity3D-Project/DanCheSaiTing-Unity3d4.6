@@ -113,26 +113,45 @@ public class UIController : MonoBehaviour
 		}
 		else
 		{
-			if (pcvr.mGetPower > 0f) {
-				IsCloseYouMenTiShi = true;
-			}
-
 			if(m_BeginDaojishi.enabled)
 			{
 				m_BeginDaojishi.enabled = false;
 				m_BeginDaojishiAudio.Stop();
 			}
-			if(!IsCloseYouMenTiShi && !m_HasTishi)
+
+            if (Mathf.Abs(pcvr.mGetSteer) > 0f && !IsCloseYouMenTiShi)
+            {
+                //关闭方向盘提示.
+                IsCloseYouMenTiShi = true;
+                m_HasTishi = true;
+                m_YoumenTishi.enabled = false;
+                m_YoumenTimmer = 0.0f;
+            }
+
+            if (IsCloseYouMenTiShi && m_HasTishi)
+            {
+                if (Mathf.Abs(pcvr.mGetSteer) == 0f)
+                {
+                    m_YoumenTimmer += Time.deltaTime;
+                    if (m_YoumenTimmer >= 5f)
+                    {
+                        //打开方向盘提示.
+                        IsCloseYouMenTiShi = false;
+                        m_HasTishi = false;
+                    }
+                }
+                else
+                {
+                    m_YoumenTimmer = 0.0f;
+                }
+            }
+
+            if (!IsCloseYouMenTiShi && !m_HasTishi)
 			{
 				m_YoumenTishi.enabled = true;
 				UpdateYoumenTishi();
 			}
-			else
-			{
-				m_HasTishi = true;
-				m_YoumenTishi.enabled = false;
-				m_YoumenTimmer = 0.0f;
-			}
+
 			if(m_pGameTime>=0.0f && !m_Player.m_IsFinished)
 			{
 				UpdateJinduTiao();
