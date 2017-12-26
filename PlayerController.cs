@@ -108,9 +108,9 @@ public class PlayerController : MonoBehaviour
 	public static float m_LimitSpeed = 10.0f;
 	public float m_StopTimmerSet = 5.0f;
 	public static PlayerController Instance = null;
-	public bool m_IsErrorDirection = false;
-	public  bool m_IsInWarter = false;
-	public  bool m_IsOnRoad = false;
+    private bool m_IsErrorDirection = false;
+	private bool m_IsInWarter = false;
+    private bool m_IsOnRoad = false;
 	public Transform m_pChuan;
 
 	//feiyuepubu
@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour
 	public float m_BaozhaForward = 0.0f;
 	public float m_BaozhaUp = 0.0f;
 
-	public Animator m_PlayerAnimator;
+	private Animator m_PlayerAnimator;
 	private bool m_IsJiasu = false;
 	public float m_JiasuTimeSet = 3.0f;
 	private float m_JiasuTimmer = 0.0f;
@@ -264,6 +264,10 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
 	{
+        m_PlayerAnimator = m_pChuan.GetComponent<Animator>();
+        npc1Pos = npc1.transform;
+        npc2Pos = npc2.transform;
+        npc3Pos = npc3.transform;
         m_StartForEfferct = m_ParameterForEfferct;
         PlayerMinSpeedVal = (float)ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
 		Loading.m_HasBegin = false;
@@ -985,9 +989,9 @@ public class PlayerController : MonoBehaviour
 	public NpcController npc1;
 	public NpcController npc2;
 	public NpcController npc3;
-    public Transform npc1Pos;
-	public Transform npc2Pos;
-	public Transform npc3Pos;
+    private Transform npc1Pos;
+    private Transform npc2Pos;
+    private Transform npc3Pos;
     void OnTriggerExit(Collider other)
 	{
 		if(other.tag == "water")

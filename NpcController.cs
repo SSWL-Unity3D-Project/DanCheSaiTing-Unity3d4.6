@@ -8,7 +8,7 @@ public class NpcController : MonoBehaviour
     /// 用于npc随机.
     /// </summary>
     public GameObject[] NpcObjArray = new GameObject[4];
-	public float m_NpcSpeed = 10.0f;
+	private float m_NpcSpeed = 10.0f;
 	private int m_NpcIndex = 0;
 	public Transform m_NpcPath;
 	private int m_NpcPathNum = 0;
@@ -18,20 +18,25 @@ public class NpcController : MonoBehaviour
 	public float TimmerSet = 5.0f;
 	private float m_Timmer = 0.0f;
 	public PlayerController m_player;
-	public Rigidbody m_playerRig;
+	private Rigidbody m_playerRig;
 	private bool m_IsJiasu = false;
 	private bool m_IsJiansu = false;
 	public float m_TopSpeedSet = 50.0f;
 	public float m_EndSpeedSet = 20.0f;
-	public bool m_IsFirstNpc = false;
+	//public bool m_IsFirstNpc = false;
 	private float m_SpeedIndex = 1.0f;
-	public bool m_IsHit = false;
-	public float m_HitTimmer = 0.0f;
-	public Vector3 m_PlayerHit;
-	public Vector3 m_NpcPos;
+    [HideInInspector]
+    public bool m_IsHit = false;
+    [HideInInspector]
+    public float m_HitTimmer = 0.0f;
+    [HideInInspector]
+    public Vector3 m_PlayerHit;
+    [HideInInspector]
+    public Vector3 m_NpcPos;
     public static int NpcIndexVal = 0;
 	void Start ()
     {
+        m_playerRig = m_player.GetComponent<Rigidbody>();
         if (NpcIndexVal >= NpcObjArray.Length)
         {
             NpcIndexVal = -1;
@@ -159,22 +164,33 @@ public class NpcController : MonoBehaviour
 //	}
 	private bool m_IsPubu = false;
 	private bool m_IsEnd = false;
+    public enum NpcEnum
+    {
+        Null,
+        Npc01,
+        Npc02,
+        Npc03,
+    }
+    public NpcEnum NpcState = NpcEnum.Null;
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag == "pathpoint")
 		{
 			m_NpcIndex = Convert.ToInt32(other.name);
 		}
-		if(other.tag == "npc1" && m_IsFirstNpc)
+		if(other.tag == "npc1" && NpcState == NpcEnum.Npc01)
 		{
 			m_NpcPathNum = Convert.ToInt32(other.name)-1;
 		}
-		if(other.tag == "npc2" && !m_IsFirstNpc)
+		if(other.tag == "npc2" && NpcState == NpcEnum.Npc02)
 		{
-//			Debug.Log("m_NpcPathNum" + m_NpcPathNum);
 			m_NpcPathNum = Convert.ToInt32(other.name)-1;
-		}
-		if(other.tag == "pubuNpc")
+        }
+        if (other.tag == "npc3" && NpcState == NpcEnum.Npc03)
+        {
+            m_NpcPathNum = Convert.ToInt32(other.name) - 1;
+        }
+        if (other.tag == "pubuNpc")
 		{
 			m_IsPubu = true;
 		}
