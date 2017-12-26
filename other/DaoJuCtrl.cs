@@ -54,8 +54,35 @@ public class DaoJuCtrl : MonoBehaviour
     /// 是否被玩家的磁铁吸附.
     /// </summary>
     bool IsMoveToPlayerByCiTie = false;
+    float TimeLastUpdate = 0f;
+    /// <summary>
+    /// 道具的旋转控制脚本.
+    /// </summary>
+    public TweenRotation TweenRot;
     void Update()
     {
+        if (TweenRot != null)
+        {
+            if (Time.time - TimeLastUpdate >= 0.5f)
+            {
+                TimeLastUpdate = Time.time;
+                if (Vector3.Distance(transform.position, PlayerController.GetInstance().transform.position) >= 200f)
+                {
+                    if (TweenRot.gameObject.activeInHierarchy)
+                    {
+                        TweenRot.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    if (!TweenRot.gameObject.activeInHierarchy)
+                    {
+                        TweenRot.gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
+
         if (IsMoveToPlayerByCiTie)
         {
             Transform playerTr = PlayerController.GetInstance().transform;
