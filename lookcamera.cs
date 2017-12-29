@@ -12,7 +12,10 @@ public class lookcamera : MonoBehaviour
 
 	void Update () 
 	{
-		transform.LookAt (Mycamera.position);
+		if (Vector3.Distance(transform.position, Mycamera.position) < 300f)
+		{
+			transform.LookAt (Mycamera.position);
+		}
 		//transform.eulerAngles = new Vector3( transform.eulerAngles.x, transform.eulerAngles.z, transform.eulerAngles.y);
 		//transform.localEulerAngles = new Vector3( transform.localEulerAngles.x, transform.localEulerAngles.z, transform.localEulerAngles.y);
 		//transform.forward = Mycamera.position - transform.position;
