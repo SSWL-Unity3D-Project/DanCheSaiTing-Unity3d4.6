@@ -258,6 +258,7 @@ public class PlayerController : MonoBehaviour
                 FiXingYiAniAy = PlayerDt[i].FiXingYiAniAy;
                 FengKuangAni = PlayerDt[i].FengKuangAni;
                 FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
+				SpawnJiFenTr = PlayerDt[i].SpawnJiFenTr;
             }
         }
     }
