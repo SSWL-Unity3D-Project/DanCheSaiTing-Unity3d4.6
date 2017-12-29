@@ -795,6 +795,7 @@ public class PlayerController : MonoBehaviour
 		}
 		SpeedObj = sp;
 
+#if UNITY_EDITOR
 		if (!pcvr.bIsHardWare || pcvr.IsTestGame) {
 			string strA = sp.ToString() + "km/h";
 			GUI.Box(new Rect(0f, 0f, wVal, hVal), strA);
@@ -802,6 +803,7 @@ public class PlayerController : MonoBehaviour
 			string strB = "throttle "+throttle.ToString("F3");
 			GUI.Box(new Rect(0f, hVal, wVal, hVal), strB);
 		}
+#endif
 	}
 
 	public static float PlayerMinSpeedVal = 80f;
