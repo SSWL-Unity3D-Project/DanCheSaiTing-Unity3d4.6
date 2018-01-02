@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 
@@ -436,7 +436,7 @@ public class PlayerController : MonoBehaviour
                 IsPlayHuiTouAni = false;
                 m_IsHitshake = true;
                 m_PlayerAnimator.SetTrigger("IsDiaoluo");
-                TimeRandHuiTou = UnityEngine.Random.Range(3f, 8f);
+                TimeRandHuiTou = (float)UnityEngine.Random.Range(5, 10);
                 TimeLastHuiTou = Time.time;
             }
             else
