@@ -173,8 +173,22 @@ public class NpcController : MonoBehaviour
     }
     public NpcEnum NpcState = NpcEnum.Null;
 	void OnTriggerEnter(Collider other)
-	{
-		if(other.tag == "pathpoint")
+    {
+        PlayerController playerCom = other.GetComponent<PlayerController>();
+        if (playerCom != null)
+        {
+            Transform playerTr = playerCom.transform;
+            Vector3 posPlayer = playerTr.position;
+            Vector3 posNpc = transform.position;
+            Vector3 vecNP = posNpc - posPlayer;
+            if (Vector3.Dot(transform.forward, vecNP) <= 0f)
+            {
+                playerCom.m_IsHitshake = true;
+                playerCom.m_PlayerAnimator.SetTrigger("IsDiaoluo");
+            }
+        }
+
+        if (other.tag == "pathpoint")
 		{
 			m_NpcIndex = Convert.ToInt32(other.name);
 		}

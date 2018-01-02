@@ -222,7 +222,8 @@ public class PlayerController : MonoBehaviour
 	public float m_BaozhaForward = 0.0f;
 	public float m_BaozhaUp = 0.0f;
 
-	private Animator m_PlayerAnimator;
+    [HideInInspector]
+	public Animator m_PlayerAnimator;
 	private bool m_IsJiasu = false;
 	public float m_JiasuTimeSet = 3.0f;
 	private float m_JiasuTimmer = 0.0f;
@@ -863,21 +864,6 @@ public class PlayerController : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-        NpcController npcCom = other.GetComponent<NpcController>();
-        if (npcCom != null)
-        {
-            Transform npcTr = npcCom.transform;
-            Vector3 posNpc = npcTr.position;
-            Vector3 posPlayer = transform.position;
-            Vector3 vecNP = posNpc - posPlayer;
-            if (Vector3.Dot(npcTr.forward, vecNP) >= 0f)
-            {
-                m_IsHitshake = true;
-                m_PlayerAnimator.SetTrigger("IsDiaoluo");
-                return;
-            }
-        }
-
         DaoJuCtrl daoJuCom = other.GetComponent<DaoJuCtrl>();
         if (daoJuCom != null)
         {
@@ -1205,7 +1191,8 @@ public class PlayerController : MonoBehaviour
 	}
 	float m_HitshakeTimmerSet = 0.2f;
 	private float m_HitshakeTimmer = 0.0f;
-	private bool m_IsHitshake = false;
+    [HideInInspector]
+    public bool m_IsHitshake = false;
 	static bool IsHitRock = false;
 	void OnHitShake()
 	{
