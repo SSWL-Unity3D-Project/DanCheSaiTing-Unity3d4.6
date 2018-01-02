@@ -250,7 +250,7 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < PlayerObjArray.Length; i++)
         {
             PlayerObjArray[i].SetActive(PlayerIndexRand == i ? true : false);
-            if (PlayerDt[i] != null)
+			if (PlayerDt[i] != null && PlayerIndexRand == i)
             {
                 m_pChuan = PlayerObjArray[PlayerIndexRand].transform;
                 m_PlayerAnimator = PlayerObjArray[PlayerIndexRand].GetComponent<Animator>();

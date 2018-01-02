@@ -61,6 +61,11 @@ public class DaoJuCtrl : MonoBehaviour
     public GameObject DaoJuChild;
     void Update()
     {
+		if (Application.loadedLevel == 0)
+		{
+			return;
+		}
+
         if (DaoJuChild != null)
         {
             if (Time.time - TimeLastUpdate >= 0.5f)
@@ -115,7 +120,12 @@ public class DaoJuCtrl : MonoBehaviour
     }
 
     public void OnDestroyThis()
-    {
+	{
+		if (Application.loadedLevel == 0)
+		{
+			return;
+		}
+
         if (IsDestroyThis)
         {
             return;

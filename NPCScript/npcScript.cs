@@ -223,7 +223,10 @@ public class npcScript : MonoBehaviour {
 		}
 
 		desNode = nodeArray[ curNodeIndex ];
-		NPCTransform.forward = desNode.position - NPCTransform.position;
+		if (Vector3.Distance(desNode.position, NPCTransform.position) > 1f)
+		{
+			NPCTransform.forward = desNode.position - NPCTransform.position;
+		}
 		movingState = 1;
 	}
 
