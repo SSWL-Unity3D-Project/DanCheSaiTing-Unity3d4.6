@@ -863,6 +863,21 @@ public class PlayerController : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
+        NpcController npcCom = other.GetComponent<NpcController>();
+        if (npcCom != null)
+        {
+            Transform npcTr = npcCom.transform;
+            Vector3 posNpc = npcTr.position;
+            Vector3 posPlayer = transform.position;
+            Vector3 vecNP = posNpc - posPlayer;
+            if (Vector3.Dot(npcTr.forward, vecNP) >= 0f)
+            {
+                m_IsHitshake = true;
+                m_PlayerAnimator.SetTrigger("IsDiaoluo");
+                return;
+            }
+        }
+
         DaoJuCtrl daoJuCom = other.GetComponent<DaoJuCtrl>();
         if (daoJuCom != null)
         {
