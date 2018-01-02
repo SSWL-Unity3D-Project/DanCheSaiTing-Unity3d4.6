@@ -419,14 +419,34 @@ public class PlayerController : MonoBehaviour
 		LaBaAudio.Play();
 	}
 
-	void Update () 
+    bool IsPlayHuiTouAni = false;
+    float TimeLastHuiTou = 0f;
+    float TimeRandHuiTou = 0f;
+
+    void Update () 
 	{
-		if(timmerstar<5.0f)
+        if (timmerstar<5.0f)
 		{
 			timmerstar+=Time.deltaTime;
 		}
 		else
-		{
+        {
+            if (IsPlayHuiTouAni)
+            {
+                IsPlayHuiTouAni = false;
+                m_IsHitshake = true;
+                m_PlayerAnimator.SetTrigger("IsDiaoluo");
+                TimeRandHuiTou = UnityEngine.Random.Range(3f, 8f);
+                TimeLastHuiTou = Time.time;
+            }
+            else
+            {
+                if (Time.time - TimeLastHuiTou >= TimeRandHuiTou)
+                {
+                    IsPlayHuiTouAni = true;
+                }
+            }
+
             if (IsOpenCiTieDaoJu)
             {
                 if (Time.time - TimeLastCiTie >= TimeOpenCiTie)
