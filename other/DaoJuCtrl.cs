@@ -13,6 +13,7 @@ public class DaoJuCtrl : MonoBehaviour
     /// CiTie 磁铁
     /// DaoDan 导弹
     /// ZhangAiWu 障碍物
+    /// ShuangYiFeiJi 双翼飞机
     /// </summary>
     public enum DaoJuType
     {
@@ -26,6 +27,7 @@ public class DaoJuCtrl : MonoBehaviour
         CiTie,
         DaoDan,
         ZhangAiWu,
+        ShuangYiFeiJi,
     }
     public DaoJuType DaoJuState = DaoJuType.Null;
     bool IsDestroyThis = false;
@@ -156,6 +158,7 @@ public class DaoJuCtrl : MonoBehaviour
             case DaoJuType.PenQiJiaSu:
             case DaoJuType.FeiXingYi:
             case DaoJuType.JiaSuFengShan:
+            case DaoJuType.ShuangYiFeiJi:
                 {
                     PlayerController.GetInstance().OpenPlayerDaoJuAni(DaoJuState);
                     break;

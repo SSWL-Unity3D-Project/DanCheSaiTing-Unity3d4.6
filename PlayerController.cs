@@ -21,12 +21,13 @@ public class PlayerController : MonoBehaviour
     public float DaoDanDisNpc = 100f;
     /// <summary>
     /// 道具掉落点.
-    /// DaoJuDiaoLuoTr[x]: 0 喷气道具, 1 飞行翼道具, 2 风框道具.
+    /// DaoJuDiaoLuoTr[x]: 0 喷气道具, 1 飞行翼道具, 2 风框道具, 3 双翼飞行道具.
     /// </summary>
     public Transform[] DaoJuDiaoLuoTr;
     /// <summary>
     /// 喷气动画列表.
     /// </summary>
+    [HideInInspector]
     public Animator[] PenQiAniAy;
     /// <summary>
     /// 喷气道具掉落预置.
@@ -35,14 +36,25 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 飞机翅膀动画列表.
     /// </summary>
+    [HideInInspector]
     public Animator[] FiXingYiAniAy;
     /// <summary>
     /// 飞行翅膀道具掉落预置.
     /// </summary>
     public GameObject FeiXingYiPrefab;
     /// <summary>
+    /// 双翼飞机翅膀动画列表.
+    /// </summary>
+    [HideInInspector]
+    public Animator[] ShuangYiFeiJiAniAy;
+    /// <summary>
+    /// 双翼飞机翅膀道具掉落预置.
+    /// </summary>
+    public GameObject ShuangYiFeiJiPrefab;
+    /// <summary>
     /// 风框动画.
     /// </summary>
+    [HideInInspector]
     public Animator FengKuangAni;
     /// <summary>
     /// 风框道具掉落预置.
@@ -51,11 +63,16 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 道具风框转动脚本.
     /// </summary>
+    [HideInInspector]
     public TweenRotation FengKuangTwRot;
     /// <summary>
-    /// 主角飞行高度.
+    /// 主角飞行高度(飞行翼).
     /// </summary>
     public float PlayerHightFeiXing = 1f;
+    /// <summary>
+    /// 主角飞行高度(双翼飞机).
+    /// </summary>
+    public float PlayerHightShuangYiFeiJi = 1f;
     /// <summary>
     /// 主角普通运动速度.
     /// </summary>
@@ -65,9 +82,13 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float PlayerMvSpeedPenQi = 90f;
     /// <summary>
-    /// 主角飞行运动速度.
+    /// 主角飞行运动速度(飞行翼).
     /// </summary>
     public float PlayerMvSpeedFeiXing = 100f;
+    /// <summary>
+    /// 主角飞行运动速度(双翼飞机).
+    /// </summary>
+    public float PlayerMvSpeedShuangYiFeiJi = 100f;
     /// <summary>
     /// 主角加速风扇运动速度.
     /// </summary>
@@ -169,6 +190,10 @@ public class PlayerController : MonoBehaviour
     /// 飞行翼虚化强度控制.
     /// </summary>
 	public float m_ForEfferctFeiXing = 1.0f;
+    /// <summary>
+    /// 双翼飞机虚化强度控制.
+    /// </summary>
+	public float m_ForEfferctShuangYiFeiJi = 1.0f;
     /// <summary>
     /// 加速风扇虚化强度控制.
     /// </summary>
@@ -1337,6 +1362,18 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
                 }
+            case DaoJuCtrl.DaoJuType.ShuangYiFeiJi:
+                {
+                    m_pChuan.localPosition -= new Vector3(0f, PlayerHightShuangYiFeiJi, 0f);
+                    m_CameraSmooth.SetCameraUpPos(-PlayerHightShuangYiFeiJi);
+                    Instantiate(ShuangYiFeiJiPrefab, DaoJuDiaoLuoTr[3].position, DaoJuDiaoLuoTr[3].rotation);
+                    for (int i = 0; i < ShuangYiFeiJiAniAy.Length; i++)
+                    {
+                        ShuangYiFeiJiAniAy[i].transform.localScale = Vector3.zero;
+                        ShuangYiFeiJiAniAy[i].SetBool("IsPlay", false);
+                    }
+                    break;
+                }
             case DaoJuCtrl.DaoJuType.JiaSuFengShan:
                 {
                     FengKuangTwRot.enabled = false;
@@ -1393,6 +1430,19 @@ public class PlayerController : MonoBehaviour
                     {
                         FiXingYiAniAy[i].transform.localScale = Vector3.one;
                         FiXingYiAniAy[i].SetBool("IsPlay", true);
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.ShuangYiFeiJi:
+                {
+                    m_ParameterForEfferct = m_ForEfferctShuangYiFeiJi;
+                    m_pChuan.localPosition += new Vector3(0f, PlayerHightShuangYiFeiJi, 0f);
+                    m_CameraSmooth.SetCameraUpPos(PlayerHightShuangYiFeiJi);
+                    m_pTopSpeed = PlayerMvSpeedShuangYiFeiJi;
+                    for (int i = 0; i < ShuangYiFeiJiAniAy.Length; i++)
+                    {
+                        ShuangYiFeiJiAniAy[i].transform.localScale = Vector3.one;
+                        ShuangYiFeiJiAniAy[i].SetBool("IsPlay", true);
                     }
                     break;
                 }

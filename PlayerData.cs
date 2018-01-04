@@ -16,6 +16,10 @@ public class PlayerData : MonoBehaviour
     /// </summary>
     public Animator[] FiXingYiAniAy;
     /// <summary>
+    /// 双翼飞机翅膀动画列表.
+    /// </summary>
+    public Animator[] ShuangYiFeiJiAniAy;
+    /// <summary>
     /// 风框动画.
     /// </summary>
     public Animator FengKuangAni;

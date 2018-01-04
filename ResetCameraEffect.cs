@@ -9,6 +9,7 @@ public class ResetCameraEffect : MonoBehaviour {
         {
             if (PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu
                 || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi
+                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.ShuangYiFeiJi
                 || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.JiaSuFengShan)
             {
             }
