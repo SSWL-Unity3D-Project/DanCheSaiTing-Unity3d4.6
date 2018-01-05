@@ -11,7 +11,7 @@ public class AmmoMoveCtrl : MonoBehaviour
     /// </summary>
     public class AmmoDt
     {
-        public AmmoType AmmoState = AmmoType.Null;
+        public AmmoType AmmoState = AmmoType.PuTong;
         /// <summary>
         /// 子弹要击中的目标.
         /// </summary>
@@ -23,15 +23,17 @@ public class AmmoMoveCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// Null 普通子弹.
+    /// PuTong 普通子弹.
     /// GenZongDan 跟踪子弹.
+    /// YuLei 鱼雷子弹.
     /// </summary>
     public enum AmmoType
     {
-        Null,
+        PuTong,
         GenZongDan,
+        YuLei,
     }
-    AmmoType AmmoState = AmmoType.Null;
+    AmmoType AmmoState = AmmoType.PuTong;
     /// <summary>
     /// 跟踪弹跟随的目标.
     /// </summary>
@@ -40,33 +42,50 @@ public class AmmoMoveCtrl : MonoBehaviour
     /// 子弹速度.
     /// </summary>
     public float AmmoSpeed;
+    /// <summary>
+    /// 子弹杀伤范围.
+    /// </summary>
+    public float ShaShangDis;
+    /// <summary>
+    /// 子弹检测碰撞的信息.
+    /// </summary>
+    public LayerMask AmmoHitLayer;
     bool IsDestroyThis = false;
     /// <summary>
     /// 子弹爆炸粒子特效,需要挂上自销毁脚本.
     /// </summary>
     public GameObject LiZiPrefab;
     AmmoDt mAmmoInfo;
-
+    
     // Update is called once per frame
     void Update()
     {
-	    if (AmmoState == AmmoType.GenZongDan)
+        switch (AmmoState)
         {
-            float mvDis = AmmoSpeed * Time.deltaTime;
-            if (Vector3.Distance(GenZongTr.position, transform.position) <= mvDis)
-            {
-                //子弹击中目标.
-                NpcController npcCom = GenZongTr.GetComponent<NpcController>();
-                if (npcCom != null)
+            case AmmoType.GenZongDan:
                 {
-                    npcCom.OnDaoDanHit(transform.position);
+                    float mvDis = AmmoSpeed * Time.deltaTime;
+                    if (Vector3.Distance(GenZongTr.position, transform.position) <= mvDis)
+                    {
+                        //子弹击中目标.
+                        NpcController npcCom = GenZongTr.GetComponent<NpcController>();
+                        if (npcCom != null)
+                        {
+                            npcCom.OnDaoDanHit(transform.position);
+                        }
+                        OnDestroyThis();
+                        return;
+                    }
+                    Vector3 vecForward = Vector3.Normalize(GenZongTr.position - transform.position);
+                    transform.position += vecForward * mvDis;
+                    transform.forward = Vector3.Lerp(transform.forward, vecForward, 15f * Time.deltaTime);
+                    break;
                 }
-                OnDestroyThis();
-                return;
-            }
-            Vector3 vecForward = Vector3.Normalize(GenZongTr.position - transform.position);
-            transform.position += vecForward * mvDis;
-            transform.forward = Vector3.Lerp(transform.forward, vecForward, 15f * Time.deltaTime);
+            case AmmoType.YuLei:
+                {
+                    CheckYuLeiAmmoOverlapSphereHit();
+                    break;
+                }
         }
 	}
 
@@ -90,7 +109,7 @@ public class AmmoMoveCtrl : MonoBehaviour
         mAmmoInfo = ammoInfo;
         switch (ammoInfo.AmmoState)
         {
-            case AmmoType.Null:
+            case AmmoType.PuTong:
                 {
                     Vector3[] posArray = new Vector3[2];
                     posArray[0] = transform.position;
@@ -107,13 +126,25 @@ public class AmmoMoveCtrl : MonoBehaviour
                     GenZongTr = ammoInfo.AimTr;
                     break;
                 }
+            case AmmoType.YuLei:
+                {
+                    Vector3[] posArray = new Vector3[2];
+                    posArray[0] = transform.position;
+                    posArray[1] = ammoInfo.PosHit;
+                    iTween.MoveTo(gameObject, iTween.Hash("path", posArray,
+                                                       "speed", AmmoSpeed,
+                                                       "orienttopath", true,
+                                                       "easeType", iTween.EaseType.linear,
+                                                       "oncomplete", "MoveAmmoOnCompelteITween"));
+                    break;
+                }
         }
         AmmoState = ammoInfo.AmmoState;
     }
 
     void MoveAmmoOnCompelteITween()
     {
-        if (AmmoType.Null == AmmoState)
+        if (AmmoType.PuTong == AmmoState)
         {
             if (mAmmoInfo.AimTr != null)
             {
@@ -126,5 +157,49 @@ public class AmmoMoveCtrl : MonoBehaviour
             }
         }
         OnDestroyThis();
+    }
+
+
+    /// <summary>
+    /// 检测鱼雷子弹的碰撞.
+    /// </summary>
+    void CheckYuLeiAmmoOverlapSphereHit()
+    {
+        bool isDestroyAmmo = false;
+        Collider[] hits = Physics.OverlapSphere(transform.position, ShaShangDis, AmmoHitLayer);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            // Don't collide with triggers
+            if (hits[i].isTrigger)
+            {
+                continue;
+            }
+
+            DaoJuCtrl daoJuCom = hits[i].GetComponent<DaoJuCtrl>();
+            if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
+            {
+                daoJuCom.OnDestroyThis();
+                isDestroyAmmo = true;
+            }
+
+            NpcController npcCom = hits[i].GetComponent<NpcController>();
+            if (npcCom != null)
+            {
+                npcCom.OnDaoDanHit(transform.position);
+                isDestroyAmmo = true;
+            }
+
+            npcScript npcSp = hits[i].GetComponent<npcScript>();
+            if (npcSp != null)
+            {
+                npcSp.OnDestroyThis();
+                isDestroyAmmo = true;
+            }
+        }
+
+        if (isDestroyAmmo)
+        {
+            OnDestroyThis();
+        }
     }
 }

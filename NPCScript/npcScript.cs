@@ -239,20 +239,26 @@ public class npcScript : MonoBehaviour {
 	{
 		if (colObj.transform.tag == "player" && !hitLe)
 		{
-			hitLe = true;
-			if (ragballObject)
-			{
-				if (animatorNPC)
-				{
-					animatorNPC.enabled = false;
-				}
-
-				ragballObject.SetActive(true);
-			}
-
-			Invoke("DeadLe", 1.0f);
-		}
+            OnDestroyThis();
+        }
 	}	
+
+    public void OnDestroyThis()
+    {
+        if (!hitLe)
+        {
+            hitLe = true;
+            if (ragballObject)
+            {
+                if (animatorNPC)
+                {
+                    animatorNPC.enabled = false;
+                }
+                ragballObject.SetActive(true);
+            }
+            Invoke("DeadLe", 1.0f);
+        }
+    }
 
 	void DeadLe()
 	{

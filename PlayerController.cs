@@ -16,6 +16,18 @@ public class PlayerController : MonoBehaviour
     /// 潜艇变身特效粒子产生点.
     /// </summary>
     public Transform QianTingLiZiSpawnPoint;
+    /// <summary>
+    /// 鱼雷发射间隔时间.
+    /// </summary>
+    public float TimeQianTingYuLei;
+    /// <summary>
+    /// 潜艇鱼雷预置.
+    /// </summary>
+    public GameObject QianTingYuLeiPrefab;
+    /// <summary>
+    /// 潜艇鱼雷产生点列表.
+    /// </summary>
+    public Transform[] QiangTingYuLeiSpawnPointArray;
     public FeiBanPengZhuangCtrl pFeiBanPengZhuang;
     /// <summary>
     /// 主角不同道具等对象的数据.
@@ -1497,6 +1509,7 @@ public class PlayerController : MonoBehaviour
                     Instantiate(QianTingLiZiPrefab, QianTingLiZiSpawnPoint.position, QianTingLiZiSpawnPoint.rotation);
                     m_pChuan.gameObject.SetActive(false);
                     QianTingObj.SetActive(true);
+                    StartCoroutine(SpawnQianTingYuLei());
                     break;
                 }
         }
@@ -1571,14 +1584,14 @@ public class PlayerController : MonoBehaviour
         {
             if (mZhangAiWuObj != null)
             {
-                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.Null;
+                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.PuTong;
                 ammoDt.PosHit = mZhangAiWuObj.transform.position;
                 ammoDt.AimTr = mZhangAiWuObj.transform;
                 ammoMoveCom.InitMoveAmmo(ammoDt);
             }
             else
             {
-                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.Null;
+                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.PuTong;
                 ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(50f, 120f)) + ammo.transform.position;
                 ammoMoveCom.InitMoveAmmo(ammoDt);
             }
@@ -1597,5 +1610,35 @@ public class PlayerController : MonoBehaviour
     public void SpawnDaoJuJiFen(GameObject jiFenPrefab)
     {
         Instantiate(jiFenPrefab, SpawnJiFenTr.position, SpawnJiFenTr.rotation);
+    }
+
+    /// <summary>
+    /// 产生潜艇的鱼雷.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SpawnQianTingYuLei()
+    {
+        yield return new WaitForSeconds(0.1f);
+        int indexVal = 0;
+        GameObject ammo;
+        Vector3 posHit = Vector3.zero;
+        AmmoMoveCtrl moveAmmo;
+        AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
+        ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.YuLei;
+        do
+        {
+            ammo = (GameObject)Instantiate(QianTingYuLeiPrefab, QiangTingYuLeiSpawnPointArray[indexVal].position, QiangTingYuLeiSpawnPointArray[indexVal].rotation);
+            moveAmmo = ammo.GetComponent<AmmoMoveCtrl>();
+            posHit = ammo.transform.position + (ammo.transform.forward * UnityEngine.Random.Range(30f, 65f));
+            moveAmmo.InitMoveAmmo(ammoDt);
+            indexVal++;
+            if (indexVal >= QiangTingYuLeiSpawnPointArray.Length
+                || mSpeedDaoJuState != DaoJuCtrl.DaoJuType.QianTing)
+            {
+                indexVal = 0;
+                yield break;
+            }
+            yield return new WaitForSeconds(TimeQianTingYuLei);
+        } while (true);
     }
 }
