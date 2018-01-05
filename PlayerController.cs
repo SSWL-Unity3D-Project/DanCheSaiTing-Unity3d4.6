@@ -4,6 +4,7 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    public FeiBanPengZhuangCtrl pFeiBanPengZhuang;
     public PlayerData[] PlayerDt = new PlayerData[4];
     /// <summary>
     /// 玩家磁铁道具状态.
@@ -1384,6 +1385,14 @@ public class PlayerController : MonoBehaviour
                     FengKuangAni.SetBool("IsPlay", false);
                     break;
                 }
+            case DaoJuCtrl.DaoJuType.QianTing:
+                {
+                    if (pFeiBanPengZhuang != null)
+                    {
+                        pFeiBanPengZhuang.SetIsEnablePengZhuang(true);
+                    }
+                    break;
+                }
         }
     }
 
@@ -1402,10 +1411,18 @@ public class PlayerController : MonoBehaviour
         {
             ClosePlayerDaoJuAni(mSpeedDaoJuState);
         }
-
+        
         mSpeedDaoJuState = daoJuState;
         m_IsJiasu = true;
         m_JiasuTimmer = 0f;
+        if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.QianTing)
+        {
+            if (pFeiBanPengZhuang != null)
+            {
+                pFeiBanPengZhuang.SetIsEnablePengZhuang(true);
+            }
+        }
+
         switch (mSpeedDaoJuState)
         {
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
@@ -1455,6 +1472,14 @@ public class PlayerController : MonoBehaviour
                     SetAcitveChuanTouShuiHuaTX(true);
                     FengKuangAni.transform.localScale = Vector3.one;
                     FengKuangAni.SetBool("IsPlay", true);
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.QianTing:
+                {
+                    if (pFeiBanPengZhuang != null)
+                    {
+                        pFeiBanPengZhuang.SetIsEnablePengZhuang(false);
+                    }
                     break;
                 }
         }

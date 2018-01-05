@@ -14,6 +14,9 @@ public class DaoJuCtrl : MonoBehaviour
     /// DaoDan 导弹
     /// ZhangAiWu 障碍物
     /// ShuangYiFeiJi 双翼飞机
+    /// QianTing 潜艇
+    /// Tank 坦克
+    /// DiLei 地雷
     /// </summary>
     public enum DaoJuType
     {
@@ -28,6 +31,9 @@ public class DaoJuCtrl : MonoBehaviour
         DaoDan,
         ZhangAiWu,
         ShuangYiFeiJi,
+        QianTing,
+        Tank,
+        DiLei,
     }
     public DaoJuType DaoJuState = DaoJuType.Null;
     bool IsDestroyThis = false;
@@ -159,6 +165,7 @@ public class DaoJuCtrl : MonoBehaviour
             case DaoJuType.FeiXingYi:
             case DaoJuType.JiaSuFengShan:
             case DaoJuType.ShuangYiFeiJi:
+            case DaoJuType.QianTing:
                 {
                     PlayerController.GetInstance().OpenPlayerDaoJuAni(DaoJuState);
                     break;
