@@ -5,29 +5,70 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
-    /// 潜艇模型.
+    /// 坦克变型数据.
     /// </summary>
-    public GameObject QianTingObj;
+    [Serializable]
+    public class TankData
+    {
+        /// <summary>
+        /// 坦克模型.
+        /// </summary>
+        public GameObject TankObj;
+        /// <summary>
+        /// 坦克变身特效粒子预置.
+        /// </summary>
+        public GameObject LiZiPrefab;
+        /// <summary>
+        /// 坦克变身特效粒子产生点.
+        /// </summary>
+        public Transform LiZiSpawnPoint;
+        /// <summary>
+        /// 坦克发射间隔时间.
+        /// </summary>
+        public float TimeAmmo;
+        /// <summary>
+        /// 坦克鱼雷预置.
+        /// </summary>
+        public GameObject AmmoPrefab;
+        /// <summary>
+        /// 坦克子弹产生点列表.
+        /// </summary>
+        public Transform[] AmmoSpawnPointArray;
+    }
+    public TankData TankDt = new TankData();
+
     /// <summary>
-    /// 潜艇变身特效粒子预置.
+    /// 潜艇变型数据.
     /// </summary>
-    public GameObject QianTingLiZiPrefab;
-    /// <summary>
-    /// 潜艇变身特效粒子产生点.
-    /// </summary>
-    public Transform QianTingLiZiSpawnPoint;
-    /// <summary>
-    /// 鱼雷发射间隔时间.
-    /// </summary>
-    public float TimeQianTingYuLei;
-    /// <summary>
-    /// 潜艇鱼雷预置.
-    /// </summary>
-    public GameObject QianTingYuLeiPrefab;
-    /// <summary>
-    /// 潜艇鱼雷产生点列表.
-    /// </summary>
-    public Transform[] QiangTingYuLeiSpawnPointArray;
+    [Serializable]
+    public class QianTingData
+    {
+        /// <summary>
+        /// 潜艇模型.
+        /// </summary>
+        public GameObject QianTingObj;
+        /// <summary>
+        /// 潜艇变身特效粒子预置.
+        /// </summary>
+        public GameObject LiZiPrefab;
+        /// <summary>
+        /// 潜艇变身特效粒子产生点.
+        /// </summary>
+        public Transform LiZiSpawnPoint;
+        /// <summary>
+        /// 鱼雷发射间隔时间.
+        /// </summary>
+        public float TimeYuLei;
+        /// <summary>
+        /// 潜艇鱼雷预置.
+        /// </summary>
+        public GameObject YuLeiPrefab;
+        /// <summary>
+        /// 潜艇鱼雷产生点列表.
+        /// </summary>
+        public Transform[] YuLeiSpawnPointArray;
+    }
+    public QianTingData QianTingDt = new QianTingData();
     public FeiBanPengZhuangCtrl pFeiBanPengZhuang;
     /// <summary>
     /// 主角不同道具等对象的数据.
@@ -1422,9 +1463,16 @@ public class PlayerController : MonoBehaviour
                     {
                         pFeiBanPengZhuang.SetIsEnablePengZhuang(true);
                     }
-                    Instantiate(QianTingLiZiPrefab, QianTingLiZiSpawnPoint.position, QianTingLiZiSpawnPoint.rotation);
+                    Instantiate(QianTingDt.LiZiPrefab, QianTingDt.LiZiSpawnPoint.position, QianTingDt.LiZiSpawnPoint.rotation);
                     m_pChuan.gameObject.SetActive(true);
-                    QianTingObj.SetActive(false);
+                    QianTingDt.QianTingObj.SetActive(false);
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.Tank:
+                {
+                    Instantiate(TankDt.LiZiPrefab, TankDt.LiZiSpawnPoint.position, TankDt.LiZiSpawnPoint.rotation);
+                    m_pChuan.gameObject.SetActive(true);
+                    TankDt.TankObj.SetActive(false);
                     break;
                 }
         }
@@ -1506,10 +1554,18 @@ public class PlayerController : MonoBehaviour
                     {
                         pFeiBanPengZhuang.SetIsEnablePengZhuang(false);
                     }
-                    Instantiate(QianTingLiZiPrefab, QianTingLiZiSpawnPoint.position, QianTingLiZiSpawnPoint.rotation);
+                    Instantiate(QianTingDt.LiZiPrefab, QianTingDt.LiZiSpawnPoint.position, QianTingDt.LiZiSpawnPoint.rotation);
                     m_pChuan.gameObject.SetActive(false);
-                    QianTingObj.SetActive(true);
+                    QianTingDt.QianTingObj.SetActive(true);
                     StartCoroutine(SpawnQianTingYuLei());
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.Tank:
+                {
+                    Instantiate(TankDt.LiZiPrefab, TankDt.LiZiSpawnPoint.position, TankDt.LiZiSpawnPoint.rotation);
+                    m_pChuan.gameObject.SetActive(false);
+                    TankDt.TankObj.SetActive(true);
+                    StartCoroutine(SpawnTankAmmo());
                     break;
                 }
         }
@@ -1621,24 +1677,53 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         int indexVal = 0;
         GameObject ammo;
-        Vector3 posHit = Vector3.zero;
         AmmoMoveCtrl moveAmmo;
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.YuLei;
         do
         {
-            ammo = (GameObject)Instantiate(QianTingYuLeiPrefab, QiangTingYuLeiSpawnPointArray[indexVal].position, QiangTingYuLeiSpawnPointArray[indexVal].rotation);
+            ammo = (GameObject)Instantiate(QianTingDt.YuLeiPrefab, QianTingDt.YuLeiSpawnPointArray[indexVal].position, QianTingDt.YuLeiSpawnPointArray[indexVal].rotation);
             moveAmmo = ammo.GetComponent<AmmoMoveCtrl>();
-            posHit = ammo.transform.position + (ammo.transform.forward * UnityEngine.Random.Range(30f, 65f));
+            ammoDt.PosHit = ammo.transform.position + (ammo.transform.forward * UnityEngine.Random.Range(30f, 65f));
             moveAmmo.InitMoveAmmo(ammoDt);
             indexVal++;
-            if (indexVal >= QiangTingYuLeiSpawnPointArray.Length
+            if (indexVal >= QianTingDt.YuLeiSpawnPointArray.Length
                 || mSpeedDaoJuState != DaoJuCtrl.DaoJuType.QianTing)
             {
                 indexVal = 0;
                 yield break;
             }
-            yield return new WaitForSeconds(TimeQianTingYuLei);
+            yield return new WaitForSeconds(QianTingDt.TimeYuLei);
+        } while (true);
+    }
+
+    /// <summary>
+    /// 产生坦克炮弹.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SpawnTankAmmo()
+    {
+        yield return new WaitForSeconds(0.1f);
+        int indexVal = 0;
+        GameObject ammo;
+        AmmoMoveCtrl moveAmmo;
+        AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
+        ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.TankPaoDan;
+        do
+        {
+            ammoDt.HightVal = UnityEngine.Random.Range(1, 4);
+            ammo = (GameObject)Instantiate(TankDt.AmmoPrefab, TankDt.AmmoSpawnPointArray[indexVal].position, TankDt.AmmoSpawnPointArray[indexVal].rotation);
+            moveAmmo = ammo.GetComponent<AmmoMoveCtrl>();
+            ammoDt.PosHit = ammo.transform.position + (ammo.transform.forward * UnityEngine.Random.Range(25f, 75f));
+            moveAmmo.InitMoveAmmo(ammoDt);
+            indexVal++;
+            if (indexVal >= TankDt.AmmoSpawnPointArray.Length
+                || mSpeedDaoJuState != DaoJuCtrl.DaoJuType.Tank)
+            {
+                indexVal = 0;
+                yield break;
+            }
+            yield return new WaitForSeconds(TankDt.TimeAmmo);
         } while (true);
     }
 }

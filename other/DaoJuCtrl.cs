@@ -166,6 +166,7 @@ public class DaoJuCtrl : MonoBehaviour
             case DaoJuType.JiaSuFengShan:
             case DaoJuType.ShuangYiFeiJi:
             case DaoJuType.QianTing:
+            case DaoJuType.Tank:
                 {
                     PlayerController.GetInstance().OpenPlayerDaoJuAni(DaoJuState);
                     break;

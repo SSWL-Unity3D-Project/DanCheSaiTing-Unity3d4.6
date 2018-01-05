@@ -20,18 +20,24 @@ public class AmmoMoveCtrl : MonoBehaviour
         /// 子弹击中的坐标.
         /// </summary>
         public Vector3 PosHit;
+        /// <summary>
+        /// 抛物线的高度值.
+        /// </summary>
+        public float HightVal;
     }
 
     /// <summary>
     /// PuTong 普通子弹.
     /// GenZongDan 跟踪子弹.
     /// YuLei 鱼雷子弹.
+    /// TankPaoDan 坦克炮弹.
     /// </summary>
     public enum AmmoType
     {
         PuTong,
         GenZongDan,
         YuLei,
+        TankPaoDan,
     }
     AmmoType AmmoState = AmmoType.PuTong;
     /// <summary>
@@ -83,7 +89,7 @@ public class AmmoMoveCtrl : MonoBehaviour
                 }
             case AmmoType.YuLei:
                 {
-                    CheckYuLeiAmmoOverlapSphereHit();
+                    CheckAmmoOverlapSphereHit();
                     break;
                 }
         }
@@ -138,32 +144,64 @@ public class AmmoMoveCtrl : MonoBehaviour
                                                        "oncomplete", "MoveAmmoOnCompelteITween"));
                     break;
                 }
+            case AmmoType.TankPaoDan:
+                {
+                    float lobHeight = ammoInfo.HightVal;
+                    float lobTime = Vector3.Distance(transform.position, ammoInfo.PosHit) / AmmoSpeed;
+                    GameObject ammoCore = transform.GetChild(0).gameObject;
+                    iTween.MoveBy(ammoCore, iTween.Hash("y", lobHeight,
+                                                        "time", lobTime / 2,
+                                                        "easeType", iTween.EaseType.easeOutQuad));
+                    iTween.MoveBy(ammoCore, iTween.Hash("y", -lobHeight,
+                                                        "time", lobTime / 2,
+                                                        "delay", lobTime / 2,
+                                                        "easeType", iTween.EaseType.easeInCubic));
+                    
+                    Vector3[] posArray = new Vector3[2];
+                    posArray[0] = transform.position;
+                    posArray[1] = ammoInfo.PosHit;
+                    iTween.MoveTo(gameObject, iTween.Hash("path", posArray,
+                                                       "speed", AmmoSpeed,
+                                                       "orienttopath", true,
+                                                       "easeType", iTween.EaseType.linear,
+                                                       "oncomplete", "MoveAmmoOnCompelteITween"));
+                    break;
+                }
         }
         AmmoState = ammoInfo.AmmoState;
     }
 
     void MoveAmmoOnCompelteITween()
     {
-        if (AmmoType.PuTong == AmmoState)
+        switch (AmmoState)
         {
-            if (mAmmoInfo.AimTr != null)
-            {
-                DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
-                if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
+            case AmmoType.PuTong:
                 {
-                    //障碍物爆炸. 
-                    daoJuCom.OnDestroyThis();
+                    if (mAmmoInfo.AimTr != null)
+                    {
+                        DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
+                        if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
+                        {
+                            //障碍物爆炸. 
+                            daoJuCom.OnDestroyThis();
+                        }
+                    }
+                    break;
                 }
-            }
+            case AmmoType.TankPaoDan:
+                {
+                    CheckAmmoOverlapSphereHit();
+                    break;
+                }
         }
         OnDestroyThis();
     }
 
 
     /// <summary>
-    /// 检测鱼雷子弹的碰撞.
+    /// 检测子弹的范围碰撞.
     /// </summary>
-    void CheckYuLeiAmmoOverlapSphereHit()
+    void CheckAmmoOverlapSphereHit()
     {
         bool isDestroyAmmo = false;
         Collider[] hits = Physics.OverlapSphere(transform.position, ShaShangDis, AmmoHitLayer);
