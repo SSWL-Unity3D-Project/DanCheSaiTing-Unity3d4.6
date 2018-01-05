@@ -4,8 +4,27 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    /// <summary>
+    /// 潜艇模型.
+    /// </summary>
+    public GameObject QianTingObj;
+    /// <summary>
+    /// 潜艇变身特效粒子预置.
+    /// </summary>
+    public GameObject QianTingLiZiPrefab;
+    /// <summary>
+    /// 潜艇变身特效粒子产生点.
+    /// </summary>
+    public Transform QianTingLiZiSpawnPoint;
     public FeiBanPengZhuangCtrl pFeiBanPengZhuang;
+    /// <summary>
+    /// 主角不同道具等对象的数据.
+    /// </summary>
     public PlayerData[] PlayerDt = new PlayerData[4];
+    /// <summary>
+    /// 主角模型列表.
+    /// </summary>
+    public GameObject[] PlayerObjArray;
     /// <summary>
     /// 玩家磁铁道具状态.
     /// </summary>
@@ -133,6 +152,7 @@ public class PlayerController : MonoBehaviour
     private bool m_IsErrorDirection = false;
 	private bool m_IsInWarter = false;
     private bool m_IsOnRoad = false;
+    [HideInInspector]
 	public Transform m_pChuan;
 
 	//feiyuepubu
@@ -264,7 +284,6 @@ public class PlayerController : MonoBehaviour
 	public AudioSource m_EatJiashiAudio;
 	public AudioSource LaBaAudio;
     public static int PlayerIndexRand = -1;
-    public GameObject[] PlayerObjArray;
     void Awake()
     {
         if (PlayerIndexRand >= PlayerObjArray.Length)
@@ -1391,6 +1410,9 @@ public class PlayerController : MonoBehaviour
                     {
                         pFeiBanPengZhuang.SetIsEnablePengZhuang(true);
                     }
+                    Instantiate(QianTingLiZiPrefab, QianTingLiZiSpawnPoint.position, QianTingLiZiSpawnPoint.rotation);
+                    m_pChuan.gameObject.SetActive(true);
+                    QianTingObj.SetActive(false);
                     break;
                 }
         }
@@ -1415,14 +1437,6 @@ public class PlayerController : MonoBehaviour
         mSpeedDaoJuState = daoJuState;
         m_IsJiasu = true;
         m_JiasuTimmer = 0f;
-        if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.QianTing)
-        {
-            if (pFeiBanPengZhuang != null)
-            {
-                pFeiBanPengZhuang.SetIsEnablePengZhuang(true);
-            }
-        }
-
         switch (mSpeedDaoJuState)
         {
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
@@ -1480,6 +1494,9 @@ public class PlayerController : MonoBehaviour
                     {
                         pFeiBanPengZhuang.SetIsEnablePengZhuang(false);
                     }
+                    Instantiate(QianTingLiZiPrefab, QianTingLiZiSpawnPoint.position, QianTingLiZiSpawnPoint.rotation);
+                    m_pChuan.gameObject.SetActive(false);
+                    QianTingObj.SetActive(true);
                     break;
                 }
         }

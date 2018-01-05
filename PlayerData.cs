@@ -26,9 +26,9 @@ public class PlayerData : MonoBehaviour
     /// <summary>
     /// 道具风框转动脚本.
     /// </summary>
-	public TweenRotation FengKuangTwRot;
-	/// <summary>
-	/// 积分产生点.
-	/// </summary>
-	public Transform SpawnJiFenTr;
+    public TweenRotation FengKuangTwRot;
+    /// <summary>
+    /// 积分产生点.
+    /// </summary>
+    public Transform SpawnJiFenTr;
 }
