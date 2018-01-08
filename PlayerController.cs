@@ -149,6 +149,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public GameObject ShuangYiFeiJiPrefab;
     /// <summary>
+    /// 双翼飞机风框转动脚本.
+    /// </summary>
+    [HideInInspector]
+    public TweenRotation ShuangYiFeiJiTwRot;
+    /// <summary>
     /// 风框动画.
     /// </summary>
     [HideInInspector]
@@ -379,6 +384,8 @@ public class PlayerController : MonoBehaviour
                 m_PlayerAnimator = PlayerObjArray[PlayerIndexRand].GetComponent<Animator>();
                 PenQiAniAy = PlayerDt[i].PenQiAniAy;
                 FiXingYiAniAy = PlayerDt[i].FiXingYiAniAy;
+                ShuangYiFeiJiAniAy = PlayerDt[i].ShuangYiFeiJiAniAy;
+                ShuangYiFeiJiTwRot = PlayerDt[i].ShuangYiFeiJiTwRot;
                 FengKuangAni = PlayerDt[i].FengKuangAni;
                 FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
 				SpawnJiFenTr = PlayerDt[i].SpawnJiFenTr;
@@ -1464,6 +1471,7 @@ public class PlayerController : MonoBehaviour
                     m_pChuan.localPosition -= new Vector3(0f, PlayerHightShuangYiFeiJi, 0f);
                     m_CameraSmooth.SetCameraUpPos(-PlayerHightShuangYiFeiJi);
                     Instantiate(ShuangYiFeiJiPrefab, DaoJuDiaoLuoTr[3].position, DaoJuDiaoLuoTr[3].rotation);
+                    ShuangYiFeiJiTwRot.enabled = false;
                     for (int i = 0; i < ShuangYiFeiJiAniAy.Length; i++)
                     {
                         ShuangYiFeiJiAniAy[i].transform.localScale = Vector3.zero;
@@ -1559,8 +1567,10 @@ public class PlayerController : MonoBehaviour
                     m_pChuan.localPosition += new Vector3(0f, PlayerHightShuangYiFeiJi, 0f);
                     m_CameraSmooth.SetCameraUpPos(PlayerHightShuangYiFeiJi);
                     m_pTopSpeed = PlayerMvSpeedShuangYiFeiJi;
+                    ShuangYiFeiJiTwRot.enabled = false;
                     for (int i = 0; i < ShuangYiFeiJiAniAy.Length; i++)
                     {
+                        ShuangYiFeiJiAniAy[i].enabled = true;
                         ShuangYiFeiJiAniAy[i].transform.localScale = Vector3.one;
                         ShuangYiFeiJiAniAy[i].SetBool("IsPlay", true);
                     }
@@ -1605,6 +1615,15 @@ public class PlayerController : MonoBehaviour
     {
         FengKuangAni.enabled = false;
         FengKuangTwRot.enabled = true;
+    }
+
+    public void OnDaoJuShaungYiFeiJiAniOver()
+    {
+        for (int i = 0; i < ShuangYiFeiJiAniAy.Length; i++)
+        {
+            ShuangYiFeiJiAniAy[i].enabled = false;
+        }
+        ShuangYiFeiJiTwRot.enabled = true;
     }
 
     /// <summary>

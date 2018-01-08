@@ -20,6 +20,10 @@ public class PlayerData : MonoBehaviour
     /// </summary>
     public Animator[] ShuangYiFeiJiAniAy;
     /// <summary>
+    /// 双翼飞机风框转动脚本.
+    /// </summary>
+    public TweenRotation ShuangYiFeiJiTwRot;
+    /// <summary>
     /// 风框动画.
     /// </summary>
     public Animator FengKuangAni;
