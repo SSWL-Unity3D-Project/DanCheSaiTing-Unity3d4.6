@@ -256,7 +256,7 @@ public class AmmoMoveCtrl : MonoBehaviour
             }
 
             DaoJuCtrl daoJuCom = hits[i].GetComponent<DaoJuCtrl>();
-            if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
+			if (daoJuCom != null && daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
             {
                 daoJuCom.OnDestroyThis();
                 isDestroyAmmo = true;
