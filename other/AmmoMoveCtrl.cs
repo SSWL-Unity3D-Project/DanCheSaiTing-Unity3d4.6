@@ -31,6 +31,7 @@ public class AmmoMoveCtrl : MonoBehaviour
     /// GenZongDan 跟踪子弹.
     /// YuLei 鱼雷子弹.
     /// TankPaoDan 坦克炮弹.
+    /// DiLei 地雷.
     /// </summary>
     public enum AmmoType
     {
@@ -38,6 +39,7 @@ public class AmmoMoveCtrl : MonoBehaviour
         GenZongDan,
         YuLei,
         TankPaoDan,
+        DiLei,
     }
     AmmoType AmmoState = AmmoType.PuTong;
     /// <summary>
@@ -167,6 +169,29 @@ public class AmmoMoveCtrl : MonoBehaviour
                                                        "oncomplete", "MoveAmmoOnCompelteITween"));
                     break;
                 }
+            case AmmoType.DiLei:
+                {
+                    float lobHeight = ammoInfo.HightVal;
+                    float lobTime = Vector3.Distance(transform.position, ammoInfo.PosHit) / AmmoSpeed;
+                    GameObject ammoCore = transform.GetChild(0).gameObject;
+                    iTween.MoveBy(ammoCore, iTween.Hash("y", lobHeight,
+                                                        "time", lobTime / 2,
+                                                        "easeType", iTween.EaseType.easeOutQuad));
+                    iTween.MoveBy(ammoCore, iTween.Hash("y", -lobHeight,
+                                                        "time", lobTime / 2,
+                                                        "delay", lobTime / 2,
+                                                        "easeType", iTween.EaseType.easeInCubic));
+
+                    Vector3[] posArray = new Vector3[2];
+                    posArray[0] = transform.position;
+                    posArray[1] = ammoInfo.PosHit;
+                    iTween.MoveTo(gameObject, iTween.Hash("path", posArray,
+                                                       "speed", AmmoSpeed,
+                                                       "orienttopath", true,
+                                                       "easeType", iTween.EaseType.linear,
+                                                       "oncomplete", "MoveAmmoOnCompelteITween"));
+                    break;
+                }
         }
         AmmoState = ammoInfo.AmmoState;
     }
@@ -191,6 +216,23 @@ public class AmmoMoveCtrl : MonoBehaviour
             case AmmoType.TankPaoDan:
                 {
                     CheckAmmoOverlapSphereHit();
+                    break;
+                }
+            case AmmoType.DiLei:
+                {
+                    if (mAmmoInfo.AimTr != null)
+                    {
+                        DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
+                        if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
+                        {
+                            //障碍物爆炸. 
+                            daoJuCom.OnDestroyThis();
+                        }
+                    }
+                    else
+                    {
+                        CheckAmmoOverlapSphereHit();
+                    }
                     break;
                 }
         }

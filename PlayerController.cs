@@ -1685,6 +1685,62 @@ public class PlayerController : MonoBehaviour
         DaoDanSpawnCount++;
     }
 
+
+    /// <summary>
+    /// 地雷数据.
+    /// </summary>
+    [Serializable]
+    public class DiLeiData
+    {
+        /// <summary>
+        /// 子弹预置.
+        /// </summary>
+        public GameObject AmmoPrefab;
+        /// <summary>
+        /// 子弹产生点.
+        /// </summary>
+        public Transform[] SpawnAmmoTr;
+        /// <summary>
+        /// 障碍物道具.
+        /// </summary>
+        [HideInInspector]
+        public GameObject mZhangAiWuObj;
+        [HideInInspector]
+        public int AmmoSpawnCount = 0;
+    }
+    public DiLeiData DiLeiDt;
+    /// <summary>
+    /// 当主角吃上地雷道具.
+    /// </summary>
+    public void OnPlayerHitDiLeiDaoJu(GameObject zhangAiWu)
+    {
+        DiLeiDt.AmmoSpawnCount = 0;
+        DiLeiDt.mZhangAiWuObj = zhangAiWu;
+        SpawnDaoDanAmmo();
+        Invoke("SpawnDiLeiAmmo", 0.5f);
+    }
+
+    public void SpawnDiLeiAmmo()
+    {
+        GameObject ammo = (GameObject)Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].position, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].rotation);
+        AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
+        AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
+        ammoDt.HightVal = UnityEngine.Random.Range(2.5f, 5f);
+        ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
+        if (DiLeiDt.mZhangAiWuObj != null)
+        {
+            ammoDt.PosHit = mZhangAiWuObj.transform.position;
+            ammoDt.AimTr = mZhangAiWuObj.transform;
+            ammoMoveCom.InitMoveAmmo(ammoDt);
+        }
+        else
+        {
+            ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(40f, 65f)) + ammo.transform.position;
+            ammoMoveCom.InitMoveAmmo(ammoDt);
+        }
+        DiLeiDt.AmmoSpawnCount++;
+    }
+
     public void OpenPlayerCiTieDaoJu()
     {
         IsOpenCiTieDaoJu = true;

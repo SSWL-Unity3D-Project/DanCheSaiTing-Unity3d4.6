@@ -50,7 +50,7 @@ public class DaoJuCtrl : MonoBehaviour
     /// </summary>
     public GameObject JiFenPrefab;
     /// <summary>
-    /// 导弹要攻击的障碍物对象.
+    /// 导弹/地雷要攻击的障碍物对象.
     /// </summary>
     public GameObject ZhangAiWuObj;
     /// <summary>
@@ -192,6 +192,11 @@ public class DaoJuCtrl : MonoBehaviour
             case DaoJuType.DaoDan:
                 {
                     PlayerController.GetInstance().OnPlayerHitDaoDanDaoJu(ZhangAiWuObj);
+                    break;
+                }
+            case DaoJuType.DiLei:
+                {
+                    PlayerController.GetInstance().OnPlayerHitDiLeiDaoJu(ZhangAiWuObj);
                     break;
                 }
         }
