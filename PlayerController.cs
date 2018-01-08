@@ -1783,7 +1783,7 @@ public class PlayerController : MonoBehaviour
     {
         DiLeiDt.AmmoSpawnCount = 0;
         DiLeiDt.mZhangAiWuObj = zhangAiWu;
-        SpawnDaoDanAmmo();
+		SpawnDiLeiAmmo();
         Invoke("SpawnDiLeiAmmo", 0.5f);
     }
 
