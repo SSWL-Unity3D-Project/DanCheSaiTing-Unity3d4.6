@@ -1796,8 +1796,8 @@ public class PlayerController : MonoBehaviour
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
         if (DiLeiDt.mZhangAiWuObj != null)
         {
-            ammoDt.PosHit = mZhangAiWuObj.transform.position;
-            ammoDt.AimTr = mZhangAiWuObj.transform;
+			ammoDt.PosHit = DiLeiDt.mZhangAiWuObj.transform.position;
+			ammoDt.AimTr = DiLeiDt.mZhangAiWuObj.transform;
             ammoMoveCom.InitMoveAmmo(ammoDt);
         }
         else
