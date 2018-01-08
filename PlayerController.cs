@@ -5,6 +5,30 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 潜艇/坦克对水粒子位置的信息.
+    /// </summary>
+    [Serializable]
+    public class DaoJuToWaterData
+    {
+        /// <summary>
+        /// 水粒子原位置信息列表.
+        /// </summary>
+        public Transform[] TrArray;
+        /// <summary>
+        /// 潜艇水粒子位置列表.
+        /// </summary>
+        public Transform[] QianTingTrArray;
+        /// <summary>
+        /// 坦克水粒子位置列表.
+        /// </summary>
+        public Transform[] TankTrArray;
+    }
+    public DaoJuToWaterData DaoJuToWaterDt;
+    /// <summary>
+    /// 水粒子列表.
+    /// </summary>
+    public Transform[] WaterLiZiTrArray;
+    /// <summary>
     /// 坦克变型数据.
     /// </summary>
     [Serializable]
@@ -1405,7 +1429,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 使玩家道具掉落.
     /// </summary>
-    void ClosePlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
+    void ClosePlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState, bool isTimeOver = true)
     {
         mSpeedDaoJuState = DaoJuCtrl.DaoJuType.Null;
         m_pTopSpeed = PlayerMvSpeedMin;
@@ -1476,6 +1500,11 @@ public class PlayerController : MonoBehaviour
                     break;
                 }
         }
+
+        if (isTimeOver)
+        {
+            ChangeDaoJuToWaterPos();
+        }
     }
 
     /// <summary>
@@ -1491,7 +1520,7 @@ public class PlayerController : MonoBehaviour
 
         if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.Null)
         {
-            ClosePlayerDaoJuAni(mSpeedDaoJuState);
+            ClosePlayerDaoJuAni(mSpeedDaoJuState, false);
         }
         
         mSpeedDaoJuState = daoJuState;
@@ -1569,6 +1598,7 @@ public class PlayerController : MonoBehaviour
                     break;
                 }
         }
+        ChangeDaoJuToWaterPos();
     }
 
     public void OnDaoJuFengKuangAniOver()
@@ -1725,5 +1755,39 @@ public class PlayerController : MonoBehaviour
             }
             yield return new WaitForSeconds(TankDt.TimeAmmo);
         } while (true);
+    }
+
+    /// <summary>
+    /// 改变对应道具时水粒子的位置.
+    /// </summary>
+    void ChangeDaoJuToWaterPos()
+    {
+        switch (mSpeedDaoJuState)
+        {
+            case DaoJuCtrl.DaoJuType.QianTing:
+                {
+                    for (int i = 0; i < WaterLiZiTrArray.Length; i++)
+                    {
+                        WaterLiZiTrArray[i].position = DaoJuToWaterDt.QianTingTrArray[i].position;
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.Tank:
+                {
+                    for (int i = 0; i < WaterLiZiTrArray.Length; i++)
+                    {
+                        WaterLiZiTrArray[i].position = DaoJuToWaterDt.TankTrArray[i].position;
+                    }
+                    break;
+                }
+            default:
+                {
+                    for (int i = 0; i < WaterLiZiTrArray.Length; i++)
+                    {
+                        WaterLiZiTrArray[i].position = DaoJuToWaterDt.TrArray[i].position;
+                    }
+                    break;
+                }
+        }
     }
 }
