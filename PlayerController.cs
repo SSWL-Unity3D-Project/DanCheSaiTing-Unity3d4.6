@@ -563,8 +563,11 @@ public class PlayerController : MonoBehaviour
             if (IsPlayHuiTouAni)
             {
                 IsPlayHuiTouAni = false;
-                m_IsHitshake = true;
-                m_PlayerAnimator.SetTrigger("IsDiaoluo");
+				m_IsHitshake = true;
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetTrigger("IsDiaoluo");
+				}
                 TimeRandHuiTou = (float)UnityEngine.Random.Range(3, 15);
                 TimeLastHuiTou = Time.time;
             }
@@ -651,7 +654,10 @@ public class PlayerController : MonoBehaviour
 			if(!m_CanDrive && canDrive)
 			{
 				m_IsHitshake = true;
-				m_PlayerAnimator.SetTrigger("IsZhuang");
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetTrigger("IsZhuang");
+				}
 				m_CameraShake.setCameraShakeImpulseValue();
 				if(m_IsInWarter && !m_IsOnRoad)
 				{
@@ -729,14 +735,20 @@ public class PlayerController : MonoBehaviour
 
 		if (mSteer < -SteerOffset)
 		{
-			m_PlayerAnimator.SetBool("IsTurnleft",true);
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsTurnleft",true);
+			}
 			if (SpeedObj > 15f && !m_IsHitshake) {
 				pcvr.m_IsOpneRightQinang = true;
 			}
 		}
 		else
 		{
-			m_PlayerAnimator.SetBool("IsTurnleft",false);
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsTurnleft",false);
+			}
 			if (!m_IsHitshake) {
 				pcvr.m_IsOpneRightQinang = false;
 			}
@@ -744,14 +756,20 @@ public class PlayerController : MonoBehaviour
 
 		if(mSteer > SteerOffset)
 		{
-			m_PlayerAnimator.SetBool("IsTurnRight",true);
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsTurnRight",true);
+			}
 			if (SpeedObj > 15f && !m_IsHitshake) {
 				pcvr.m_IsOpneLeftQinang = true;
 			}
 		}
 		else
 		{
-			m_PlayerAnimator.SetBool("IsTurnRight",false);
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsTurnRight",false);
+			}
 			if (!m_IsHitshake) {
 				pcvr.m_IsOpneLeftQinang = false;
 			}
@@ -759,11 +777,17 @@ public class PlayerController : MonoBehaviour
 		//if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
 		if (Mathf.Abs(mSteer) < SteerOffset)
 		{
-			m_PlayerAnimator.SetBool("IsRoot",true);
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsRoot",true);
+			}
 		}
 		else
 		{
-			m_PlayerAnimator.SetBool("IsRoot",false);
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsRoot",false);
+			}
 		}
 		if(canDrive && !m_IsPubu)
 		{
@@ -1028,7 +1052,10 @@ public class PlayerController : MonoBehaviour
 		{
 			TouBiInfoCtrl.IsCloseQiNang = true;
 			m_IsFinished = true;
-			m_PlayerAnimator.SetBool("IsFinish",true);
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsFinish",true);
+			}
 		}
 		if(other.tag == "water")
 		{
@@ -1052,7 +1079,10 @@ public class PlayerController : MonoBehaviour
 			{
 				IsHitRock = true;
 				m_IsHitshake = true;
-				m_PlayerAnimator.SetTrigger("IsZhuang");
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetTrigger("IsZhuang");
+				}
 				m_CameraShake.setCameraShakeImpulseValue();
 				m_HitStone.Play();
 				Instantiate(m_HitEffectObj,transform.position,transform.rotation);
@@ -1063,7 +1093,10 @@ public class PlayerController : MonoBehaviour
 			if(/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude*3.6f >30.0f)
 			{
 				m_IsHitshake = true;
-				m_PlayerAnimator.SetTrigger("IsZhuang");
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetTrigger("IsZhuang");
+				}
 				m_CameraShake.setCameraShakeImpulseValue();
 				//m_HitStone.Play();
 				//GameObject temp = (GameObject)Instantiate(m_HitEffectObj,transform.position,transform.rotation);
@@ -1090,18 +1123,27 @@ public class PlayerController : MonoBehaviour
 		//}
 		if(other.tag == "feibananimtor")
 		{
-			m_PlayerAnimator.SetTrigger("IsQifei");
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetTrigger("IsQifei");
+			}
 		}
 		if(other.tag == "pubuanimtor")
 		{
-			m_PlayerAnimator.SetTrigger("IsDiaoluo");
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetTrigger("IsDiaoluo");
+			}
 		}
 		if(other.tag == "npc1p")
 		{
 			if(/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude*3.6f >30.0f)
 			{
 				m_IsHitshake = true;
-				m_PlayerAnimator.SetTrigger("IsZhuang");
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetTrigger("IsZhuang");
+				}
 				m_CameraShake.setCameraShakeImpulseValue();
 				m_HitStone.Play();
 				Instantiate(m_HitEffectObj,transform.position,transform.rotation);
@@ -1115,7 +1157,10 @@ public class PlayerController : MonoBehaviour
 			if(/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude*3.6f >30.0f)
 			{
 				m_IsHitshake = true;
-				m_PlayerAnimator.SetTrigger("IsZhuang");
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetTrigger("IsZhuang");
+				}
 				m_CameraShake.setCameraShakeImpulseValue();
 				m_HitStone.Play();
 				Instantiate(m_HitEffectObj,transform.position,transform.rotation);
@@ -1129,7 +1174,10 @@ public class PlayerController : MonoBehaviour
             if (/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude * 3.6f > 30.0f)
             {
                 m_IsHitshake = true;
-                m_PlayerAnimator.SetTrigger("IsZhuang");
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetTrigger("IsZhuang");
+				}
                 m_CameraShake.setCameraShakeImpulseValue();
                 m_HitStone.Play();
                 Instantiate(m_HitEffectObj, transform.position, transform.rotation);
