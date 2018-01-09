@@ -64,7 +64,11 @@ public class AmmoMoveCtrl : MonoBehaviour
     /// </summary>
     public GameObject LiZiPrefab;
     AmmoDt mAmmoInfo;
-    
+    /// <summary>
+    /// 抛物线运动子弹的第一个子集.
+    /// </summary>
+    Transform AmmoCoreTr;
+
     // Update is called once per frame
     void Update()
     {
@@ -91,7 +95,7 @@ public class AmmoMoveCtrl : MonoBehaviour
                 }
             case AmmoType.YuLei:
                 {
-                    CheckAmmoOverlapSphereHit();
+                    CheckAmmoOverlapSphereHit(AmmoCoreTr);
                     break;
                 }
         }
@@ -114,6 +118,11 @@ public class AmmoMoveCtrl : MonoBehaviour
 
     public void InitMoveAmmo(AmmoDt ammoInfo)
     {
+        if (transform.childCount > 0)
+        {
+            AmmoCoreTr = transform.GetChild(0);
+        }
+
         mAmmoInfo = ammoInfo;
         switch (ammoInfo.AmmoState)
         {
@@ -245,10 +254,11 @@ public class AmmoMoveCtrl : MonoBehaviour
     /// <summary>
     /// 检测子弹的范围碰撞.
     /// </summary>
-    void CheckAmmoOverlapSphereHit()
+    void CheckAmmoOverlapSphereHit(Transform posTr = null)
     {
         bool isDestroyAmmo = false;
-        Collider[] hits = Physics.OverlapSphere(transform.position, ShaShangDis, AmmoHitLayer);
+        Vector3 pos = posTr == null ? transform.position : posTr.position;
+        Collider[] hits = Physics.OverlapSphere(pos, ShaShangDis, AmmoHitLayer);
         for (int i = 0; i < hits.Length; i++)
         {
             // Don't collide with triggers
