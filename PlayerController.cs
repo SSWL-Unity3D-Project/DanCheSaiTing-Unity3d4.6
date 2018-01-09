@@ -1835,6 +1835,10 @@ public class PlayerController : MonoBehaviour
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.YuLei;
         do
         {
+            if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.QianTing)
+            {
+                yield break;
+            }
             ammo = (GameObject)Instantiate(QianTingDt.YuLeiPrefab, QianTingDt.YuLeiSpawnPointArray[indexVal].position, QianTingDt.YuLeiSpawnPointArray[indexVal].rotation);
             moveAmmo = ammo.GetComponent<AmmoMoveCtrl>();
             ammoDt.PosHit = ammo.transform.position + (ammo.transform.forward * UnityEngine.Random.Range(30f, 65f));
@@ -1844,7 +1848,8 @@ public class PlayerController : MonoBehaviour
                 || mSpeedDaoJuState != DaoJuCtrl.DaoJuType.QianTing)
             {
                 indexVal = 0;
-                yield break;
+                yield return new WaitForSeconds(UnityEngine.Random.Range(QianTingDt.TimeYuLei * 1.6f, QianTingDt.TimeYuLei * 2.5f));
+                continue;
             }
             yield return new WaitForSeconds(QianTingDt.TimeYuLei);
         } while (true);
@@ -1864,6 +1869,10 @@ public class PlayerController : MonoBehaviour
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.TankPaoDan;
         do
         {
+            if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.Tank)
+            {
+                yield break;
+            }
             ammoDt.HightVal = UnityEngine.Random.Range(1, 4);
             ammo = (GameObject)Instantiate(TankDt.AmmoPrefab, TankDt.AmmoSpawnPointArray[indexVal].position, TankDt.AmmoSpawnPointArray[indexVal].rotation);
             moveAmmo = ammo.GetComponent<AmmoMoveCtrl>();
@@ -1874,7 +1883,8 @@ public class PlayerController : MonoBehaviour
                 || mSpeedDaoJuState != DaoJuCtrl.DaoJuType.Tank)
             {
                 indexVal = 0;
-                yield break;
+                yield return new WaitForSeconds(UnityEngine.Random.Range(TankDt.TimeAmmo * 1.6f, TankDt.TimeAmmo * 2.5f));
+                continue;
             }
             yield return new WaitForSeconds(TankDt.TimeAmmo);
         } while (true);
