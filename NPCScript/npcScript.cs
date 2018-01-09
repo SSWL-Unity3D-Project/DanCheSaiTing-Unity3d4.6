@@ -1,9 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class npcScript : MonoBehaviour {
+public class npcScript : MonoBehaviour
+{
+    [Serializable]
+    public class PushData
+    {
+        /// <summary>
+        /// 是否使npc飞远.
+        /// </summary>
+        public bool IsPushObj;
+        /// <summary>
+        /// 推力大小.
+        /// </summary>
+        public float PushForce;
+    }
+    public PushData mPushDt;
 
-	public GameObject ragballObject = null;
+    public GameObject ragballObject = null;
 	private Transform pathObject = null;
 	private float moveSpeed = 0.0f;
 	private bool isLoop = false;			//whether make the path as a loop path
@@ -23,11 +38,15 @@ public class npcScript : MonoBehaviour {
 	private Transform NPCTransform = null;
 	private bool fanxiang = false;
 	private bool hitLe = false;
-
 	//action
 	private Animator animatorNPC;
 	// Update is called once per frame
-	void Update () {
+	void Update()
+    {
+        if (hitLe)
+        {
+            return;
+        }
 
 		if (movingState == 1)
 		{
@@ -184,7 +203,7 @@ public class npcScript : MonoBehaviour {
 
 	void rootAction()
 	{
-		randNum = Random.Range (1, 3);
+		randNum = UnityEngine.Random.Range (1, 3);
 
 		if (animatorNPC)
 		{
@@ -207,7 +226,7 @@ public class npcScript : MonoBehaviour {
 
 	void runAction()
 	{
-		randNum = Random.Range (1, 3);
+		randNum = UnityEngine.Random.Range (1, 3);
 
 		if (animatorNPC)
 		{
@@ -234,7 +253,7 @@ public class npcScript : MonoBehaviour {
 	{
 		movingState = -1;
 	}
-
+    
 	public void OnTriggerEnter(Collider colObj)
 	{
 		if (colObj.transform.tag == "player" && !hitLe)
@@ -255,6 +274,12 @@ public class npcScript : MonoBehaviour {
                     animatorNPC.enabled = false;
                 }
                 ragballObject.SetActive(true);
+
+                if (mPushDt.IsPushObj)
+                {
+                    Vector3 vecForward = Vector3.Lerp(Camera.main.transform.forward, Vector3.up, UnityEngine.Random.Range(0.25f, 0.75f)) * mPushDt.PushForce;
+                    ragballObject.rigidbody.AddForce(vecForward);
+                }
             }
             Invoke("DeadLe", 1.0f);
         }
