@@ -150,20 +150,21 @@ public class AmmoMoveCtrl : MonoBehaviour
                 {
                     float lobHeight = ammoInfo.HightVal;
                     float lobTime = Vector3.Distance(transform.position, ammoInfo.PosHit) / AmmoSpeed;
+                    float lobTimePosY = 0.5f * lobTime;
                     GameObject ammoCore = transform.GetChild(0).gameObject;
                     iTween.MoveBy(ammoCore, iTween.Hash("y", lobHeight,
-                                                        "time", lobTime / 2,
+                                                        "time", lobTimePosY,
                                                         "easeType", iTween.EaseType.easeOutQuad));
                     iTween.MoveBy(ammoCore, iTween.Hash("y", -lobHeight,
-                                                        "time", lobTime / 2,
-                                                        "delay", lobTime / 2,
+                                                        "time", lobTimePosY,
+                                                        "delay", lobTimePosY,
                                                         "easeType", iTween.EaseType.easeInCubic));
                     
                     Vector3[] posArray = new Vector3[2];
                     posArray[0] = transform.position;
                     posArray[1] = ammoInfo.PosHit;
                     iTween.MoveTo(gameObject, iTween.Hash("path", posArray,
-                                                       "speed", AmmoSpeed,
+                                                       "time", lobTime,
                                                        "orienttopath", true,
                                                        "easeType", iTween.EaseType.linear,
                                                        "oncomplete", "MoveAmmoOnCompelteITween"));
@@ -173,20 +174,21 @@ public class AmmoMoveCtrl : MonoBehaviour
                 {
                     float lobHeight = ammoInfo.HightVal;
                     float lobTime = Vector3.Distance(transform.position, ammoInfo.PosHit) / AmmoSpeed;
+                    float lobTimePosY = 0.5f * lobTime;
                     GameObject ammoCore = transform.GetChild(0).gameObject;
                     iTween.MoveBy(ammoCore, iTween.Hash("y", lobHeight,
-                                                        "time", lobTime / 2,
+                                                        "time", lobTimePosY,
                                                         "easeType", iTween.EaseType.easeOutQuad));
                     iTween.MoveBy(ammoCore, iTween.Hash("y", -lobHeight,
-                                                        "time", lobTime / 2,
-                                                        "delay", lobTime / 2,
+                                                        "time", lobTimePosY,
+                                                        "delay", lobTimePosY,
                                                         "easeType", iTween.EaseType.easeInCubic));
 
                     Vector3[] posArray = new Vector3[2];
                     posArray[0] = transform.position;
                     posArray[1] = ammoInfo.PosHit;
                     iTween.MoveTo(gameObject, iTween.Hash("path", posArray,
-                                                       "speed", AmmoSpeed,
+                                                       "time", lobTime,
                                                        "orienttopath", true,
                                                        "easeType", iTween.EaseType.linear,
                                                        "oncomplete", "MoveAmmoOnCompelteITween"));
