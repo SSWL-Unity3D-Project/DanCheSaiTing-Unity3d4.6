@@ -1622,6 +1622,7 @@ public class PlayerController : MonoBehaviour
                         ShuangYiFeiJiAniAy[i].transform.localScale = Vector3.one;
                         ShuangYiFeiJiAniAy[i].SetBool("IsPlay", true);
                     }
+					Invoke("OnDaoJuShaungYiFeiJiAniOver", 0.45f);
                     break;
                 }
             case DaoJuCtrl.DaoJuType.JiaSuFengShan:
