@@ -1569,6 +1569,8 @@ public class PlayerController : MonoBehaviour
     public void OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
     {
         TimeLastDaoJuBianXing = Time.time;
+        m_IsJiasu = true;
+        m_JiasuTimmer = 0f;
         if (mSpeedDaoJuState == daoJuState)
         {
             return;
@@ -1580,8 +1582,6 @@ public class PlayerController : MonoBehaviour
         }
         
         mSpeedDaoJuState = daoJuState;
-        m_IsJiasu = true;
-        m_JiasuTimmer = 0f;
         switch (mSpeedDaoJuState)
         {
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
