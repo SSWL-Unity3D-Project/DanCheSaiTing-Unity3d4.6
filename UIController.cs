@@ -5,6 +5,10 @@ using System;
 public class UIController : MonoBehaviour
 {
     /// <summary>
+    /// 玩家道具(导弹/地雷)UI管理.
+    /// </summary>
+    public PlayerDaoJuManageUI mPlayerDaoJuManageUI;
+    /// <summary>
     /// 结算积分对象.
     /// </summary>
     public GameObject JieSuanJiFenObj;

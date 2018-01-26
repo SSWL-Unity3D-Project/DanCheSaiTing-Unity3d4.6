@@ -941,12 +941,12 @@ public class pcvr : MonoBehaviour {
     {
         if (!bIsHardWare)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 mGetJiaoTaBan = 1f;
             }
 
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetKeyUp(KeyCode.Mouse0))
             {
                 mGetJiaoTaBan = 0f;
             }

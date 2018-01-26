@@ -164,37 +164,37 @@ public class InputEventCtrl : MonoBehaviour {
 		}
 
 		//Fire button
-		if(Input.GetKeyUp(KeyCode.Mouse0))
+		if(Input.GetKeyUp(KeyCode.Space))
 		{
 			IsClickFireBtDown = false;
 			ClickFireBt( ButtonState.UP );
 		}
 
-		if(Input.GetKeyDown(KeyCode.Mouse0))
+		if(Input.GetKeyDown(KeyCode.Space))
 		{
 			IsClickFireBtDown = true;
 			ClickFireBt( ButtonState.DOWN );
 		}
 
-		if(Input.GetKeyUp(KeyCode.Space))
-		{
-			ClickShaCheBt( ButtonState.UP );
-		}
+		//if(Input.GetKeyUp(KeyCode.Space))
+		//{
+		//	ClickShaCheBt( ButtonState.UP );
+		//}
 		
-		if(Input.GetKeyDown(KeyCode.Space))
-		{
-			ClickShaCheBt( ButtonState.DOWN );
-		}
+		//if(Input.GetKeyDown(KeyCode.Space))
+		//{
+		//	ClickShaCheBt( ButtonState.DOWN );
+		//}
 
-		if(Input.GetKeyUp(KeyCode.G))
-		{
-			ClickLaBaBt( ButtonState.UP );
-		}
+		//if(Input.GetKeyUp(KeyCode.G))
+		//{
+		//	ClickLaBaBt( ButtonState.UP );
+		//}
 
-		if(Input.GetKeyDown(KeyCode.G))
-		{
-			ClickLaBaBt( ButtonState.DOWN );
-		}
+		//if(Input.GetKeyDown(KeyCode.G))
+		//{
+		//	ClickLaBaBt( ButtonState.DOWN );
+		//}
 	}
 }
 

@@ -396,6 +396,7 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
     {
+        InputEventCtrl.GetInstance().ClickFireBtEvent += ClickFireBtEvent;
         InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
         m_PlayerAnimator = m_pChuan.GetComponent<Animator>();
         npc1Pos = npc1.transform;
@@ -436,6 +437,28 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(GameObjectHide());   //gzknu
 	}
+
+    void ClickFireBtEvent(ButtonState val)
+    {
+        if (val != ButtonState.DOWN)
+        {
+            return;
+        }
+
+        if (pcvr.GetInstance().mPlayerDataManage.DaoDanNum > 0)
+        {
+            pcvr.GetInstance().mPlayerDataManage.DaoDanNum--;
+            OnPlayerHitDaoDanDaoJu(null);
+            return;
+        }
+        
+        if (pcvr.GetInstance().mPlayerDataManage.DiLeiNum > 0)
+        {
+            pcvr.GetInstance().mPlayerDataManage.DiLeiNum--;
+            OnPlayerHitDiLeiDaoJu(null);
+            return;
+        }
+    }
 
     void ClickStartBtOneEvent(ButtonState val)
     {
@@ -1535,6 +1558,13 @@ public class PlayerController : MonoBehaviour
                         FiXingYiAniAy[i].transform.localScale = Vector3.zero;
                         FiXingYiAniAy[i].SetBool("IsPlay", false);
                     }
+
+                    Instantiate(PenQiPrefab, DaoJuDiaoLuoTr[0].position, DaoJuDiaoLuoTr[0].rotation);
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.zero;
+                        PenQiAniAy[i].SetBool("IsPlay", false);
+                    }
                     break;
                 }
             case DaoJuCtrl.DaoJuType.ShuangYiFeiJi:
@@ -1634,6 +1664,12 @@ public class PlayerController : MonoBehaviour
                     {
                         FiXingYiAniAy[i].transform.localScale = Vector3.one;
                         FiXingYiAniAy[i].SetBool("IsPlay", true);
+                    }
+
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.one;
+                        PenQiAniAy[i].SetBool("IsPlay", true);
                     }
                     break;
                 }

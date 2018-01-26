@@ -11,7 +11,6 @@ public class TouBiInfoCtrl : MonoBehaviour {
 	public GameObject FreeObj;
 	public GameObject TouBiObj;
     
-	private string InsertCoinNum = "";
 	private string GameMode = "";
 	public static bool IsCloseDongGan;
 	public static bool IsCloseQiNang;
@@ -24,7 +23,6 @@ public class TouBiInfoCtrl : MonoBehaviour {
         GameMode = pcvr.GetInstance().mPlayerDataManage.GameMode;
 		if(GameMode == "oper")
 		{
-			InsertCoinNum = pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum.ToString();
 			CoinNumSetTex.spriteName = pcvr.GetInstance().mPlayerDataManage.CoinNumNeed.ToString();
 			UpdateInsertCoin();
             

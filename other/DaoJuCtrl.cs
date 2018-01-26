@@ -194,12 +194,20 @@ public class DaoJuCtrl : MonoBehaviour
                 }
             case DaoJuType.DaoDan:
                 {
-                    PlayerController.GetInstance().OnPlayerHitDaoDanDaoJu(ZhangAiWuObj);
+                    if (pcvr.GetInstance().mPlayerDataManage.DaoDanNum < 9)
+                    {
+                        pcvr.GetInstance().mPlayerDataManage.DaoDanNum += 1;
+                    }
+                    //PlayerController.GetInstance().OnPlayerHitDaoDanDaoJu(ZhangAiWuObj);
                     break;
                 }
             case DaoJuType.DiLei:
                 {
-                    PlayerController.GetInstance().OnPlayerHitDiLeiDaoJu(ZhangAiWuObj);
+                    if (pcvr.GetInstance().mPlayerDataManage.DiLeiNum < 9)
+                    {
+                        pcvr.GetInstance().mPlayerDataManage.DiLeiNum += 1;
+                    }
+                    //PlayerController.GetInstance().OnPlayerHitDiLeiDaoJu(ZhangAiWuObj);
                     break;
                 }
         }
