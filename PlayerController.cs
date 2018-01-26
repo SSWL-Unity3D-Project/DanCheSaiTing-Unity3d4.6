@@ -1040,9 +1040,10 @@ public class PlayerController : MonoBehaviour
 			//pcvr.GetInstance().OpenFangXiangPanZhenDong();
 		}
 		SpeedMovePlayer = sp;
+        PlayerMoveSpeed = (int)sp;
 
 #if UNITY_EDITOR
-		if (!pcvr.bIsHardWare || pcvr.IsTestGame) {
+        if (!pcvr.bIsHardWare || pcvr.IsTestGame) {
 			string strA = sp.ToString() + "km/h";
 			GUI.Box(new Rect(0f, 0f, wVal, hVal), strA);
 			
@@ -1051,6 +1052,26 @@ public class PlayerController : MonoBehaviour
 		}
 #endif
 	}
+
+    int _PlayerMoveSpeed;
+    /// <summary>
+    /// 主角运动速度.
+    /// </summary>
+    int PlayerMoveSpeed
+    {
+        set
+        {
+            if (value != _PlayerMoveSpeed)
+            {
+                _PlayerMoveSpeed = value;
+                m_UIController.UpdatePlayerMoveSpeed(_PlayerMoveSpeed);
+            }
+        }
+        get
+        {
+            return _PlayerMoveSpeed;
+        }
+    }
 
 	public static float PlayerMinSpeedVal = 80f;
 	void CalculateEnginePower(bool canDrive)

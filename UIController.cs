@@ -5,6 +5,14 @@ using System;
 public class UIController : MonoBehaviour
 {
     /// <summary>
+    /// 主角运动速度.
+    /// </summary>
+    public UISprite[] PlayerMoveSpeedArray;
+    /// <summary>
+    /// 电量UISprite.
+    /// </summary>
+    public UISprite DianLiangUISprite;
+    /// <summary>
     /// 玩家道具(导弹/地雷)UI管理.
     /// </summary>
     public PlayerDaoJuManageUI mPlayerDaoJuManageUI;
@@ -85,8 +93,8 @@ public class UIController : MonoBehaviour
 		m_totalTime = (int)m_pGameTime;
 		XkGameCtrl.IsLoadingLevel = false;
         ShowJiFenInfo(0);
-
-        //InputEventCtrl.GetInstance().ClickPlayerYouMenBtEvent += ClickPlayerYouMenBtEvent;
+        UpdateDianLiangUI(pcvr.GetInstance().mPlayerDataManage.DianLiangVal);
+        UpdatePlayerMoveSpeed(0);
     }
 
 	bool IsCloseYouMenTiShi;
@@ -245,7 +253,12 @@ public class UIController : MonoBehaviour
 				XkGameCtrl.IsLoadingLevel = true;
 				LoadMovieLevel();
 			}
-		}
+
+            if (PlayerMoveSpeedVal != LastPlayerMoveSpeedVal)
+            {
+                UpdatePlayerMoveSpeed(PlayerMoveSpeedVal);
+            }
+        }
 	}
 
 	bool IsLoadMovie;
@@ -448,6 +461,49 @@ public class UIController : MonoBehaviour
         for (int i = 0; i < JiFenSpriteArray.Length; i++)
         {
             JiFenSpriteArray[i].gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 更新玩家电量UI.
+    /// </summary>
+    /// <param name="dianLiang"></param>
+    public void UpdateDianLiangUI(float dianLiang)
+    {
+        DianLiangUISprite.fillAmount = dianLiang;
+    }
+
+    float TimeLastSpeed = -1f;
+    int PlayerMoveSpeedVal = 0;
+    int LastPlayerMoveSpeedVal = 0;
+    /// <summary>
+    /// 更新玩家速度数据.
+    /// </summary>
+    public void UpdatePlayerMoveSpeed(int speed)
+    {
+        if (Time.time - TimeLastSpeed < 0.1f)
+        {
+            PlayerMoveSpeedVal = speed;
+            return;
+        }
+        TimeLastSpeed = Time.time;
+        LastPlayerMoveSpeedVal = speed;
+
+        int tmpVal = 0;
+        string valStr = speed.ToString();
+        for (int i = 0; i < 3; i++)
+        {
+            if (valStr.Length > i)
+            {
+                tmpVal = speed % 10;
+                PlayerMoveSpeedArray[i].spriteName = tmpVal.ToString();
+                speed = (int)(speed / 10f);
+                PlayerMoveSpeedArray[i].enabled = true;
+            }
+            else
+            {
+                PlayerMoveSpeedArray[i].enabled = false;
+            }
         }
     }
 }

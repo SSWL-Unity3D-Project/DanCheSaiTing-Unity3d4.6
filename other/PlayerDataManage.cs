@@ -20,6 +20,29 @@ public class PlayerDataManage
     /// 游戏运营模式.
     /// </summary>
     public string GameMode = "";
+    float _DianLiangVal;
+    /// <summary>
+    /// 玩家电池电量.
+    /// </summary>
+    public float DianLiangVal
+    {
+        set
+        {
+            if (value > 1f)
+            {
+                value = 1f;
+            }
+            _DianLiangVal = value;
+            if (PlayerController.GetInstance() != null)
+            {
+                PlayerController.GetInstance().m_UIController.UpdateDianLiangUI(_DianLiangVal);
+            }
+        }
+        get
+        {
+            return _DianLiangVal;
+        }
+    }
     int _DaoDanNum;
     /// <summary>
     /// 导弹数量.
@@ -68,12 +91,14 @@ public class PlayerDataManage
             return _DiLeiNum;
         }
     }
+
     public PlayerDataManage()
     {
         PlayerCoinNum = System.Convert.ToInt32(ReadGameInfo.GetInstance().ReadInsertCoinNum());
         CoinNumNeed = System.Convert.ToInt32(ReadGameInfo.GetInstance().ReadStarCoinNumSet());
         CoinNumFeiXing = 1;
         GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
+        DianLiangVal = 1f;
         //DaoDanNum = 5; //test
         //DiLeiNum = 5; //test
     }
