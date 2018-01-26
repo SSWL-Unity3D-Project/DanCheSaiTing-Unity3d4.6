@@ -10,6 +10,12 @@ public class PlayerDaoJuManageUI : MonoBehaviour
     /// 地雷数量.
     /// </summary>
     public UISprite DiLeiUiSprite;
+    void Start()
+    {
+        UpdateDaoDanInfo(pcvr.GetInstance().mPlayerDataManage.DaoDanNum);
+        UpdateDiLeiInfo(pcvr.GetInstance().mPlayerDataManage.DiLeiNum);
+    }
+
     /// <summary>
     /// 更新导弹UI数据.
     /// </summary>

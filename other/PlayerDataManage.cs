@@ -74,7 +74,7 @@ public class PlayerDataManage
         CoinNumNeed = System.Convert.ToInt32(ReadGameInfo.GetInstance().ReadStarCoinNumSet());
         CoinNumFeiXing = 1;
         GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
-        DaoDanNum = 5; //test
-        DiLeiNum = 5; //test
+        //DaoDanNum = 5; //test
+        //DiLeiNum = 5; //test
     }
 }
