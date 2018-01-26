@@ -403,8 +403,9 @@ public class PlayerController : MonoBehaviour
         npc2Pos = npc2.transform;
         npc3Pos = npc3.transform;
         m_StartForEfferct = m_ParameterForEfferct;
-        PlayerMinSpeedVal = (float)ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
-		Loading.m_HasBegin = false;
+        //PlayerMinSpeedVal = ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
+        PlayerMinSpeedVal = 80f;
+        Loading.m_HasBegin = false;
 		pcvr.ShaCheBtLight = StartLightState.Liang;
 		pcvr.IsSlowLoopCom = false;
 		pcvr.CountFXZD = 0;
@@ -1083,7 +1084,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 主角运动速度.
     /// </summary>
-    int PlayerMoveSpeed
+    public int PlayerMoveSpeed
     {
         set
         {

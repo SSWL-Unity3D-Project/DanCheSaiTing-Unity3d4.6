@@ -254,9 +254,9 @@ public class UIController : MonoBehaviour
 				LoadMovieLevel();
 			}
 
-            if (PlayerMoveSpeedVal != LastPlayerMoveSpeedVal)
+            if (PlayerController.GetInstance().PlayerMoveSpeed != LastPlayerMoveSpeedVal)
             {
-                UpdatePlayerMoveSpeed(PlayerMoveSpeedVal);
+                UpdatePlayerMoveSpeed(PlayerController.GetInstance().PlayerMoveSpeed);
             }
         }
 	}
@@ -474,16 +474,14 @@ public class UIController : MonoBehaviour
     }
 
     float TimeLastSpeed = -1f;
-    int PlayerMoveSpeedVal = 0;
     int LastPlayerMoveSpeedVal = 0;
     /// <summary>
     /// 更新玩家速度数据.
     /// </summary>
     public void UpdatePlayerMoveSpeed(int speed)
     {
-        if (Time.time - TimeLastSpeed < 0.1f)
+        if (Time.time - TimeLastSpeed < 0.08f)
         {
-            PlayerMoveSpeedVal = speed;
             return;
         }
         TimeLastSpeed = Time.time;
