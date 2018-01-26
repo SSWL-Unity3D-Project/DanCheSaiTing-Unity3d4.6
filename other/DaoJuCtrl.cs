@@ -17,6 +17,7 @@ public class DaoJuCtrl : MonoBehaviour
     /// QianTing 潜艇
     /// Tank 坦克
     /// DiLei 地雷
+    /// DianChi 电池
     /// </summary>
     public enum DaoJuType
     {
@@ -34,6 +35,7 @@ public class DaoJuCtrl : MonoBehaviour
         QianTing,
         Tank,
         DiLei,
+        DianChi,
     }
     public DaoJuType DaoJuState = DaoJuType.Null;
     bool IsDestroyThis = false;
@@ -174,17 +176,22 @@ public class DaoJuCtrl : MonoBehaviour
                     }
                     break;
                 }
+            case DaoJuType.DianChi:
+                {
+                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal = 1f;
+                    break;
+                }
             case DaoJuType.ZhangAiWu:
                 {
-                    GameObject childObj = null;
-                    DestroyThisTimed destroyCom = null;
-                    for (int i = 0; i < transform.childCount; i++)
-                    {
-                        childObj = transform.GetChild(i).gameObject;
-                        destroyCom = childObj.AddComponent<DestroyThisTimed>();
-                        destroyCom.InitInfo(LiZiPrefab, BaoXiangPrefab, i * TimeDestroyZhangAiWu);
-                    }
-                    transform.DetachChildren(); //将子集从自身解除.
+                    //GameObject childObj = null;
+                    //DestroyThisTimed destroyCom = null;
+                    //for (int i = 0; i < transform.childCount; i++)
+                    //{
+                    //    childObj = transform.GetChild(i).gameObject;
+                    //    destroyCom = childObj.AddComponent<DestroyThisTimed>();
+                    //    destroyCom.InitInfo(LiZiPrefab, BaoXiangPrefab, i * TimeDestroyZhangAiWu);
+                    //}
+                    //transform.DetachChildren(); //将子集从自身解除.
                     break;
                 }
             case DaoJuType.CiTie:

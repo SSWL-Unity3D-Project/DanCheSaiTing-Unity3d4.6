@@ -32,10 +32,14 @@ public class PlayerDataManage
             {
                 value = 1f;
             }
-            _DianLiangVal = value;
-            if (PlayerController.GetInstance() != null)
+
+            if (_DianLiangVal != value)
             {
-                PlayerController.GetInstance().m_UIController.UpdateDianLiangUI(_DianLiangVal);
+                _DianLiangVal = value;
+                if (PlayerController.GetInstance() != null)
+                {
+                    PlayerController.GetInstance().m_UIController.UpdateDianLiangUI(_DianLiangVal);
+                }
             }
         }
         get

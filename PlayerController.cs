@@ -763,8 +763,16 @@ public class PlayerController : MonoBehaviour
 	void GetInput()
 	{
 		//throttle = 1f;
-        throttle = pcvr.mGetPower;
+        if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0f)
+        {
+            throttle = pcvr.mGetPower;
+        }
+        else
+        {
+            throttle = 0f;
+        }
         jiaoTaBan = pcvr.mGetJiaoTaBan;
+        mSteer = pcvr.mGetSteer;
         //if (!IsClickShaCheBt)
         //{
         //    throttle = pcvr.mGetPower;
@@ -777,7 +785,25 @@ public class PlayerController : MonoBehaviour
         //        rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime * 3f);
         //    }
         //}
-        mSteer = pcvr.mGetSteer;
+
+        if (throttle > 0f)
+        {
+            if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0.1f)
+            {
+                pcvr.GetInstance().mPlayerDataManage.DianLiangVal = Mathf.Lerp(pcvr.GetInstance().mPlayerDataManage.DianLiangVal, 0f, Time.deltaTime * 0.2f);
+            }
+            else
+            {
+                if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0.01)
+                {
+                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal -= (Time.deltaTime * 0.1f);
+                }
+                else
+                {
+                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal = 0f;
+                }
+            }
+        }
 
         if (jiaoTaBan > 0.5f)
         {
