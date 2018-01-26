@@ -937,18 +937,35 @@ public class pcvr : MonoBehaviour {
 	static float TimePowerMax = 3f;
 	static float PowerLastVal;
 	static bool IsAddSpeed;
+    bool IsHitJiaoTaBan = false;
     void GetPcvrJiaoTaBan()
     {
         if (!bIsHardWare)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                mGetJiaoTaBan = 1f;
+                IsHitJiaoTaBan = true;
             }
 
             if (Input.GetKeyUp(KeyCode.Mouse0))
             {
-                mGetJiaoTaBan = 0f;
+                IsHitJiaoTaBan = false;
+            }
+
+            if (IsHitJiaoTaBan)
+            {
+                mGetJiaoTaBan = Mathf.Lerp(mGetJiaoTaBan, 1f, Time.deltaTime * 0.2f);
+            }
+            else
+            {
+                if (mGetJiaoTaBan >= 0.1f)
+                {
+                    mGetJiaoTaBan = Mathf.Lerp(mGetJiaoTaBan, 0f, Time.deltaTime * 10f);
+                }
+                else
+                {
+                    mGetJiaoTaBan = 0f;
+                }
             }
         }
         else

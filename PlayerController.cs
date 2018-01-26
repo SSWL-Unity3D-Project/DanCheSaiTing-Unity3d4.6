@@ -779,6 +779,31 @@ public class PlayerController : MonoBehaviour
         //}
         mSteer = pcvr.mGetSteer;
 
+        if (jiaoTaBan > 0.5f)
+        {
+            if (m_PlayerAnimator.gameObject.activeInHierarchy)
+            {
+                m_PlayerAnimator.SetBool("IsRun2", true);
+                m_PlayerAnimator.SetBool("IsRun1", false);
+            }
+        }
+        else if (jiaoTaBan > 0f)
+        {
+            if (m_PlayerAnimator.gameObject.activeInHierarchy)
+            {
+                m_PlayerAnimator.SetBool("IsRun1", true);
+                m_PlayerAnimator.SetBool("IsRun2", false);
+            }
+        }
+        else
+        {
+            if (m_PlayerAnimator.gameObject.activeInHierarchy)
+            {
+                m_PlayerAnimator.SetBool("IsRun1", false);
+                m_PlayerAnimator.SetBool("IsRun2", false);
+            }
+        }
+
 		if (mSteer < -SteerOffset)
 		{
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
