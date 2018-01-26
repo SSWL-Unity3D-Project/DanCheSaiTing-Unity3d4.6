@@ -69,6 +69,22 @@ public class DaoJuCtrl : MonoBehaviour
     /// 道具的子集.
     /// </summary>
     public GameObject DaoJuChild;
+    void Start()
+    {
+        if (DaoJuState == DaoJuType.ZhangAiWu)
+        {
+            if (pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData == null)
+            {
+                pcvr.GetInstance().mPlayerDataManage.CreatDaoJuZhangAiWuData();
+            }
+
+            if (pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData != null)
+            {
+                pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.AddZhangAiWuTr(transform);
+            }
+        }
+    }
+
     void Update()
     {
 		if (Application.loadedLevel == 0)
@@ -129,7 +145,7 @@ public class DaoJuCtrl : MonoBehaviour
         }
     }
 
-    public void OnDestroyThis()
+    public void OnDestroyThis(bool isPlayerHit = false)
 	{
 		if (Application.loadedLevel == 0)
 		{
@@ -183,7 +199,11 @@ public class DaoJuCtrl : MonoBehaviour
                 }
             case DaoJuType.ZhangAiWu:
                 {
-                    PlayerController.GetInstance().OnPlayerHitDaoJuZhangAiWu();
+                    if (isPlayerHit)
+                    {
+                        PlayerController.GetInstance().OnPlayerHitDaoJuZhangAiWu();
+                    }
+                    pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.RemoveZhangAiWuTr(transform);
                     //GameObject childObj = null;
                     //DestroyThisTimed destroyCom = null;
                     //for (int i = 0; i < transform.childCount; i++)

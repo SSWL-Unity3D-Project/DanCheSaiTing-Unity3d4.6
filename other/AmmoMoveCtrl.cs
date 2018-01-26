@@ -288,6 +288,12 @@ public class AmmoMoveCtrl : MonoBehaviour
                 isDestroyAmmo = true;
             }
         }
+        
+        if (AmmoState == AmmoType.DiLei || AmmoState == AmmoType.TankPaoDan)
+        {
+            //地雷和坦克炮弹强制删除.
+            isDestroyAmmo = true;
+        }
 
         if (isDestroyAmmo)
         {

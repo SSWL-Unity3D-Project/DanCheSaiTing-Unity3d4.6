@@ -1,4 +1,4 @@
-﻿
+﻿using UnityEngine;
 /// <summary>
 /// 玩家数据管理.
 /// </summary>
@@ -20,6 +20,7 @@ public class PlayerDataManage
     /// 游戏运营模式.
     /// </summary>
     public string GameMode = "";
+    public DaoJuZhangAiWuData mDaoJuZhangAiWuData;
     float _DianLiangVal;
     /// <summary>
     /// 玩家电池电量.
@@ -105,5 +106,14 @@ public class PlayerDataManage
         DianLiangVal = 1f;
         //DaoDanNum = 5; //test
         //DiLeiNum = 5; //test
+    }
+
+    public void CreatDaoJuZhangAiWuData()
+    {
+        if (mDaoJuZhangAiWuData == null)
+        {
+            GameObject obj = new GameObject("_DaoJuZhangAiWuData");
+            mDaoJuZhangAiWuData = obj.AddComponent<DaoJuZhangAiWuData>();
+        }
     }
 }

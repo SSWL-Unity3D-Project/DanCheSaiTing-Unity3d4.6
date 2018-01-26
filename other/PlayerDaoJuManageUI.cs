@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// 玩家道具(导弹/地雷)UI控制.
+/// </summary>
 public class PlayerDaoJuManageUI : MonoBehaviour
 {
     /// <summary>

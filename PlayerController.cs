@@ -449,14 +449,16 @@ public class PlayerController : MonoBehaviour
         if (pcvr.GetInstance().mPlayerDataManage.DaoDanNum > 0)
         {
             pcvr.GetInstance().mPlayerDataManage.DaoDanNum--;
-            OnPlayerHitDaoDanDaoJu(null);
+            GameObject zhangAiWuObj = pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
+            OnPlayerHitDaoDanDaoJu(zhangAiWuObj);
             return;
         }
         
         if (pcvr.GetInstance().mPlayerDataManage.DiLeiNum > 0)
         {
             pcvr.GetInstance().mPlayerDataManage.DiLeiNum--;
-            OnPlayerHitDiLeiDaoJu(null);
+            GameObject zhangAiWuObj = pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
+            OnPlayerHitDiLeiDaoJu(zhangAiWuObj);
             return;
         }
     }
@@ -1161,7 +1163,7 @@ public class PlayerController : MonoBehaviour
         DaoJuCtrl daoJuCom = other.GetComponent<DaoJuCtrl>();
         if (daoJuCom != null)
         {
-            daoJuCom.OnDestroyThis();
+            daoJuCom.OnDestroyThis(true);
             return;
         }
 
@@ -2066,7 +2068,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnPlayerHitDaoJuZhangAiWu()
     {
-        if (rigidbody.velocity.magnitude * 3.6f > 30.0f)
+        if (rigidbody.velocity.magnitude * 3.6f > 10f)
         {
             IsHitRock = true;
             m_IsHitshake = true;
