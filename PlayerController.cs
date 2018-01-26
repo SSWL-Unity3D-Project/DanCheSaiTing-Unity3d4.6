@@ -640,7 +640,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-			if(SpeedObj > 105f && !m_IsFinished)
+			if(SpeedMovePlayer > 105f && !m_IsFinished)
 			{
 				if (!m_IsHitshake) {
 					if (pcvr.m_IsOpneLeftQinang || pcvr.m_IsOpneRightQinang) {
@@ -810,7 +810,7 @@ public class PlayerController : MonoBehaviour
 			{
 				m_PlayerAnimator.SetBool("IsTurnleft",true);
 			}
-			if (SpeedObj > 15f && !m_IsHitshake) {
+			if (SpeedMovePlayer > 15f && !m_IsHitshake) {
 				pcvr.m_IsOpneRightQinang = true;
 			}
 		}
@@ -831,7 +831,7 @@ public class PlayerController : MonoBehaviour
 			{
 				m_PlayerAnimator.SetBool("IsTurnRight",true);
 			}
-			if (SpeedObj > 15f && !m_IsHitshake) {
+			if (SpeedMovePlayer > 15f && !m_IsHitshake) {
 				pcvr.m_IsOpneLeftQinang = true;
 			}
 		}
@@ -968,7 +968,7 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	float SpeedObj;
+	float SpeedMovePlayer;
 	void OnGUI()
 	{
 		float wVal = Screen.width;
@@ -1034,12 +1034,12 @@ public class PlayerController : MonoBehaviour
 
 		float sp = rigidbody.velocity.magnitude * 3.6f;
 		sp = Mathf.Floor( sp );
-		float dSpeed = SpeedObj - sp;
+		float dSpeed = SpeedMovePlayer - sp;
 		if (dSpeed > 30f) {
 			m_IsHitshake = true;
 			//pcvr.GetInstance().OpenFangXiangPanZhenDong();
 		}
-		SpeedObj = sp;
+		SpeedMovePlayer = sp;
 
 #if UNITY_EDITOR
 		if (!pcvr.bIsHardWare || pcvr.IsTestGame) {
@@ -1055,18 +1055,20 @@ public class PlayerController : MonoBehaviour
 	public static float PlayerMinSpeedVal = 80f;
 	void CalculateEnginePower(bool canDrive)
 	{
-		//if(throttle > 0f && SpeedObj <= m_pTopSpeed && !m_IsPubu) {
-		if(SpeedObj <= m_pTopSpeed && !m_IsPubu) {
-			float speedVal = (m_pTopSpeed * throttle);
-			float tmp = (m_pTopSpeed - PlayerMinSpeedVal) / (1f - pcvr.YouMemnMinVal);
-			speedVal = m_pTopSpeed - (1f - throttle) * tmp;
-			speedVal = speedVal < PlayerMinSpeedVal ? PlayerMinSpeedVal : speedVal;
-            //			if (!pcvr.bIsHardWare) {
-            //				speedVal = 80f; //test
-            //			}
-            speedVal /= 3.2f;   //gzkun//3.6f;
-			rigidbody.velocity = speedVal * transform.forward;
-		}
+        if (throttle > 0f || jiaoTaBan > 0f)
+        {
+            if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu)
+            {
+                float youMenSpeedVal = (m_pTopSpeed * throttle);
+                float jiaoTaBanSpeedVal = m_pTopSpeed * jiaoTaBan;
+                float speedVal = youMenSpeedVal > jiaoTaBanSpeedVal ? youMenSpeedVal : jiaoTaBanSpeedVal;
+                //float tmp = (m_pTopSpeed - PlayerMinSpeedVal) / (1f - pcvr.YouMemnMinVal);
+                //speedVal = m_pTopSpeed - (1f - throttle) * tmp;
+                speedVal = speedVal < PlayerMinSpeedVal ? PlayerMinSpeedVal : speedVal;
+                speedVal /= 3.2f;   //gzkun//3.6f;
+                rigidbody.velocity = speedVal * transform.forward;
+            }
+        }
 
 		if(m_IsPubu) {
 			m_pubuTimmer+=Time.deltaTime;
