@@ -37,8 +37,15 @@ public class pcvr : MonoBehaviour {
 	public static uint BikeShaCheCur;
 	public static uint mBikePowerMin = 999999;
 	public static uint mBikePowerMax = 0;
+    /// <summary>
+    /// 油门.
+    /// </summary>
 	public static float mGetPower = 0f;
-	static uint BikePowerLen = 0;
+    /// <summary>
+    /// 脚踏板.
+    /// </summary>
+	public static float mGetJiaoTaBan = 0f;
+    static uint BikePowerLen = 0;
 	public static uint BikePowerCur;
 	public static uint BikePowerOld;
 	bool bIsJiaoYanBikeValue = false;
@@ -64,7 +71,8 @@ public class pcvr : MonoBehaviour {
 	static uint mBikeShaCheMax = 0;
 	static uint BikeShaCheLen = 1;
 	bool IsPlayFangXiangPanZhenDong;
-	static private pcvr Instance = null;
+    public PlayerDataManage mPlayerDataManage;
+    static private pcvr Instance = null;
 	static public pcvr GetInstance()
 	{
 		if (Instance == null) {
@@ -79,8 +87,9 @@ public class pcvr : MonoBehaviour {
 			if (HardWareTest.IsTestHardWare) {
 				TestComPort.GetInstance();
 			}
-			//ScreenLog.Log("open hid***********************");
-		}
+            Instance.mPlayerDataManage = new PlayerDataManage();
+            //ScreenLog.Log("open hid***********************");
+        }
 		return Instance;
 	}
 
@@ -139,7 +148,8 @@ public class pcvr : MonoBehaviour {
 			IsHandleDirByKey = !IsHandleDirByKey;
 		}
 
-		GetPcvrPowerVal();
+        GetPcvrJiaoTaBan();
+        GetPcvrPowerVal();
 		GetPcvrSteerVal();
 		//GetPcvrShaCheVal();
 		if (!bIsHardWare) {
@@ -927,7 +937,26 @@ public class pcvr : MonoBehaviour {
 	static float TimePowerMax = 3f;
 	static float PowerLastVal;
 	static bool IsAddSpeed;
-	public static void GetPcvrPowerVal()
+    void GetPcvrJiaoTaBan()
+    {
+        if (!bIsHardWare)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                mGetJiaoTaBan = 1f;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                mGetJiaoTaBan = 0f;
+            }
+        }
+        else
+        {
+        }
+    }
+
+    public static void GetPcvrPowerVal()
 	{
 		//if (!bIsHardWare) {
 		if (!bIsHardWare || IsTestGame) {

@@ -216,7 +216,8 @@ public class PlayerController : MonoBehaviour
     public Transform SpawnJiFenTr;
 	public static float m_pTopSpeed = 100.0f;
 	private float throttle = 0.0f;
-	public bool canDrive = true;
+	private float jiaoTaBan = 0.0f;
+    public bool canDrive = true;
 	public WheelCollider m_wheel;
 	public Transform m_pLookTarget;
 	public Transform m_massCenter;
@@ -394,7 +395,8 @@ public class PlayerController : MonoBehaviour
     }
 
 	void Start()
-	{
+    {
+        InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
         m_PlayerAnimator = m_pChuan.GetComponent<Animator>();
         npc1Pos = npc1.transform;
         npc2Pos = npc2.transform;
@@ -435,7 +437,27 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(GameObjectHide());   //gzknu
 	}
 
-	public static int GameGradeVal = 2;
+    void ClickStartBtOneEvent(ButtonState val)
+    {
+        if (val != ButtonState.DOWN)
+        {
+            return;
+        }
+
+        if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi)
+        {
+            return;
+        }
+
+        if (pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum < pcvr.GetInstance().mPlayerDataManage.CoinNumFeiXing)
+        {
+            return;
+        }
+        pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum -= pcvr.GetInstance().mPlayerDataManage.CoinNumFeiXing;
+        OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType.FeiXingYi);
+    }
+
+    public static int GameGradeVal = 2;
     IEnumerator GameObjectHide()        //gzknu
     {
         yield return new WaitForSeconds(1.0f);
@@ -568,7 +590,7 @@ public class PlayerController : MonoBehaviour
 				{
 					m_PlayerAnimator.SetTrigger("IsDiaoluo");
 				}
-                TimeRandHuiTou = (float)UnityEngine.Random.Range(3, 15);
+                TimeRandHuiTou = UnityEngine.Random.Range(3, 15);
                 TimeLastHuiTou = Time.time;
             }
             else
@@ -717,8 +739,9 @@ public class PlayerController : MonoBehaviour
 	float SteerOffset = 0.05f;
 	void GetInput()
 	{
-		throttle = 1f;
-        //throttle = pcvr.mGetPower;
+		//throttle = 1f;
+        throttle = pcvr.mGetPower;
+        jiaoTaBan = pcvr.mGetJiaoTaBan;
         //if (!IsClickShaCheBt)
         //{
         //    throttle = pcvr.mGetPower;
@@ -1572,6 +1595,11 @@ public class PlayerController : MonoBehaviour
         m_IsJiasu = true;
         m_JiasuTimmer = 0f;
         if (mSpeedDaoJuState == daoJuState)
+        {
+            return;
+        }
+
+        if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi && daoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu)
         {
             return;
         }

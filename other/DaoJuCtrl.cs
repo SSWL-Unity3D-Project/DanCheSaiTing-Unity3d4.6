@@ -168,7 +168,10 @@ public class DaoJuCtrl : MonoBehaviour
             case DaoJuType.QianTing:
             case DaoJuType.Tank:
                 {
-                    PlayerController.GetInstance().OpenPlayerDaoJuAni(DaoJuState);
+                    if (DaoJuState == DaoJuType.PenQiJiaSu)
+                    {
+                        PlayerController.GetInstance().OpenPlayerDaoJuAni(DaoJuState);
+                    }
                     break;
                 }
             case DaoJuType.ZhangAiWu:

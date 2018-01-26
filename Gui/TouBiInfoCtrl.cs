@@ -10,9 +10,7 @@ public class TouBiInfoCtrl : MonoBehaviour {
 	public AudioSource m_TbSource;
 	public GameObject FreeObj;
 	public GameObject TouBiObj;
-
-	private int m_InserNum = 0;
-	private string CoinNumSet = "";
+    
 	private string InsertCoinNum = "";
 	private string GameMode = "";
 	public static bool IsCloseDongGan;
@@ -23,16 +21,14 @@ public class TouBiInfoCtrl : MonoBehaviour {
 	{
 		IsCloseQiNang = false;
 		IsCloseDongGan = false;
-		GameMode = ReadGameInfo.GetInstance ().ReadGameStarMode();
+        GameMode = pcvr.GetInstance().mPlayerDataManage.GameMode;
 		if(GameMode == "oper")
 		{
-			CoinNumSet = ReadGameInfo.GetInstance ().ReadStarCoinNumSet();
-			InsertCoinNum = ReadGameInfo.GetInstance ().ReadInsertCoinNum();
-			CoinNumSetTex.spriteName = CoinNumSet;
-			m_InserNum = Convert.ToInt32(InsertCoinNum);
+			InsertCoinNum = pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum.ToString();
+			CoinNumSetTex.spriteName = pcvr.GetInstance().mPlayerDataManage.CoinNumNeed.ToString();
 			UpdateInsertCoin();
-
-			TouBiObj.SetActive(true);
+            
+            TouBiObj.SetActive(true);
 			FreeObj.SetActive(false);
 		}
 		else {
@@ -48,8 +44,8 @@ public class TouBiInfoCtrl : MonoBehaviour {
 	void Update()
 	{
 		if (pcvr.bIsHardWare) {
-			if (GlobalData.CoinCur != m_InserNum && GameMode == "oper") {
-				m_InserNum = GlobalData.CoinCur - 1;
+			if (GlobalData.CoinCur != pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum && GameMode == "oper") {
+                pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum = GlobalData.CoinCur - 1;
 				OnClickInsertBt();
 			}
 		}
@@ -101,15 +97,15 @@ public class TouBiInfoCtrl : MonoBehaviour {
 	void OnClickInsertBt()
 	{
 		m_TbSource.Play();
-		m_InserNum++;
-		ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
+        pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum++;
+		ReadGameInfo.GetInstance().WriteInsertCoinNum(pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum.ToString());
 		UpdateInsertCoin();
 	}
 
 	void UpdateInsertCoin()
 	{
 		int n = 1;
-		int num = m_InserNum;
+		int num = pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum;
 		int temp = num;
 		while (num > 9) {
 			num /= 10;
