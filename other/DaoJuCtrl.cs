@@ -183,6 +183,7 @@ public class DaoJuCtrl : MonoBehaviour
                 }
             case DaoJuType.ZhangAiWu:
                 {
+                    PlayerController.GetInstance().OnPlayerHitDaoJuZhangAiWu();
                     //GameObject childObj = null;
                     //DestroyThisTimed destroyCom = null;
                     //for (int i = 0; i < transform.childCount; i++)

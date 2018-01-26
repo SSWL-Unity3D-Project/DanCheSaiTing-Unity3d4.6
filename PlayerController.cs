@@ -2063,4 +2063,18 @@ public class PlayerController : MonoBehaviour
                 }
         }
     }
+
+    public void OnPlayerHitDaoJuZhangAiWu()
+    {
+        if (rigidbody.velocity.magnitude * 3.6f > 30.0f)
+        {
+            IsHitRock = true;
+            m_IsHitshake = true;
+            if (m_PlayerAnimator.gameObject.activeInHierarchy)
+            {
+                m_PlayerAnimator.SetTrigger("IsZhuang");
+            }
+            m_CameraShake.setCameraShakeImpulseValue();
+        }
+    }
 }
