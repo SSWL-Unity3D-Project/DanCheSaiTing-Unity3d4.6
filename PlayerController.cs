@@ -505,6 +505,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
         pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum -= pcvr.GetInstance().mPlayerDataManage.CoinNumFeiXing;
+        m_UIController.mTouBiInfo.UpdateInsertCoin();
         OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType.FeiXingYi);
     }
 
@@ -767,15 +768,15 @@ public class PlayerController : MonoBehaviour
 		}
 		if(m_IsJiasu)
 		{
-			m_JiasuTimmer+=Time.deltaTime;
-			if(m_JiasuTimmer<m_JiasuTimeSet)
+			m_JiasuTimmer += Time.deltaTime;
+			if(m_JiasuTimmer < m_JiasuTimeSet)
 			{
 				rigidbody.velocity = 1.4f*transform.forward*m_JiasuTopSpeed/3.6f;
 			}
 			else
 			{
 				m_IsJiasu =	false;
-				m_JiasuTimmer = 0.0f;
+				m_JiasuTimmer = 0f;
 			}
 		}
 	}
@@ -825,12 +826,19 @@ public class PlayerController : MonoBehaviour
 
         if (throttle > 0f)
         {
-            if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0f)
+            if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi || mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu)
             {
-                pcvr.GetInstance().mPlayerDataManage.DianLiangVal -= (Time.deltaTime * DianLiangSubSpeed);
-                if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal < 0f)
+                //喷气加速和飞行翼状态时不消耗电量.
+            }
+            else
+            {
+                if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0f)
                 {
-                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal = 0f;
+                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal -= (Time.deltaTime * DianLiangSubSpeed);
+                    if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal < 0f)
+                    {
+                        pcvr.GetInstance().mPlayerDataManage.DianLiangVal = 0f;
+                    }
                 }
             }
         }
@@ -1139,17 +1147,30 @@ public class PlayerController : MonoBehaviour
 
 	public static float PlayerMinSpeedVal = 80f;
 	void CalculateEnginePower(bool canDrive)
-	{
-        if (throttle > 0f || jiaoTaBan > 0f)
+    {
+        if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi || mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu)
         {
+            //喷气加速和飞行翼状态时不用踩脚踏板或加油门.
             if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu)
             {
-                float youMenSpeedVal = m_pTopSpeed * throttle;
-                float jiaoTaBanSpeedVal = mTopJiaoTaSpeed < m_pTopSpeed ? (mTopJiaoTaSpeed * jiaoTaBan) : m_pTopSpeed * jiaoTaBan;
-                float speedVal = youMenSpeedVal > jiaoTaBanSpeedVal ? youMenSpeedVal : jiaoTaBanSpeedVal;
-                speedVal = speedVal < PlayerMinSpeedVal ? PlayerMinSpeedVal : speedVal;
+                float speedVal = m_pTopSpeed;
                 speedVal /= 3.2f;   //gzkun//3.6f;
                 rigidbody.velocity = speedVal * transform.forward;
+            }
+        }
+        else
+        {
+            if (throttle > 0f || jiaoTaBan > 0f)
+            {
+                if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu)
+                {
+                    float youMenSpeedVal = m_pTopSpeed * throttle;
+                    float jiaoTaBanSpeedVal = mTopJiaoTaSpeed < m_pTopSpeed ? (mTopJiaoTaSpeed * jiaoTaBan) : m_pTopSpeed * jiaoTaBan;
+                    float speedVal = youMenSpeedVal > jiaoTaBanSpeedVal ? youMenSpeedVal : jiaoTaBanSpeedVal;
+                    speedVal = speedVal < PlayerMinSpeedVal ? PlayerMinSpeedVal : speedVal;
+                    speedVal /= 3.2f;   //gzkun//3.6f;
+                    rigidbody.velocity = speedVal * transform.forward;
+                }
             }
         }
 
@@ -1763,6 +1784,7 @@ public class PlayerController : MonoBehaviour
         {
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
                 {
+                    m_JiasuTimeSet = PenQiBianXingTime;
                     DaoJuBianXingTime = PenQiBianXingTime;
                     m_ParameterForEfferct = m_ForEfferctPenQi;
                     m_pTopSpeed = PlayerMvSpeedPenQi;
@@ -1776,6 +1798,7 @@ public class PlayerController : MonoBehaviour
                 }
             case DaoJuCtrl.DaoJuType.FeiXingYi:
                 {
+                    m_JiasuTimeSet = PenQiBianXingTime;
                     DaoJuBianXingTime = FeiXingYiBianXingTime;
                     m_ParameterForEfferct = m_ForEfferctFeiXing;
                     m_pChuan.localPosition += new Vector3(0f, PlayerHightFeiXing, 0f);

@@ -96,13 +96,16 @@ public class TouBiInfoCtrl : MonoBehaviour {
 	{
 		m_TbSource.Play();
         pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum++;
-		ReadGameInfo.GetInstance().WriteInsertCoinNum(pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum.ToString());
 		UpdateInsertCoin();
 	}
 
-	void UpdateInsertCoin()
-	{
-		int n = 1;
+    /// <summary>
+    /// 更新币值信息.
+    /// </summary>
+	public void UpdateInsertCoin()
+    {
+        ReadGameInfo.GetInstance().WriteInsertCoinNum(pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum.ToString());
+        int n = 1;
 		int num = pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum;
 		int temp = num;
 		while (num > 9) {

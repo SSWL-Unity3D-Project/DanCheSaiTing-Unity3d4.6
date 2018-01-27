@@ -5,6 +5,10 @@ using System;
 public class UIController : MonoBehaviour
 {
     /// <summary>
+    /// 投币控制.
+    /// </summary>
+    public TouBiInfoCtrl mTouBiInfo;
+    /// <summary>
     /// 游戏结束时要关闭的对象.
     /// </summary>
     public GameObject[] HiddenObjArray;
