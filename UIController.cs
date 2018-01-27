@@ -5,6 +5,10 @@ using System;
 public class UIController : MonoBehaviour
 {
     /// <summary>
+    /// 游戏结束时要关闭的对象.
+    /// </summary>
+    public GameObject[] HiddenObjArray;
+    /// <summary>
     /// 主角运动速度.
     /// </summary>
     public UISprite[] PlayerMoveSpeedArray;
@@ -226,6 +230,7 @@ public class UIController : MonoBehaviour
 				m_daojishiObj.SetActive(false);
 				m_biaodituObj.SetActive(false);
                 HiddenJiFen();
+                HiddenUi();
                 JieSuanJiFenObj.SetActive(true);
             }
 			if(m_IsCongratulate)
@@ -467,6 +472,14 @@ public class UIController : MonoBehaviour
                 JiFenSpriteArray[i].enabled = false;
                 JieSuanJiFenSpriteArray[i].enabled = false;
             }
+        }
+    }
+
+    void HiddenUi()
+    {
+        for (int i = 0; i < HiddenObjArray.Length; i++)
+        {
+            HiddenObjArray[i].SetActive(false);
         }
     }
 
