@@ -1731,9 +1731,18 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
     {
-        TimeLastDaoJuBianXing = Time.time;
-        m_IsJiasu = true;
-        m_JiasuTimmer = 0f;
+        if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi)
+        {
+            //道具加速为飞行翼时不重置时间.
+            return;
+        }
+        else
+        {
+            TimeLastDaoJuBianXing = Time.time;
+            m_IsJiasu = true;
+            m_JiasuTimmer = 0f;
+        }
+
         if (mSpeedDaoJuState == daoJuState)
         {
             return;
