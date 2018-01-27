@@ -216,7 +216,7 @@ public class AmmoMoveCtrl : MonoBehaviour
                     if (mAmmoInfo.AimTr != null)
                     {
                         DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
-                        if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
+                        if (daoJuCom != null && daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
                         {
                             //障碍物爆炸. 
                             daoJuCom.OnDestroyThis();
@@ -234,10 +234,16 @@ public class AmmoMoveCtrl : MonoBehaviour
                     if (mAmmoInfo.AimTr != null)
                     {
                         DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
-                        if (daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
+                        if (daoJuCom != null && daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
                         {
                             //障碍物爆炸. 
                             daoJuCom.OnDestroyThis();
+                        }
+
+                        NpcController npcCom = mAmmoInfo.AimTr.GetComponent<NpcController>();
+                        if (npcCom != null)
+                        {
+                            npcCom.OnDaoDanHit(transform.position);
                         }
                     }
                     else
