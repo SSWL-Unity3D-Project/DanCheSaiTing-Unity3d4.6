@@ -176,9 +176,25 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float PlayerHightShuangYiFeiJi = 1f;
     /// <summary>
-    /// 主角普通运动速度.
+    /// 主角普通运动速度(油门速度).
     /// </summary>
     public float PlayerMvSpeedMin = 50f;
+    /// <summary>
+    /// 电池电量减少速度.
+    /// </summary>
+    public float DianLiangSubSpeed = 0.1f;
+    /// <summary>
+    /// 脚踏板最高速度.
+    /// </summary>
+    public float mTopJiaoTaSpeed = 110f;
+    /// <summary>
+    /// 脚踏板风扇.
+    /// </summary>
+    public Transform JiaoTaBanFenShanTr;
+    /// <summary>
+    /// 脚踏板风扇最高转速.
+    /// </summary>
+    public float JiaoTaBanFenShanTopSpeed = 2f;
     /// <summary>
     /// 主角喷气运动速度.
     /// </summary>
@@ -205,6 +221,14 @@ public class PlayerController : MonoBehaviour
     /// 道具变型时长.
     /// </summary>
     public float DaoJuBianXingTime = 5f;
+    /// <summary>
+    /// 喷气变形时长.
+    /// </summary>
+    public float PenQiBianXingTime = 5f;
+    /// <summary>
+    /// 飞行翼(投币)变形时长.
+    /// </summary>
+    public float FeiXingYiBianXingTime = 5f;
     /// <summary>
     /// 积分.
     /// </summary>
@@ -764,6 +788,11 @@ public class PlayerController : MonoBehaviour
 	float mSteerTimeCur;
 	float SteerOffset = 0.05f;
     /// <summary>
+    /// 控制脚踏板动画切换的变量.
+    /// </summary>
+    [Range(0.1f, 0.9f)]
+    public float JiaoTaBanAniVal = 0.5f;
+    /// <summary>
     /// 脚踏板电量恢复数值.
     /// </summary>
     public float DianLiangHuiFuVal = 10f;
@@ -795,24 +824,17 @@ public class PlayerController : MonoBehaviour
 
         if (throttle > 0f)
         {
-            if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0.1f)
+            if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0f)
             {
-                pcvr.GetInstance().mPlayerDataManage.DianLiangVal = Mathf.Lerp(pcvr.GetInstance().mPlayerDataManage.DianLiangVal, 0f, Time.deltaTime * 0.2f);
-            }
-            else
-            {
-                if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0.01)
-                {
-                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal -= (Time.deltaTime * 0.1f);
-                }
-                else
+                pcvr.GetInstance().mPlayerDataManage.DianLiangVal -= (Time.deltaTime * DianLiangSubSpeed);
+                if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal < 0f)
                 {
                     pcvr.GetInstance().mPlayerDataManage.DianLiangVal = 0f;
                 }
             }
         }
-
-        if (jiaoTaBan > 0.5f)
+        
+        if (jiaoTaBan > JiaoTaBanAniVal)
         {
             if (m_PlayerAnimator.gameObject.activeInHierarchy)
             {
@@ -839,7 +861,13 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-		if (mSteer < -SteerOffset)
+        if (JiaoTaBanFenShanTr != null)
+        {
+            //转动脚踏板风扇.
+            JiaoTaBanFenShanTr.Rotate(Vector3.forward * JiaoTaBanFenShanTopSpeed * jiaoTaBan);
+        }
+
+        if (mSteer < -SteerOffset)
 		{
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
@@ -1115,11 +1143,9 @@ public class PlayerController : MonoBehaviour
         {
             if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu)
             {
-                float youMenSpeedVal = (m_pTopSpeed * throttle);
-                float jiaoTaBanSpeedVal = m_pTopSpeed * jiaoTaBan;
+                float youMenSpeedVal = m_pTopSpeed * throttle;
+                float jiaoTaBanSpeedVal = mTopJiaoTaSpeed < m_pTopSpeed ? (mTopJiaoTaSpeed * jiaoTaBan) : m_pTopSpeed * jiaoTaBan;
                 float speedVal = youMenSpeedVal > jiaoTaBanSpeedVal ? youMenSpeedVal : jiaoTaBanSpeedVal;
-                //float tmp = (m_pTopSpeed - PlayerMinSpeedVal) / (1f - pcvr.YouMemnMinVal);
-                //speedVal = m_pTopSpeed - (1f - throttle) * tmp;
                 speedVal = speedVal < PlayerMinSpeedVal ? PlayerMinSpeedVal : speedVal;
                 speedVal /= 3.2f;   //gzkun//3.6f;
                 rigidbody.velocity = speedVal * transform.forward;
@@ -1727,6 +1753,7 @@ public class PlayerController : MonoBehaviour
         {
             case DaoJuCtrl.DaoJuType.PenQiJiaSu:
                 {
+                    DaoJuBianXingTime = PenQiBianXingTime;
                     m_ParameterForEfferct = m_ForEfferctPenQi;
                     m_pTopSpeed = PlayerMvSpeedPenQi;
                     SetAcitveChuanTouShuiHuaTX(true);
@@ -1739,6 +1766,7 @@ public class PlayerController : MonoBehaviour
                 }
             case DaoJuCtrl.DaoJuType.FeiXingYi:
                 {
+                    DaoJuBianXingTime = FeiXingYiBianXingTime;
                     m_ParameterForEfferct = m_ForEfferctFeiXing;
                     m_pChuan.localPosition += new Vector3(0f, PlayerHightFeiXing, 0f);
                     m_CameraSmooth.SetCameraUpPos(PlayerHightFeiXing);
