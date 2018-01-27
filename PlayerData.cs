@@ -4,6 +4,10 @@ using System.Collections;
 public class PlayerData : MonoBehaviour
 {
     /// <summary>
+    /// 脚踏板风扇.
+    /// </summary>
+    public Transform JiaoTaBanFenShanTr;
+    /// <summary>
     /// 主角动画.
     /// </summary>
     //public Animator PlayerAni;

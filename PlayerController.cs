@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 脚踏板风扇.
     /// </summary>
-    public Transform JiaoTaBanFenShanTr;
+    Transform JiaoTaBanFenShanTr;
     /// <summary>
     /// 脚踏板风扇最高转速.
     /// </summary>
@@ -414,6 +414,7 @@ public class PlayerController : MonoBehaviour
                 FengKuangAni = PlayerDt[i].FengKuangAni;
                 FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
 				SpawnJiFenTr = PlayerDt[i].SpawnJiFenTr;
+                JiaoTaBanFenShanTr = PlayerDt[i].JiaoTaBanFenShanTr;
             }
         }
     }
