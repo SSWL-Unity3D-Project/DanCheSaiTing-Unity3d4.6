@@ -763,6 +763,10 @@ public class PlayerController : MonoBehaviour
 	float mSteer;
 	float mSteerTimeCur;
 	float SteerOffset = 0.05f;
+    /// <summary>
+    /// 脚踏板电量恢复数值.
+    /// </summary>
+    public float DianLiangHuiFuVal = 10f;
 	void GetInput()
 	{
 		//throttle = 1f;
@@ -815,6 +819,7 @@ public class PlayerController : MonoBehaviour
                 m_PlayerAnimator.SetBool("IsRun2", true);
                 m_PlayerAnimator.SetBool("IsRun1", false);
             }
+            pcvr.GetInstance().mPlayerDataManage.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
         }
         else if (jiaoTaBan > 0f)
         {
@@ -823,6 +828,7 @@ public class PlayerController : MonoBehaviour
                 m_PlayerAnimator.SetBool("IsRun1", true);
                 m_PlayerAnimator.SetBool("IsRun2", false);
             }
+            pcvr.GetInstance().mPlayerDataManage.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
         }
         else
         {

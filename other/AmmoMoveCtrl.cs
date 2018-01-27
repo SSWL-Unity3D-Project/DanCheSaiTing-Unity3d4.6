@@ -250,7 +250,6 @@ public class AmmoMoveCtrl : MonoBehaviour
         OnDestroyThis();
     }
 
-
     /// <summary>
     /// 检测子弹的范围碰撞.
     /// </summary>
