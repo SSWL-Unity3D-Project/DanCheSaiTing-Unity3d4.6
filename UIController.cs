@@ -13,6 +13,10 @@ public class UIController : MonoBehaviour
     /// </summary>
     public UISprite DianLiangUISprite;
     /// <summary>
+    /// 充电图标.
+    /// </summary>
+    public GameObject ChongDianObj;
+    /// <summary>
     /// 玩家道具(导弹/地雷)UI管理.
     /// </summary>
     public PlayerDaoJuManageUI mPlayerDaoJuManageUI;
@@ -95,6 +99,7 @@ public class UIController : MonoBehaviour
         ShowJiFenInfo(0);
         UpdateDianLiangUI(pcvr.GetInstance().mPlayerDataManage.DianLiangVal);
         UpdatePlayerMoveSpeed(0);
+        ChongDianObj.SetActive(false);
     }
 
 	bool IsCloseYouMenTiShi;
@@ -125,7 +130,16 @@ public class UIController : MonoBehaviour
 		}
 		else
 		{
-			if(m_BeginDaojishi.enabled)
+            if (pcvr.mGetJiaoTaBan > 0f && !ChongDianObj.activeInHierarchy)
+            {
+                ChongDianObj.SetActive(true);
+            }
+            else if (pcvr.mGetJiaoTaBan <= 0f && ChongDianObj.activeInHierarchy)
+            {
+                ChongDianObj.SetActive(false);
+            }
+
+            if (m_BeginDaojishi.enabled)
 			{
 				m_BeginDaojishi.enabled = false;
 				m_BeginDaojishiAudio.Stop();
