@@ -25,6 +25,10 @@ public class UIController : MonoBehaviour
     /// </summary>
     public GameObject ChongDianObj;
     /// <summary>
+    /// 电量警告图标.
+    /// </summary>
+    public GameObject DianLiangJiangGaoObj;
+    /// <summary>
     /// 玩家道具(导弹/地雷)UI管理.
     /// </summary>
     public PlayerDaoJuManageUI mPlayerDaoJuManageUI;
@@ -138,6 +142,7 @@ public class UIController : MonoBehaviour
 		}
 		else
 		{
+            //充电动画控制.
             if (pcvr.mGetJiaoTaBan > 0f && !ChongDianObj.activeInHierarchy)
             {
                 ChongDianObj.SetActive(true);
@@ -145,6 +150,16 @@ public class UIController : MonoBehaviour
             else if (pcvr.mGetJiaoTaBan <= 0f && ChongDianObj.activeInHierarchy)
             {
                 ChongDianObj.SetActive(false);
+            }
+
+            //电量低动画控制.
+            if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal <= 0.15f && !DianLiangJiangGaoObj.activeInHierarchy)
+            {
+                DianLiangJiangGaoObj.SetActive(true);
+            }
+            else if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0.15f && DianLiangJiangGaoObj.activeInHierarchy)
+            {
+                DianLiangJiangGaoObj.SetActive(false);
             }
 
             if (m_BeginDaojishi.enabled)
