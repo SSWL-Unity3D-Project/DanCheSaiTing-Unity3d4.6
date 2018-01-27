@@ -1802,7 +1802,7 @@ public class PlayerController : MonoBehaviour
                 }
             case DaoJuCtrl.DaoJuType.FeiXingYi:
                 {
-                    m_JiasuTimeSet = PenQiBianXingTime;
+                    m_JiasuTimeSet = FeiXingYiBianXingTime;
                     DaoJuBianXingTime = FeiXingYiBianXingTime;
                     m_ParameterForEfferct = m_ForEfferctFeiXing;
                     m_pChuan.localPosition += new Vector3(0f, PlayerHightFeiXing, 0f);
