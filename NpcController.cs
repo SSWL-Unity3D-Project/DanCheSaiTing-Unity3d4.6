@@ -36,6 +36,12 @@ public class NpcController : MonoBehaviour
     public static int NpcIndexVal = 0;
 	void Start ()
     {
+        if (pcvr.GetInstance().mPlayerDataManage.mAiNpcData == null)
+        {
+            pcvr.GetInstance().mPlayerDataManage.CreatAiNpcData();
+        }
+        pcvr.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
+
         m_playerRig = m_player.GetComponent<Rigidbody>();
         if (NpcIndexVal >= NpcObjArray.Length)
         {

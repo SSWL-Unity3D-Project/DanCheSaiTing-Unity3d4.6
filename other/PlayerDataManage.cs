@@ -20,7 +20,14 @@ public class PlayerDataManage
     /// 游戏运营模式.
     /// </summary>
     public string GameMode = "";
+    /// <summary>
+    /// 道具障碍物数据管理.
+    /// </summary>
     public DaoJuZhangAiWuData mDaoJuZhangAiWuData;
+    /// <summary>
+    /// AiNpc数据管理.
+    /// </summary>
+    public AiNpcDataManage mAiNpcData;
     float _DianLiangVal;
     /// <summary>
     /// 玩家电池电量.
@@ -108,12 +115,27 @@ public class PlayerDataManage
         //DiLeiNum = 5; //test
     }
 
+    /// <summary>
+    /// 创建道具障碍物数据.
+    /// </summary>
     public void CreatDaoJuZhangAiWuData()
     {
         if (mDaoJuZhangAiWuData == null)
         {
             GameObject obj = new GameObject("_DaoJuZhangAiWuData");
             mDaoJuZhangAiWuData = obj.AddComponent<DaoJuZhangAiWuData>();
+        }
+    }
+    
+    /// <summary>
+    /// 创建AiNpc数据.
+    /// </summary>
+    public void CreatAiNpcData()
+    {
+        if (mAiNpcData == null)
+        {
+            GameObject obj = new GameObject("_AiNpcData");
+            mAiNpcData = obj.AddComponent<AiNpcDataManage>();
         }
     }
 }

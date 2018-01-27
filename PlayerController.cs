@@ -382,7 +382,11 @@ public class PlayerController : MonoBehaviour
 	private float m_JiasuTimmer = 0.0f;
 	public GameObject m_JiasuPartical;
 	public AudioSource m_JiasuAudio;
-	public AudioSource m_EatJiasuAudio;
+    /// <summary>
+    /// 变形翼音效.
+    /// </summary>
+	public AudioSource mBianXingYiAudio;
+    public AudioSource m_EatJiasuAudio;
 	public float m_JiasuTopSpeed = 0.0f;
 	public GameObject m_JiashiGameObject;
 
@@ -1815,6 +1819,7 @@ public class PlayerController : MonoBehaviour
                         PenQiAniAy[i].transform.localScale = Vector3.one;
                         PenQiAniAy[i].SetBool("IsPlay", true);
                     }
+                    mBianXingYiAudio.Play();
                     break;
                 }
             case DaoJuCtrl.DaoJuType.ShuangYiFeiJi:
@@ -1910,36 +1915,22 @@ public class PlayerController : MonoBehaviour
     public void SpawnDaoDanAmmo()
     {
         bool isFollowNpc = false;
+        Transform aimNpcTr = null;
         GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation);
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
-        Transform AimNpcTr = null;
-        if(Vector3.Distance(npc1Pos.position, transform.position) <= DaoDanDisNpc
-            && Vector3.Dot(npc1Pos.forward, npc1Pos.position - transform.position) > 0f)
+        GameObject aimNpc =  pcvr.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+        if (aimNpc != null)
         {
             isFollowNpc = true;
-            AimNpcTr = npc1Pos;
-        }
-
-        if (!isFollowNpc && Vector3.Distance(npc2Pos.position, transform.position) <= DaoDanDisNpc
-            && Vector3.Dot(npc2Pos.forward, npc2Pos.position - transform.position) > 0f)
-        {
-            isFollowNpc = true;
-            AimNpcTr = npc2Pos;
-        }
-
-        if (!isFollowNpc && Vector3.Distance(npc3Pos.position, transform.position) <= DaoDanDisNpc
-            && Vector3.Dot(npc3Pos.forward, npc3Pos.position - transform.position) > 0f)
-        {
-            isFollowNpc = true;
-            AimNpcTr = npc3Pos;
+            aimNpcTr = aimNpc.transform;
         }
 
         if (isFollowNpc)
         {
             ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.GenZongDan;
-            ammoDt.PosHit = AimNpcTr.position;
-            ammoDt.AimTr = AimNpcTr;
+            ammoDt.PosHit = aimNpcTr.position;
+            ammoDt.AimTr = aimNpcTr;
             ammoMoveCom.InitMoveAmmo(ammoDt);
         }
         else
@@ -2003,16 +1994,27 @@ public class PlayerController : MonoBehaviour
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         ammoDt.HightVal = UnityEngine.Random.Range(2.5f, 5f);
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
-        if (DiLeiDt.mZhangAiWuObj != null)
+        GameObject aimNpc = pcvr.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+
+        if (aimNpc != null)
         {
-			ammoDt.PosHit = DiLeiDt.mZhangAiWuObj.transform.position;
-			ammoDt.AimTr = DiLeiDt.mZhangAiWuObj.transform;
+            ammoDt.PosHit = aimNpc.transform.position;
+            ammoDt.AimTr = aimNpc.transform;
             ammoMoveCom.InitMoveAmmo(ammoDt);
         }
         else
         {
-            ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(40f, 65f)) + ammo.transform.position;
-            ammoMoveCom.InitMoveAmmo(ammoDt);
+            if (DiLeiDt.mZhangAiWuObj != null)
+            {
+                ammoDt.PosHit = DiLeiDt.mZhangAiWuObj.transform.position;
+                ammoDt.AimTr = DiLeiDt.mZhangAiWuObj.transform;
+                ammoMoveCom.InitMoveAmmo(ammoDt);
+            }
+            else
+            {
+                ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(40f, 65f)) + ammo.transform.position;
+                ammoMoveCom.InitMoveAmmo(ammoDt);
+            }
         }
         DiLeiDt.AmmoSpawnCount++;
     }
