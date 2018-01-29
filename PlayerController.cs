@@ -397,7 +397,7 @@ public class PlayerController : MonoBehaviour
     public static int PlayerIndexRand = -1;
     void Awake()
     {
-        if (PlayerIndexRand >= PlayerObjArray.Length)
+        if (PlayerIndexRand >= PlayerObjArray.Length - 1)
         {
             PlayerIndexRand = -1;
         }

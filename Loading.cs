@@ -110,7 +110,7 @@ public class Loading : MonoBehaviour
 		XkGameCtrl.IsLoadingLevel = true;
 		Resources.UnloadUnusedAssets();
 		GC.Collect();
-		Application.LoadLevel(2);
+		Application.LoadLevel(5);
 	}
 
 	void UpdateInsertCoin()
