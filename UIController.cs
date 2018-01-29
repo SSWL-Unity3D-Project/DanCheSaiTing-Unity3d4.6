@@ -109,7 +109,7 @@ public class UIController : MonoBehaviour
 		m_totalTime = (int)m_pGameTime;
 		XkGameCtrl.IsLoadingLevel = false;
         ShowJiFenInfo(0);
-        UpdateDianLiangUI(pcvr.GetInstance().mPlayerDataManage.DianLiangVal);
+        UpdateDianLiangUI(1f);
         UpdatePlayerMoveSpeed(0);
         ChongDianObj.SetActive(false);
     }
@@ -153,11 +153,11 @@ public class UIController : MonoBehaviour
             }
 
             //电量低动画控制.
-            if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal <= 0.15f && !DianLiangJiangGaoObj.activeInHierarchy)
+            if (PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DianLiangVal <= 0.15f && !DianLiangJiangGaoObj.activeInHierarchy)
             {
                 DianLiangJiangGaoObj.SetActive(true);
             }
-            else if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0.15f && DianLiangJiangGaoObj.activeInHierarchy)
+            else if (PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DianLiangVal > 0.15f && DianLiangJiangGaoObj.activeInHierarchy)
             {
                 DianLiangJiangGaoObj.SetActive(false);
             }

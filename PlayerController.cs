@@ -805,7 +805,7 @@ public class PlayerController : MonoBehaviour
 	void GetInput()
 	{
 		//throttle = 1f;
-        if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0f)
+        if (m_UIController.mPlayerDaoJuManageUI.DianLiangVal > 0f)
         {
             throttle = pcvr.mGetPower;
         }
@@ -836,12 +836,12 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal > 0f)
+                if (m_UIController.mPlayerDaoJuManageUI.DianLiangVal > 0f)
                 {
-                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal -= (Time.deltaTime * DianLiangSubSpeed);
-                    if (pcvr.GetInstance().mPlayerDataManage.DianLiangVal < 0f)
+                    m_UIController.mPlayerDaoJuManageUI.DianLiangVal -= (Time.deltaTime * DianLiangSubSpeed);
+                    if (m_UIController.mPlayerDaoJuManageUI.DianLiangVal < 0f)
                     {
-                        pcvr.GetInstance().mPlayerDataManage.DianLiangVal = 0f;
+                        m_UIController.mPlayerDaoJuManageUI.DianLiangVal = 0f;
                     }
                 }
             }
@@ -854,7 +854,7 @@ public class PlayerController : MonoBehaviour
                 m_PlayerAnimator.SetBool("IsRun2", true);
                 m_PlayerAnimator.SetBool("IsRun1", false);
             }
-            pcvr.GetInstance().mPlayerDataManage.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
+            m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
         }
         else if (jiaoTaBan > 0f)
         {
@@ -863,7 +863,7 @@ public class PlayerController : MonoBehaviour
                 m_PlayerAnimator.SetBool("IsRun1", true);
                 m_PlayerAnimator.SetBool("IsRun2", false);
             }
-            pcvr.GetInstance().mPlayerDataManage.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
+            m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
         }
         else
         {

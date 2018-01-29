@@ -194,7 +194,7 @@ public class DaoJuCtrl : MonoBehaviour
                 }
             case DaoJuType.DianChi:
                 {
-                    pcvr.GetInstance().mPlayerDataManage.DianLiangVal = 1f;
+                    PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DianLiangVal = 1f;
                     break;
                 }
             case DaoJuType.ZhangAiWu:

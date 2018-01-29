@@ -5,6 +5,34 @@
 /// </summary>
 public class PlayerDaoJuManageUI : MonoBehaviour
 {
+    float _DianLiangVal = 1f;
+    /// <summary>
+    /// 玩家电池电量.
+    /// </summary>
+    public float DianLiangVal
+    {
+        set
+        {
+            if (value > 1f)
+            {
+                value = 1f;
+            }
+
+            if (_DianLiangVal != value)
+            {
+                _DianLiangVal = value;
+                if (PlayerController.GetInstance() != null)
+                {
+                    PlayerController.GetInstance().m_UIController.UpdateDianLiangUI(_DianLiangVal);
+                }
+            }
+        }
+        get
+        {
+            return _DianLiangVal;
+        }
+    }
+
     int _DaoDanNum = 0;
     /// <summary>
     /// 导弹数量.
@@ -19,16 +47,14 @@ public class PlayerDaoJuManageUI : MonoBehaviour
             }
 
             _DaoDanNum = value;
-            if (PlayerController.GetInstance() != null)
-            {
-                PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.UpdateDaoDanInfo(_DaoDanNum);
-            }
+            UpdateDaoDanInfo(_DaoDanNum);
         }
         get
         {
             return _DaoDanNum;
         }
     }
+
     int _DiLeiNum = 0;
     /// <summary>
     /// 地雷数量.
@@ -43,10 +69,7 @@ public class PlayerDaoJuManageUI : MonoBehaviour
             }
 
             _DiLeiNum = value;
-            if (PlayerController.GetInstance() != null)
-            {
-                PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.UpdateDiLeiInfo(_DiLeiNum);
-            }
+            UpdateDiLeiInfo(_DiLeiNum);
         }
         get
         {
@@ -64,8 +87,9 @@ public class PlayerDaoJuManageUI : MonoBehaviour
     public UISprite DiLeiUiSprite;
     void Start()
     {
-        UpdateDaoDanInfo(DaoDanNum);
-        UpdateDiLeiInfo(DiLeiNum);
+        DianLiangVal = 1f;
+        DaoDanNum = 0;
+        DiLeiNum = 0;
     }
 
     /// <summary>

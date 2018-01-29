@@ -28,33 +28,6 @@ public class PlayerDataManage
     /// AiNpc数据管理.
     /// </summary>
     public AiNpcDataManage mAiNpcData;
-    float _DianLiangVal;
-    /// <summary>
-    /// 玩家电池电量.
-    /// </summary>
-    public float DianLiangVal
-    {
-        set
-        {
-            if (value > 1f)
-            {
-                value = 1f;
-            }
-
-            if (_DianLiangVal != value)
-            {
-                _DianLiangVal = value;
-                if (PlayerController.GetInstance() != null)
-                {
-                    PlayerController.GetInstance().m_UIController.UpdateDianLiangUI(_DianLiangVal);
-                }
-            }
-        }
-        get
-        {
-            return _DianLiangVal;
-        }
-    }
 
     public PlayerDataManage()
     {
@@ -62,7 +35,6 @@ public class PlayerDataManage
         CoinNumNeed = System.Convert.ToInt32(ReadGameInfo.GetInstance().ReadStarCoinNumSet());
         CoinNumFeiXing = 1;
         GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
-        DianLiangVal = 1f;
     }
 
     /// <summary>
