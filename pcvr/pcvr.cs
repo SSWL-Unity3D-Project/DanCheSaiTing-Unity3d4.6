@@ -942,12 +942,12 @@ public class pcvr : MonoBehaviour {
     {
         if (!bIsHardWare)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 IsHitJiaoTaBan = true;
             }
 
-            if (Input.GetKeyUp(KeyCode.Mouse0))
+            if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 IsHitJiaoTaBan = false;
             }
