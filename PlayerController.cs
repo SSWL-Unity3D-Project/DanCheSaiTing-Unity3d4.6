@@ -475,17 +475,17 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (pcvr.GetInstance().mPlayerDataManage.DaoDanNum > 0)
+        if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0)
         {
-            pcvr.GetInstance().mPlayerDataManage.DaoDanNum--;
+            m_UIController.mPlayerDaoJuManageUI.DaoDanNum--;
             GameObject zhangAiWuObj = pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
             OnPlayerHitDaoDanDaoJu(zhangAiWuObj);
             return;
         }
         
-        if (pcvr.GetInstance().mPlayerDataManage.DiLeiNum > 0)
+        if (m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
         {
-            pcvr.GetInstance().mPlayerDataManage.DiLeiNum--;
+            m_UIController.mPlayerDaoJuManageUI.DiLeiNum--;
             GameObject zhangAiWuObj = pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
             OnPlayerHitDiLeiDaoJu(zhangAiWuObj);
             return;

@@ -222,18 +222,18 @@ public class DaoJuCtrl : MonoBehaviour
                 }
             case DaoJuType.DaoDan:
                 {
-                    if (pcvr.GetInstance().mPlayerDataManage.DaoDanNum < 9)
+                    if (PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DaoDanNum < 9)
                     {
-                        pcvr.GetInstance().mPlayerDataManage.DaoDanNum += 1;
+                        PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DaoDanNum += 1;
                     }
                     //PlayerController.GetInstance().OnPlayerHitDaoDanDaoJu(ZhangAiWuObj);
                     break;
                 }
             case DaoJuType.DiLei:
                 {
-                    if (pcvr.GetInstance().mPlayerDataManage.DiLeiNum < 9)
+                    if (PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DiLeiNum < 9)
                     {
-                        pcvr.GetInstance().mPlayerDataManage.DiLeiNum += 1;
+                        PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DiLeiNum += 1;
                     }
                     //PlayerController.GetInstance().OnPlayerHitDiLeiDaoJu(ZhangAiWuObj);
                     break;

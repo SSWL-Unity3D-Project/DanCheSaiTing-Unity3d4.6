@@ -55,54 +55,6 @@ public class PlayerDataManage
             return _DianLiangVal;
         }
     }
-    int _DaoDanNum;
-    /// <summary>
-    /// 导弹数量.
-    /// </summary>
-    public int DaoDanNum
-    {
-        set
-        {
-            if (value > 9)
-            {
-                value = 9;
-            }
-
-            _DaoDanNum = value;
-            if (PlayerController.GetInstance() != null)
-            {
-                PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.UpdateDaoDanInfo(_DaoDanNum);
-            }
-        }
-        get
-        {
-            return _DaoDanNum;
-        }
-    }
-    int _DiLeiNum;
-    /// <summary>
-    /// 地雷数量.
-    /// </summary>
-    public int DiLeiNum
-    {
-        set
-        {
-            if (value > 9)
-            {
-                value = 9;
-            }
-
-            _DiLeiNum = value;
-            if (PlayerController.GetInstance() != null)
-            {
-                PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.UpdateDiLeiInfo(_DiLeiNum);
-            }
-        }
-        get
-        {
-            return _DiLeiNum;
-        }
-    }
 
     public PlayerDataManage()
     {
@@ -111,8 +63,6 @@ public class PlayerDataManage
         CoinNumFeiXing = 1;
         GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
         DianLiangVal = 1f;
-        //DaoDanNum = 5; //test
-        //DiLeiNum = 5; //test
     }
 
     /// <summary>

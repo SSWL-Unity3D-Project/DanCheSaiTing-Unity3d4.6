@@ -5,6 +5,55 @@
 /// </summary>
 public class PlayerDaoJuManageUI : MonoBehaviour
 {
+    int _DaoDanNum = 0;
+    /// <summary>
+    /// 导弹数量.
+    /// </summary>
+    public int DaoDanNum
+    {
+        set
+        {
+            if (value > 9)
+            {
+                value = 9;
+            }
+
+            _DaoDanNum = value;
+            if (PlayerController.GetInstance() != null)
+            {
+                PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.UpdateDaoDanInfo(_DaoDanNum);
+            }
+        }
+        get
+        {
+            return _DaoDanNum;
+        }
+    }
+    int _DiLeiNum = 0;
+    /// <summary>
+    /// 地雷数量.
+    /// </summary>
+    public int DiLeiNum
+    {
+        set
+        {
+            if (value > 9)
+            {
+                value = 9;
+            }
+
+            _DiLeiNum = value;
+            if (PlayerController.GetInstance() != null)
+            {
+                PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.UpdateDiLeiInfo(_DiLeiNum);
+            }
+        }
+        get
+        {
+            return _DiLeiNum;
+        }
+    }
+
     /// <summary>
     /// 导弹数量.
     /// </summary>
@@ -15,8 +64,8 @@ public class PlayerDaoJuManageUI : MonoBehaviour
     public UISprite DiLeiUiSprite;
     void Start()
     {
-        UpdateDaoDanInfo(pcvr.GetInstance().mPlayerDataManage.DaoDanNum);
-        UpdateDiLeiInfo(pcvr.GetInstance().mPlayerDataManage.DiLeiNum);
+        UpdateDaoDanInfo(DaoDanNum);
+        UpdateDiLeiInfo(DiLeiNum);
     }
 
     /// <summary>
