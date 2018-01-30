@@ -868,18 +868,62 @@ public class pcvr : MonoBehaviour {
 	}
 
 	static bool IsHandleDirByKey = true;
+    /// <summary>
+    /// 获取键盘方向.
+    /// </summary>
+    static void GetPCSteerVal()
+    {
+        float timeAdd = 0.1f;
+        float horVal = Input.GetAxis("Horizontal");
+        if (horVal > 0f)
+        {
+            if (mGetSteer < 1f)
+            {
+                mGetSteer += Time.deltaTime * timeAdd;
+                if (mGetSteer > 1f)
+                {
+                    mGetSteer = 1f;
+                }
+            }
+        }
+        else if (horVal < 0f)
+        {
+            if (mGetSteer < -1f)
+            {
+                mGetSteer -= Time.deltaTime * timeAdd;
+                if (mGetSteer < -1f)
+                {
+                    mGetSteer = -1f;
+                }
+            }
+        }
+        else
+        {
+            if (Math.Abs(mGetSteer) < 0.1f)
+            {
+                mGetSteer = 0f;
+            }
+            else
+            {
+                mGetSteer = Mathf.Lerp(mGetSteer, 0f, Time.deltaTime * timeAdd);
+            }
+        }
+    }
+
 	public static void GetPcvrSteerVal()
-	{
-		if (!IsHandleDirByKey) {
-			if (!bIsHardWare) {
-				mGetSteer = Input.GetAxis("Horizontal");
-				return;
+    {
+        if (!IsHandleDirByKey) {
+			if (!bIsHardWare)
+            {
+                GetPCSteerVal();
+                return;
 			}
 		}
 		else {
-			if (!bIsHardWare || IsTestGame) {
-				mGetSteer = Input.GetAxis("Horizontal");
-				return;
+			if (!bIsHardWare || IsTestGame)
+            {
+                GetPCSteerVal();
+                return;
 			}
 		}
 
