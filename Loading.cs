@@ -118,11 +118,13 @@ public class Loading : MonoBehaviour
 		int n = 1;
 		int num = m_InserNum;
 		int temp = num;
-		while(num > 9)
+        pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum = m_InserNum;
+        while (num > 9)
 		{
 			num /= 10;
 			n++;
 		}
+
 		if(n > 2)
 		{
 			m_InsertNumS.spriteName = "9";

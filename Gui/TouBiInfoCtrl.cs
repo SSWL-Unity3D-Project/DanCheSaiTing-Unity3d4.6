@@ -2,8 +2,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class TouBiInfoCtrl : MonoBehaviour {
-
+public class TouBiInfoCtrl : MonoBehaviour
+{
 	public UISprite CoinNumSetTex;
 	public UISprite m_InsertNumS;
 	public UISprite m_InsertNumG;
@@ -41,17 +41,20 @@ public class TouBiInfoCtrl : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-		if (pcvr.bIsHardWare) {
-			if (GlobalData.CoinCur != pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum && GameMode == "oper") {
+		if (pcvr.bIsHardWare)
+        {
+			if (GlobalData.CoinCur != pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum && GameMode == "oper")
+            {
                 pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum = GlobalData.CoinCur - 1;
 				OnClickInsertBt();
 			}
 		}
-		else {
+		else
+        {
 			if (Input.GetKeyDown(KeyCode.T) && GameMode == "oper") {
 				OnClickInsertBt();
-			}
-		}
+            }
+        }
 	}
 	
 	void ClickSetEnterBtEvent(ButtonState val)
