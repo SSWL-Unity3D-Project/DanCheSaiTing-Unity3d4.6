@@ -177,22 +177,29 @@ public class UIController : MonoBehaviour
                 m_YoumenTimmer = 0.0f;
             }
 
-            if (IsCloseYouMenTiShi && m_HasTishi)
+            if (m_pGameTime >= 0.0f && !m_Player.m_IsFinished)
             {
-                if (Mathf.Abs(pcvr.mGetSteer) == 0f)
+                if (IsCloseYouMenTiShi && m_HasTishi)
                 {
-                    m_YoumenTimmer += Time.deltaTime;
-                    if (m_YoumenTimmer >= 5f)
+                    if (Mathf.Abs(pcvr.mGetPower) == 0f)
                     {
-                        //打开方向盘提示.
-                        IsCloseYouMenTiShi = false;
-                        m_HasTishi = false;
+                        m_YoumenTimmer += Time.deltaTime;
+                        if (m_YoumenTimmer >= 5f)
+                        {
+                            //打开油门提示.
+                            IsCloseYouMenTiShi = false;
+                            m_HasTishi = false;
+                        }
+                    }
+                    else
+                    {
+                        m_YoumenTimmer = 0.0f;
                     }
                 }
-                else
-                {
-                    m_YoumenTimmer = 0.0f;
-                }
+            }
+            else
+            {
+                m_YoumenTishi.gameObject.SetActive(false);
             }
 
             if (!IsCloseYouMenTiShi && !m_HasTishi)
