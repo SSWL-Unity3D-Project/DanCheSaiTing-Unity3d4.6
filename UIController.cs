@@ -5,6 +5,10 @@ using System;
 public class UIController : MonoBehaviour
 {
     /// <summary>
+    /// 播放请投币动画控制组件当玩家想耗币加速时.
+    /// </summary>
+    public Animator JiaSuCoinAni;
+    /// <summary>
     /// 投币控制.
     /// </summary>
     public TouBiInfoCtrl mTouBiInfo;
@@ -168,7 +172,7 @@ public class UIController : MonoBehaviour
 				m_BeginDaojishiAudio.Stop();
 			}
 
-            if (Mathf.Abs(pcvr.mGetSteer) > 0f && !IsCloseYouMenTiShi)
+            if (Mathf.Abs(pcvr.mGetPower) > 0f && !IsCloseYouMenTiShi)
             {
                 //关闭方向盘提示.
                 IsCloseYouMenTiShi = true;
@@ -556,5 +560,14 @@ public class UIController : MonoBehaviour
                 PlayerMoveSpeedArray[i].enabled = false;
             }
         }
+    }
+
+    /// <summary>
+    /// 播放请投币动画当玩家想耗币加速时.
+    /// </summary>
+    public void PlayInsertCoinAniOnClickJiaSu()
+    {
+        JiaSuCoinAni.gameObject.SetActive(true);
+        JiaSuCoinAni.SetTrigger("IsPlay");
     }
 }

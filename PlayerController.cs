@@ -506,6 +506,7 @@ public class PlayerController : MonoBehaviour
 
         if (pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum < pcvr.GetInstance().mPlayerDataManage.CoinNumFeiXing)
         {
+            m_UIController.PlayInsertCoinAniOnClickJiaSu();
             return;
         }
         pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum -= pcvr.GetInstance().mPlayerDataManage.CoinNumFeiXing;

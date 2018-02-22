@@ -4,6 +4,7 @@
 public class UITextureAnimation : MonoBehaviour
 {
     public Texture mTexture;
+	public Color mColor = Color.white;
     UITexture mUITexture;
     void Start()
     {
@@ -12,9 +13,25 @@ public class UITextureAnimation : MonoBehaviour
 
     void Update()
     {
+        if (mUITexture != null)
+        {
+            UpdateUITextureInfo();
+        }
+    }
+
+    /// <summary>
+    /// 更新UITexture的信息.
+    /// </summary>
+    void UpdateUITextureInfo()
+    {
         if (mUITexture.mainTexture != mTexture)
         {
             mUITexture.mainTexture = mTexture;
+        }
+
+        if (mUITexture.color != mColor)
+        {
+            mUITexture.color = mColor;
         }
     }
 
@@ -25,7 +42,7 @@ public class UITextureAnimation : MonoBehaviour
     {
         //Debug.Log("OnAnimationTrigger -> index is " + index);
         //广播消息.
-        SendMessage("OnAnimationEnvent", index);
+        SendMessage("OnAnimationEnvent", index, SendMessageOptions.DontRequireReceiver);
     }
 
 #if UNITY_EDITOR
@@ -36,9 +53,9 @@ public class UITextureAnimation : MonoBehaviour
             mUITexture = GetComponent<UITexture>();
         }
 
-        if (mUITexture.mainTexture != mTexture)
+        if (mUITexture != null)
         {
-            mUITexture.mainTexture = mTexture;
+            UpdateUITextureInfo();
         }
     }
 #endif
