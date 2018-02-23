@@ -43,7 +43,7 @@ public class NpcController : MonoBehaviour
         pcvr.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
 
         m_playerRig = m_player.GetComponent<Rigidbody>();
-        if (NpcIndexVal >= NpcObjArray.Length)
+        if (NpcIndexVal >= NpcObjArray.Length - 1)
         {
             NpcIndexVal = -1;
         }
