@@ -12,8 +12,8 @@ public class RequestMasterServer : MonoBehaviour
         SetPanel = 3
     }
     bool IsClickConnect;
-    public static string MasterServerMovieComment = "Movie Scence";
-    public static string MasterServerGameNetComment = "GameNet Scence";
+    public static string MasterServerMovieComment = "Movie Scene";
+    public static string MasterServerGameNetComment = "GameNet Scene";
     string ServerIp = "";
     float TimeConnect;
     /// <summary>
@@ -25,31 +25,10 @@ public class RequestMasterServer : MonoBehaviour
     /// </summary>
     float TimeLastCheckMasterServer = 0f;
 
-    static RequestMasterServer _Instance;
-    public static RequestMasterServer GetInstance()
+    public void Init()
     {
-        if (_Instance == null)
-        {
-            GameObject obj = new GameObject("_RequestMasterServer");
-            _Instance = obj.AddComponent<RequestMasterServer>();
-            DontDestroyOnLoad(obj);
-        }
-        return _Instance;
+        SetIsNetScene(true);
     }
-
-    //void Start()
-    //{
-        //InitLoopRequestHostList();
-
-        //CancelInvoke("CheckMasterServerList");
-        //InvokeRepeating("CheckMasterServerList", 3f, 0.1f);
-    //}
-
-    //void InitLoopRequestHostList()
-    //{
-    //    CancelInvoke("RequestHostListLoop");
-    //    InvokeRepeating("RequestHostListLoop", 0f, 3f);
-    //}
 
     void Update()
     {
@@ -219,61 +198,84 @@ public class RequestMasterServer : MonoBehaviour
         }
         return masterServerNum;
     }
-    
+
+    /// <summary>
+    /// 是否是网络场景.
+    /// </summary>
+    bool IsNetScene = false;
+    /// <summary>
+    /// 设置IsNetScene属性.
+    /// 当游戏切换到非联机场景时设置为false.
+    /// 当游戏切换到联机游戏场景时设置为true.
+    /// </summary>
+    public void SetIsNetScene(bool isNet)
+    {
+        IsNetScene = isNet;
+    }
+
     void CheckMasterServerList()
     {
         int masterServerNum = 0;
         bool isCreatMasterServer = true;
         HostData[] data = MasterServer.PollHostList();
 
-        // Go through all the hosts in the host list
-        foreach (var element in data)
+        if (NetworkRootMovie.GetInstance() != null)
         {
-            if (element.comment == MasterServerMovieComment)
+            //循环动画场景.
+            foreach (var element in data)
             {
-                masterServerNum++;
-                if (Network.peerType == NetworkPeerType.Disconnected)
+                if (element.comment == MasterServerMovieComment)
                 {
-                    if (masterServerNum > 0)
+                    masterServerNum++;
+                    if (Network.peerType == NetworkPeerType.Disconnected)
                     {
-                        isCreatMasterServer = false;
+                        if (masterServerNum > 0)
+                        {
+                            isCreatMasterServer = false;
+                        }
                     }
-                }
-                else if (Network.peerType == NetworkPeerType.Server)
-                {
-                    if (masterServerNum > 1 && Random.Range(0, 100) % 2 == 1)
+                    else if (Network.peerType == NetworkPeerType.Server)
                     {
-                        //随机删除1个循环动画场景的masterServer.
-                        isCreatMasterServer = false;
-                        Debug.Log("random remove masterServer...");
+                        if (masterServerNum > 1 && Random.Range(0, 100) % 2 == 1)
+                        {
+                            //随机删除1个循环动画场景的masterServer.
+                            isCreatMasterServer = false;
+                            Debug.Log("random remove masterServer...");
+                        }
                     }
                 }
             }
         }
 
-        //GameScene levelVal = (GameScene)Application.loadedLevel;
-        GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
-        if (levelVal == GameScene.Scene01 || levelVal == GameScene.SetPanel)
+        if (!IsNetScene)
         {
-            //不需要网络链接的游戏场景.
+            //不需要网络链接的游戏场景中不进行主服务器MasterServer的创建.
             isCreatMasterServer = false;
         }
+
+        //GameScene levelVal = (GameScene)Application.loadedLevel;
+        GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
+        //if (levelVal == GameScene.Scene01 || levelVal == GameScene.SetPanel)
+        //{
+        //    //不需要网络链接的游戏场景.
+        //    isCreatMasterServer = false;
+        //}
 
         switch (Network.peerType)
         {
             case NetworkPeerType.Disconnected:
                 if (isCreatMasterServer)
                 {
-                    if (levelVal == GameScene.Movie)
-                    {
+                    //if (NetworkRootMovie.GetInstance() != null)
+                    //{
                         //if ((Toubi.GetInstance() != null && !Toubi.GetInstance().CheckIsLoopWait())
                         //    || Toubi.GetInstance() == null)
                         //{
                         //    return;
                         //}
-                        ServerIp = "";
-                    }
-                    NetworkServerNet.GetInstance().InitCreateServer();
+                    //    ServerIp = "";
+                    //}
+                     NetworkServerNet.GetInstance().InitCreateServer();
                 }
                 break;
 
@@ -310,11 +312,11 @@ public class RequestMasterServer : MonoBehaviour
         if (msEvent == MasterServerEvent.RegistrationSucceeded)
         {
             Debug.Log("MasterServer registered, GameLevel " + (GameScene)Application.loadedLevel);
-            if ((GameScene)Application.loadedLevel == GameScene.Movie)
+            if (NetworkRootMovie.GetInstance() != null)
             {
                 //只在循环动画场景执行!
                 //ServerLinkInfo.GetInstance().HiddenServerLinkInfo();
-                NetworkRootMovie.GetInstance().mNetworkRpcMsgSpawn.CreateNetworkRpc();
+                NetworkRootMovie.GetInstance().CreateNetworkRpc();
             }
         }
     }

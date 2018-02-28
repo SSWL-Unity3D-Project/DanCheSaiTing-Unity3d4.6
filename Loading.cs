@@ -37,8 +37,14 @@ public class Loading : MonoBehaviour
 	public static bool m_HasBegin = false;
 	public bool IsLuPingTest;
 	void Start ()
-	{
-		if (IsLuPingTest) {
+    {
+        if (NetworkServerNet.GetInstance() != null)
+        {
+            NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(true);
+        }
+
+        if (IsLuPingTest)
+        {
 			gameObject.SetActive(false);
 		}
 		//m_MovieTex.loop = true;
@@ -99,18 +105,24 @@ public class Loading : MonoBehaviour
 
 	void ClickSetEnterBtEvent(ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == ButtonState.DOWN)
+        {
 			return;
 		}
 
-		if (Loading.m_HasBegin) {
+		if (m_HasBegin)
+        {
 			return;
 		}
 		
+        if (NetworkServerNet.GetInstance() != null)
+        {
+            NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
+        }
 		XkGameCtrl.IsLoadingLevel = true;
 		Resources.UnloadUnusedAssets();
 		GC.Collect();
-		Application.LoadLevel(5);
+		Application.LoadLevel(5); //进入设置界面.
 	}
 
 	void UpdateInsertCoin()

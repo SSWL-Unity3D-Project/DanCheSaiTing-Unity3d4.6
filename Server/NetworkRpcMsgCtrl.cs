@@ -9,21 +9,8 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
 	public static int MaxLinkServerCount = 100;
 	public static int NoLinkClientCount = 10;
 
-	static NetworkRpcMsgCtrl _Instance;
-	public static NetworkRpcMsgCtrl GetInstance()
-	{
-		return _Instance;
-	}
-
 	public void Init()
     {
-		if (_Instance != null)
-        {
-			_Instance.RemoveSelf();
-		}
-
-		_Instance = this;
-		DontDestroyOnLoad(gameObject);
 		gameObject.name = "_NetworkRpcMsgCtrl";
 		mNetViewCom = GetComponent<NetworkView>();
 	}
@@ -34,7 +21,7 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
         {
 			return;
 		}
-		_Instance = null;
+		//_Instance = null;
 		Network.Destroy(gameObject);
 		Debug.Log("NetworkRpcMsgCtrl::RemoveSelf...");
 	}
@@ -51,7 +38,7 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
 		//	return;
 		//}
 		MaxLinkServerCount = Network.connections.Length;
-		RequestMasterServer.GetInstance().ResetIsClickConnect();
+        NetworkServerNet.GetInstance().mRequestMasterServer.ResetIsClickConnect();
 		//GlobalData.GetInstance().gameLeve = (GameLeve)levelVal;
 		//Debug.Log("SendLoadLevel -> levelVal = " + (GameLeve)levelVal);
 
@@ -70,7 +57,7 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
 		//}
 		//Debug.Log("SendLoadLevelMsgToOthers *********** levelVal " + (GameLeve)levelVal);
 		MaxLinkServerCount = Network.connections.Length;
-		RequestMasterServer.GetInstance().ResetIsClickConnect();
+		NetworkServerNet.GetInstance().mRequestMasterServer.ResetIsClickConnect();
 		//Toubi.GetInstance().MakeGameIntoWaterwheelNet();
 
 		//GlobalData.GetInstance().gameLeve = (GameLeve)levelVal;

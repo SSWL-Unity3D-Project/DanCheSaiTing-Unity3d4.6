@@ -1,11 +1,27 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿
+public enum GameMode
+{
+    None,
+    SoloMode,
+    OnlineMode
+}
+
+public enum GameLeve : int
+{
+    None = -1,
+    Movie = 0,
+    Waterwheel = 1,
+    WaterwheelNet = 2,
+    SetPanel = 3
+}
 
 public class GlobalData
 {
 	public static GameTextType GameTextVal = GameTextType.Chinese;
 	public static int CoinCur;
-	private static  GlobalData Instance;
+    public GameMode gameMode;
+    public GameLeve gameLeve;
+    private static  GlobalData Instance;
 	public static GlobalData GetInstance()
 	{
 		if (Instance == null) {

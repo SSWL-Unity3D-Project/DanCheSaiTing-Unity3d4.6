@@ -11,34 +11,39 @@ public class NetworkServerNet : MonoBehaviour
     /// <summary>
     /// 链接到服务器的玩家数量.
     /// </summary>
-	int LinkServerCount;
+	//int LinkServerCount;
     /// <summary>
     /// 玩家网络数据索引.
     /// </summary>
 	int IndexSpawnClient;
-    float TimeCreateServer;
+    float TimeLastCreatServer;
     /// <summary>
     /// 网络游戏类型名称.
     /// </summary>
     [HideInInspector]
     public string mGameTypeName = "MyUniqueGameType";
+    /// <summary>
+    /// MasterServer控制脚本.
+    /// </summary>
+    [HideInInspector]
+    public RequestMasterServer mRequestMasterServer;
 
-    private static NetworkServerNet _Instance;
+    static NetworkServerNet _Instance;
     public static NetworkServerNet GetInstance()
     {
         if (_Instance == null)
         {
             Debug.Log("creat NetworkServerNet...");
             GameObject obj = new GameObject("_NetworkServerNet");
-            DontDestroyOnLoad(obj);
             _Instance = obj.AddComponent<NetworkServerNet>();
-
-            RequestMasterServer.GetInstance();
+            _Instance.mRequestMasterServer = obj.AddComponent<RequestMasterServer>();
+            _Instance.Init();
+            DontDestroyOnLoad(obj);
         }
         return _Instance;
     }
 
-    void Awake()
+    void Init()
     {
         //if (GameMovieCtrl.GetInstance() != null
         //    && GameMovieCtrl.GetInstance().GameLinkSt == GameMovieCtrl.GameLinkEnum.NO_LINK)
@@ -62,8 +67,14 @@ public class NetworkServerNet : MonoBehaviour
             XKMasterServerCtrl.CheckMasterServerIP();
         }
 
+        //初始化MasterServer.
         MasterServer.ipAddress = MasterServerIp;
         Network.natFacilitatorIP = MasterServerIp;
+
+        if (mRequestMasterServer != null)
+        {
+            mRequestMasterServer.Init();
+        }
     }
 
     void Update()
@@ -119,10 +130,10 @@ public class NetworkServerNet : MonoBehaviour
             }
         }
 
-        if (NetworkRpcMsgCtrl.GetInstance() != null)
-        {
-            NetworkRpcMsgCtrl.GetInstance().RemoveSelf();
-        }
+        //if (NetworkRpcMsgCtrl.GetInstance() != null)
+        //{
+        //    NetworkRpcMsgCtrl.GetInstance().RemoveSelf();
+        //}
 
         int playerIndex = IndexSpawnClient;
         Debug.Log("CheckConnectToServer::playerIndex " + playerIndex);
@@ -187,10 +198,10 @@ public class NetworkServerNet : MonoBehaviour
             isCheck = false;
         }
 
-        if (NetworkRpcMsgCtrl.GetInstance() != null)
-        {
-            NetworkRpcMsgCtrl.GetInstance().RemoveSelf();
-        }
+        //if (NetworkRpcMsgCtrl.GetInstance() != null)
+        //{
+        //    NetworkRpcMsgCtrl.GetInstance().RemoveSelf();
+        //}
 
         //GameObject obj = GameNetCtrlXK.GetInstance().PlayerObj[0];
         //Transform tran = GameNetCtrlXK.GetInstance().PlayerPos[0].transform;
@@ -226,7 +237,7 @@ public class NetworkServerNet : MonoBehaviour
 
         //    aiPosNum++;
         //}
-        LinkServerCount = 0;
+        //LinkServerCount = 0;
     }
 
     void OnPlayerConnected(NetworkPlayer playerNet)
@@ -242,10 +253,19 @@ public class NetworkServerNet : MonoBehaviour
 
             StartCoroutine(CheckOpenAllCamera());
         }
-        else if (GlobalData.GetInstance().gameLeve == GameLeve.Movie)
+        //else if (GlobalData.GetInstance().gameLeve == GameLeve.Movie)
+        //{
+        //    LinkServerCount = Network.connections.Length;
+        //    NetworkRpcMsgCtrl.GetInstance().SetSpawnClientIndex(playerNet, Network.connections.Length);
+        //}
+
+        if (NetworkRootMovie.GetInstance() != null)
         {
-            LinkServerCount = Network.connections.Length;
-            NetworkRpcMsgCtrl.GetInstance().SetSpawnClientIndex(playerNet, Network.connections.Length);
+            //循环动画场景.
+            if (NetworkRootMovie.GetInstance().mNetworkRpcMsgScript != null)
+            {
+                NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.SetSpawnClientIndex(playerNet, Network.connections.Length);
+            }
         }
     }
 
@@ -303,33 +323,30 @@ public class NetworkServerNet : MonoBehaviour
 
     public void InitCreateServer()
     {
-        if (GlobalData.GetInstance().gameLeve == GameLeve.Movie)
+        if (NetworkRootMovie.GetInstance() != null)
         {
-            if (Time.realtimeSinceStartup - TimeCreateServer < 8f)
+            //循环动画场景间隔一定时间主动创建服务器.
+            if (Time.time - TimeLastCreatServer < 9f)
             {
-                //Debug.Log("test**********************InitCreateServer");
+                //Debug.Log("InitCreateServer -> test...");
                 return;
             }
-            TimeCreateServer = Time.realtimeSinceStartup;
-            int randVal = (Random.Range(0, 100) % 4) * 3;
-            Debug.Log("InitCreateServer -> randVal ***** " + randVal);
-            Invoke("DelayInitCreateServer", randVal);
+            TimeLastCreatServer = Time.time;
+            
+            StartCoroutine( DelayInitCreateServer((Random.Range(0, 100) % 4) * 3) );
             return;
         }
-
-        if (!IsCreateServer)
+        else
         {
-            return;
+            //非循环动画场景直接创建服务器.
+            IsCreateServer = false;
         }
-        IsCreateServer = false;
     }
 
-    void DelayInitCreateServer()
+    IEnumerator DelayInitCreateServer(float timeVal)
     {
-        if (!IsCreateServer)
-        {
-            return;
-        }
+        Debug.Log("DelayInitCreateServer -> randTime == " + timeVal);
+        yield return new WaitForSeconds(timeVal);
         IsCreateServer = false;
     }
 
@@ -396,7 +413,7 @@ public class NetworkServerNet : MonoBehaviour
 
     public void ResetMasterServerHost()
     {
-        RequestMasterServer.GetInstance().ResetIsClickConnect();
+        mRequestMasterServer.ResetIsClickConnect();
         if (Network.peerType != NetworkPeerType.Server)
         {
             if (Network.peerType != NetworkPeerType.Disconnected)
@@ -418,12 +435,12 @@ public class NetworkServerNet : MonoBehaviour
         }
         IsCreateServer = true;
 
-        if (!MasterServer.dedicatedServer && GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet)
-        {
-            return;
-        }
+        //if (!MasterServer.dedicatedServer && GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet)
+        //{
+        //    return;
+        //}
 
-        ScreenLog.Log("start create to server");
+        ScreenLog.Log("start create to server, time " + Time.time);
         Network.InitializeServer(7, port, true);
 
         //		Debug.Log("masterServer.ip " + MasterServer.ipAddress + ", port " + MasterServer.port
@@ -438,7 +455,7 @@ public class NetworkServerNet : MonoBehaviour
         switch (GlobalData.GetInstance().gameLeve)
         {
             case GameLeve.Movie:
-                RequestMasterServer.GetInstance().SetMasterServerIp(Network.player.ipAddress);
+                mRequestMasterServer.SetMasterServerIp(Network.player.ipAddress);
                 MasterServer.RegisterHost(mGameTypeName, "My game", RequestMasterServer.MasterServerMovieComment);
                 break;
 
