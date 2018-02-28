@@ -428,9 +428,6 @@ public class PlayerController : MonoBehaviour
         InputEventCtrl.GetInstance().ClickFireBtEvent += ClickFireBtEvent;
         InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
         m_PlayerAnimator = m_pChuan.GetComponent<Animator>();
-        npc1Pos = npc1.transform;
-        npc2Pos = npc2.transform;
-        npc3Pos = npc3.transform;
         m_StartForEfferct = m_ParameterForEfferct;
         //PlayerMinSpeedVal = ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
         PlayerMinSpeedVal = 80f;
@@ -754,7 +751,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 	void FixedUpdate()
-	{		
+    {
 		if(!m_IsFinished && !m_UIController.m_IsGameOver && timmerstar >=5.0f)
 		{
 			//Debug.Log("rigidbody.velocity.magnitude*3.6f" + rigidbody.velocity.magnitude*3.6f);
@@ -1214,7 +1211,7 @@ public class PlayerController : MonoBehaviour
 				pcvr.m_IsOpneBehindQinang = false;
 			}
 		}
-		OnNpcHitPlayer ();
+		//OnNpcHitPlayer();
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -1317,64 +1314,28 @@ public class PlayerController : MonoBehaviour
 				m_PlayerAnimator.SetTrigger("IsDiaoluo");
 			}
 		}
-		if(other.tag == "npc1p")
-		{
-			if(/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude*3.6f >30.0f)
-			{
-				m_IsHitshake = true;
-				if (m_PlayerAnimator.gameObject.activeInHierarchy)
-				{
-					m_PlayerAnimator.SetTrigger("IsZhuang");
-				}
-				m_CameraShake.setCameraShakeImpulseValue();
-				m_HitStone.Play();
-				Instantiate(m_HitEffectObj,transform.position,transform.rotation);
-			}
-			npc1.m_IsHit = true;
-			npc1.m_PlayerHit = transform.position;
-			npc1.m_NpcPos = npc1Pos.position;
-		}
-		if(other.tag == "npc2p")
-		{
-			if(/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude*3.6f >30.0f)
-			{
-				m_IsHitshake = true;
-				if (m_PlayerAnimator.gameObject.activeInHierarchy)
-				{
-					m_PlayerAnimator.SetTrigger("IsZhuang");
-				}
-				m_CameraShake.setCameraShakeImpulseValue();
-				m_HitStone.Play();
-				Instantiate(m_HitEffectObj,transform.position,transform.rotation);
-			}
-			npc2.m_IsHit = true;
-			npc2.m_PlayerHit = transform.position;
-			npc2.m_NpcPos = npc2Pos.position;
-        }
-        if (other.tag == "npc3p")
+
+        NpcController npcScript = other.GetComponent<NpcController>();
+        if (npcScript)
         {
-            if (/*m_SpeedRecord*3.6f - */rigidbody.velocity.magnitude * 3.6f > 30.0f)
+            if (rigidbody.velocity.magnitude * 3.6f > 30.0f)
             {
                 m_IsHitshake = true;
-				if (m_PlayerAnimator.gameObject.activeInHierarchy)
-				{
-					m_PlayerAnimator.SetTrigger("IsZhuang");
-				}
+                if (m_PlayerAnimator.gameObject.activeInHierarchy)
+                {
+                    m_PlayerAnimator.SetTrigger("IsZhuang");
+                }
                 m_CameraShake.setCameraShakeImpulseValue();
                 m_HitStone.Play();
                 Instantiate(m_HitEffectObj, transform.position, transform.rotation);
             }
-            npc3.m_IsHit = true;
-            npc3.m_PlayerHit = transform.position;
-            npc3.m_NpcPos = npc3Pos.position;
+            npcScript.m_IsHit = true;
+            npcScript.m_PlayerHit = transform.position;
+            npcScript.m_NpcPos = npcScript.transform.position;
+            OnNpcHitPlayer(npcScript);
         }
     }
-	public NpcController npc1;
-	public NpcController npc2;
-	public NpcController npc3;
-    private Transform npc1Pos;
-    private Transform npc2Pos;
-    private Transform npc3Pos;
+
     void OnTriggerExit(Collider other)
 	{
 		if(other.tag == "water")
@@ -1618,30 +1579,14 @@ public class PlayerController : MonoBehaviour
 	}
 	static float TimeHitRock;
 
-	void OnNpcHitPlayer()
-	{
-		if(npc1.m_IsHit)
-		{
-			if(npc1.m_HitTimmer<0.4f)
-			{
-				//Debug.Log("1111111111111111111111");
-				rigidbody.AddForce(Vector3.Normalize(npc1.m_PlayerHit - npc1.m_NpcPos )*80000.0f,ForceMode.Force);
-			}
-		}
-		if(npc2.m_IsHit)
-		{
-			if(npc2.m_HitTimmer<0.4f)
-			{
-				//Debug.Log("22222222222222222222222222");
-				rigidbody.AddForce(Vector3.Normalize(npc2.m_PlayerHit - npc2.m_NpcPos )*80000.0f,ForceMode.Force);
-			}
-        }
-        if (npc3.m_IsHit)
+	public void OnNpcHitPlayer(NpcController npcScript = null)
+    {
+        if (!m_IsFinished && !m_UIController.m_IsGameOver && timmerstar >= 5.0f)
         {
-            if (npc3.m_HitTimmer < 0.4f)
+            if (npcScript != null && npcScript.m_IsHit && npcScript.m_HitTimmer < 0.4f)
             {
-                //Debug.Log("333333333333333333333333333");
-                rigidbody.AddForce(Vector3.Normalize(npc3.m_PlayerHit - npc3.m_NpcPos) * 80000.0f, ForceMode.Force);
+                Debug.Log(npcScript.name + " hit player!");
+                rigidbody.AddForce(Vector3.Normalize(npcScript.m_PlayerHit - npcScript.m_NpcPos) * 80000.0f, ForceMode.Force);
             }
         }
     }
