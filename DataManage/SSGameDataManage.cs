@@ -90,6 +90,10 @@ public class SSGameDataManage : MonoBehaviour
         /// </summary>
         public AudioSource m_EatJiasuAudio;
         /// <summary>
+        /// 加时UI.
+        /// </summary>
+        public GameObject m_JiashiGameObject;
+        /// <summary>
         /// 加时音效.
         /// </summary>
         public AudioSource m_JiashiAudio;
@@ -127,4 +131,33 @@ public class SSGameDataManage : MonoBehaviour
         public Transform[] m_NpcPathArray = new Transform[3];
     }
     public NpcData mNpcDt;
+
+    /// <summary>
+    /// 游戏配置数据.
+    /// </summary>
+    [System.Serializable]
+    public class GameData
+    {
+        /// <summary>
+        /// 主角预制.
+        /// </summary>
+        public GameObject PlayerPrefab;
+        /// <summary>
+        /// 主角/npc产生点.
+        /// </summary>
+        public Transform[] SpawnPointArray = new Transform[4];
+        public void SpawnPlayer(int indexVal)
+        {
+            Object obj = null;
+            if (Network.peerType == NetworkPeerType.Disconnected)
+            {
+                obj = Instantiate(PlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
+            }
+            else
+            {
+
+            }
+        }
+    }
+    public GameData mGameData;
 }

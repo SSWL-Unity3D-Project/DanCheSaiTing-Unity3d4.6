@@ -9,5 +9,6 @@ public class SSGameRoot : MonoBehaviour
     void Awake()
     {
         SSGameCtrl.GetInstance().mSSGameRoot = this;
+        mSSGameDataManage.mGameData.SpawnPlayer(0);
     }
 }

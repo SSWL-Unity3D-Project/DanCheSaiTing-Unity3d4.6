@@ -406,6 +406,7 @@ public class PlayerController : MonoBehaviour
         Path = playerDt.Path;
         m_RadialBlurEffect = playerDt.m_RadialBlurEffect;
         m_CameraShake = playerDt.m_CameraShake;
+        m_CameraSmooth = playerDt.m_CameraSmooth;
         m_HitStone = playerDt.m_HitStone;
         m_HitWater = playerDt.m_HitWater;
         m_HitWater = playerDt.m_HitWater;
@@ -416,6 +417,7 @@ public class PlayerController : MonoBehaviour
         m_HuanjingSenlin = playerDt.m_HuanjingSenlin;
         m_HuanjingShuiliu = playerDt.m_HuanjingShuiliu;
         m_FeibanAudio = playerDt.m_FeibanAudio;
+        m_JiashiGameObject = playerDt.m_JiashiGameObject;
         m_JiasuAudio = playerDt.m_JiasuAudio;
         mBianXingYiAudio = playerDt.mBianXingYiAudio;
         m_EatJiasuAudio = playerDt.m_EatJiasuAudio;
