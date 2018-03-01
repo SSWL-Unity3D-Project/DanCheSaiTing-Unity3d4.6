@@ -155,15 +155,18 @@ public class SSGameDataManage : MonoBehaviour
         /// </summary>
         public void SpawnPlayer(int indexVal)
         {
-            Object obj = null;
+            GameObject obj = null;
             if (Network.peerType == NetworkPeerType.Disconnected)
             {
-                obj = Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
+                obj = (GameObject)Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
+                NetworkView netView = obj.GetComponent<NetworkView>();
+                netView.enabled = false;
             }
             else
             {
 
             }
+
         }
 
         /// <summary>
@@ -177,6 +180,8 @@ public class SSGameDataManage : MonoBehaviour
             if (Network.peerType == NetworkPeerType.Disconnected)
             {
                 obj = (GameObject)Instantiate(mNpcPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
+                NetworkView netView = obj.GetComponent<NetworkView>();
+                netView.enabled = false;
             }
             else
             {
