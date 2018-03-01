@@ -8,6 +8,7 @@ public class SSGameCtrl : MonoBehaviour
     /// <summary>
     /// 游戏场景总控制脚本.
     /// </summary>
+    [HideInInspector]
     public SSGameRoot mSSGameRoot;
     static SSGameCtrl _Instance;
     public static SSGameCtrl GetInstance()

@@ -18,7 +18,6 @@ public class NpcController : MonoBehaviour
 	public float TimmerSet = 5.0f;
 	private float m_Timmer = 0.0f;
 	public PlayerController m_player;
-	private Rigidbody m_playerRig;
 	private bool m_IsJiasu = false;
 	private bool m_IsJiansu = false;
 	public float m_TopSpeedSet = 50.0f;
@@ -34,15 +33,20 @@ public class NpcController : MonoBehaviour
     [HideInInspector]
     public Vector3 m_NpcPos;
     public static int NpcIndexVal = 0;
-	void Start ()
+    /// <summary>
+    /// 随机更新主角的记录时间.
+    /// </summary>
+    float TimeLastRandPlayer = 0f;
+    float TimeRandPlayer = 3f;
+    void Start ()
     {
+        m_player = GetPlayerController();
         if (pcvr.GetInstance().mPlayerDataManage.mAiNpcData == null)
         {
             pcvr.GetInstance().mPlayerDataManage.CreatAiNpcData();
         }
         pcvr.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
-
-        m_playerRig = m_player.GetComponent<Rigidbody>();
+        
         if (NpcIndexVal >= NpcObjArray.Length - 1)
         {
             NpcIndexVal = -1;
@@ -80,8 +84,17 @@ public class NpcController : MonoBehaviour
 		{
 			return;
 		}
+
 		if(PlayerController.GetInstance().timmerstar > 5.0f)
 		{
+            if (Time.time - TimeLastRandPlayer > TimeRandPlayer)
+            {
+                TimeLastRandPlayer = Time.time;
+                TimeRandPlayer = (UnityEngine.Random.Range(0, 100) % 4) + 2f;
+                m_player = GetPlayerController();
+                //Debug.Log(name + " -> randPlayer is " + m_player.name + ", time " + Time.time.ToString("f1") + ", TimeRandPlayer " + TimeRandPlayer);
+            }
+
 			if(!m_IsHit)
 			{
 				m_Timmer+=Time.deltaTime;
@@ -101,22 +114,26 @@ public class NpcController : MonoBehaviour
 					}
 					m_Timmer = 0.0f;
 				}
+
 				if(m_IsJiasu)
 				{
-					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed,m_playerRig.velocity.magnitude*m_SpeedIndex,10.0f*Time.deltaTime);
+					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, (m_player.SpeedMovePlayer * m_SpeedIndex) / 3.6f, 10.0f * Time.deltaTime);
 					if(m_NpcSpeed>m_TopSpeedSet)
 					{
 						m_NpcSpeed = m_TopSpeedSet;
 					}
 				}
+
 				if(m_IsJiansu)
 				{
-					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed,m_playerRig.velocity.magnitude*m_SpeedIndex,10.0f*Time.deltaTime);
+					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, (m_player.SpeedMovePlayer * m_SpeedIndex) / 3.6f, 10.0f * Time.deltaTime);
 				}
+
 				if(m_NpcSpeed<=20f)
 				{
 					m_NpcSpeed = UnityEngine.Random.Range(20f, 25f);
 				}
+
 				if(m_IsEnd)
 				{
 					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed,m_EndSpeedSet,10.0f*Time.deltaTime);
@@ -227,4 +244,17 @@ public class NpcController : MonoBehaviour
         }
         m_IsHit = true;
     }
+
+    PlayerController GetPlayerController()
+    {
+        int count = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerControllerList.Count;
+        if (count == 0)
+        {
+            return null;
+        }
+
+        int randVal = UnityEngine.Random.Range(0, 100) % count;
+        return SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerControllerList[randVal];
+    }
+
 }

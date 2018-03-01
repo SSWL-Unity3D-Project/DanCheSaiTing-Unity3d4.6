@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 游戏数据管理.
@@ -94,4 +95,10 @@ public class SSGameDataManage : MonoBehaviour
         public AudioSource LaBaAudio;
     }
     public PlayerData mPlayerDt;
+
+    /// <summary>
+    /// 玩家控制脚本列表.
+    /// </summary>
+    [HideInInspector]
+    public List<PlayerController> mPlayerControllerList = new List<PlayerController>();
 }
