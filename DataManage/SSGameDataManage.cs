@@ -101,4 +101,17 @@ public class SSGameDataManage : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public List<PlayerController> mPlayerControllerList = new List<PlayerController>();
+    
+    /// <summary>
+    /// Npc数据.
+    /// </summary>
+    [System.Serializable]
+    public class NpcData
+    {
+        /// <summary>
+        /// npc路径.
+        /// </summary>
+        public Transform[] m_NpcPathArray = new Transform[3];
+    }
+    public NpcData mNpcDt;
 }
