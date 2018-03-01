@@ -401,6 +401,8 @@ public class PlayerController : MonoBehaviour
         SSGameDataManage.PlayerData playerDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerDt;
         m_ColorEffect = playerDt.m_ColorEffect;
         m_UIController = playerDt.m_UIController;
+        m_OutHedao = playerDt.m_OutHedao;
+        m_ErrorDirection = playerDt.m_ErrorDirection;
         Path = playerDt.Path;
         m_RadialBlurEffect = playerDt.m_RadialBlurEffect;
         m_CameraShake = playerDt.m_CameraShake;

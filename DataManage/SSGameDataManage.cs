@@ -21,6 +21,14 @@ public class SSGameDataManage : MonoBehaviour
         /// </summary>
         public UIController m_UIController;
         /// <summary>
+        /// 出河道UI提示.
+        /// </summary>
+        public GameObject m_OutHedao;
+        /// <summary>
+        /// 运动方向错误UI提示
+        /// </summary>
+        public GameObject m_ErrorDirection;
+        /// <summary>
         /// 路径.
         /// </summary>
         public Transform Path;
