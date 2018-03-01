@@ -111,7 +111,7 @@ public class UIController : MonoBehaviour
         chile = 0;
 		m_pScale.enabled = false;
 		m_totalTime = (int)m_pGameTime;
-		XkGameCtrl.IsLoadingLevel = false;
+		//XkGameCtrl.IsLoadingLevel = false;
         ShowJiFenInfo(0);
         UpdateDianLiangUI(1f);
         UpdatePlayerMoveSpeed(0);
@@ -299,7 +299,7 @@ public class UIController : MonoBehaviour
 			if(m_CongratulateTimmer>5.0f)
 			{
 				//MyCOMDevice.GetInstance().ForceRestartComPort();
-				XkGameCtrl.IsLoadingLevel = true;
+				//XkGameCtrl.IsLoadingLevel = true;
 				LoadMovieLevel();
 			}
 
@@ -332,7 +332,7 @@ public class UIController : MonoBehaviour
 			yield return new WaitForSeconds(0.5f);
 			if (Time.realtimeSinceStartup - timeLast > 5f) {
 				isLoop = false;
-				XkGameCtrl.IsLoadingLevel = true;
+				//XkGameCtrl.IsLoadingLevel = true;
 				//Debug.Log("CheckUnloadUnusedAssets -> loading movie level, asyncVal.isDone "+asyncVal.isDone);
 				Application.LoadLevel(0);
 				yield break;
@@ -343,7 +343,7 @@ public class UIController : MonoBehaviour
 			}
 			else {
 				isLoop = false;
-				XkGameCtrl.IsLoadingLevel = true;
+				//XkGameCtrl.IsLoadingLevel = true;
 				Application.LoadLevel(0);
 				yield break;
 			}

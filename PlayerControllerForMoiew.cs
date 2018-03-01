@@ -83,7 +83,7 @@ public class PlayerControllerForMoiew : MonoBehaviour
 
 		m_BeijingAudio.Play();
 		Instance = this;
-		XkGameCtrl.IsLoadingLevel = false;
+		//XkGameCtrl.IsLoadingLevel = false;
 		PlayerYinQingAd.Play();
 		m_HuanjingSenlin.Play();
 		m_HuanjingShuiliu.Play();

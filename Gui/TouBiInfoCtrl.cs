@@ -62,7 +62,7 @@ public class TouBiInfoCtrl : MonoBehaviour
 		if (val == ButtonState.DOWN) {
 			return;
 		}
-		XkGameCtrl.IsLoadingLevel = true;
+		//XkGameCtrl.IsLoadingLevel = true;
 		Resources.UnloadUnusedAssets();
 		GC.Collect();
 		Application.LoadLevel(5);

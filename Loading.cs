@@ -119,7 +119,7 @@ public class Loading : MonoBehaviour
         {
             NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
         }
-		XkGameCtrl.IsLoadingLevel = true;
+		//XkGameCtrl.IsLoadingLevel = true;
 		Resources.UnloadUnusedAssets();
 		GC.Collect();
 		Application.LoadLevel(5); //进入设置界面.
@@ -207,7 +207,7 @@ public class Loading : MonoBehaviour
 	}
 	IEnumerator loadScene(int num)   
 	{
-		XkGameCtrl.IsLoadingLevel = true;
+		//XkGameCtrl.IsLoadingLevel = true;
 		Resources.UnloadUnusedAssets();
 		GC.Collect();
 		AsyncOperation async = Application.LoadLevelAsync(num);   

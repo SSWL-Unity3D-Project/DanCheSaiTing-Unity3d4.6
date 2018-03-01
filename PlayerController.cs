@@ -395,8 +395,36 @@ public class PlayerController : MonoBehaviour
 	public AudioSource m_EatJiashiAudio;
 	public AudioSource LaBaAudio;
     public static int PlayerIndexRand = -1;
+
+    void InitPlayerData()
+    {
+        SSGameDataManage.PlayerData playerDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerDt;
+        m_ColorEffect = playerDt.m_ColorEffect;
+        m_UIController = playerDt.m_UIController;
+        Path = playerDt.Path;
+        m_RadialBlurEffect = playerDt.m_RadialBlurEffect;
+        m_CameraShake = playerDt.m_CameraShake;
+        m_HitStone = playerDt.m_HitStone;
+        m_HitWater = playerDt.m_HitWater;
+        m_HitWater = playerDt.m_HitWater;
+        m_YinqingAudio = playerDt.m_YinqingAudio;
+        m_ShuihuaAudio = playerDt.m_ShuihuaAudio;
+        m_BeijingAudio = playerDt.m_BeijingAudio;
+        m_ErrorDirectionAudio = playerDt.m_ErrorDirectionAudio;
+        m_HuanjingSenlin = playerDt.m_HuanjingSenlin;
+        m_HuanjingShuiliu = playerDt.m_HuanjingShuiliu;
+        m_FeibanAudio = playerDt.m_FeibanAudio;
+        m_JiasuAudio = playerDt.m_JiasuAudio;
+        mBianXingYiAudio = playerDt.mBianXingYiAudio;
+        m_EatJiasuAudio = playerDt.m_EatJiasuAudio;
+        m_JiashiAudio = playerDt.m_JiashiAudio;
+        m_EatJiashiAudio = playerDt.m_EatJiashiAudio;
+        LaBaAudio = playerDt.LaBaAudio;
+    }
+
     void Awake()
     {
+        InitPlayerData();
         if (PlayerIndexRand >= PlayerObjArray.Length - 1)
         {
             PlayerIndexRand = -1;

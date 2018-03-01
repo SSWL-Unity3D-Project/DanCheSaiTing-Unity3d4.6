@@ -156,9 +156,9 @@ public class pcvr : MonoBehaviour {
 			return;
 		}
 
-		if (XkGameCtrl.IsLoadingLevel) {
-			return;
-		}
+		//if (XkGameCtrl.IsLoadingLevel) {
+		//	return;
+		//}
 
 		SendMessage();
 		GetMessage();

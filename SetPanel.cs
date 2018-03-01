@@ -30,7 +30,7 @@ public class SetPanel : MonoBehaviour
 	int GameAudioVolume;
 	void Start () 
 	{
-		XkGameCtrl.IsLoadingLevel = false;
+		//XkGameCtrl.IsLoadingLevel = false;
 		GameAudioVolume = ReadGameInfo.GetInstance().ReadGameAudioVolume();
 		GameAudioVolumeLB.text = GameAudioVolume.ToString();
 
@@ -512,7 +512,7 @@ public class SetPanel : MonoBehaviour
                 {
                     CloseAllQiNang();
 					pcvr.StartBtLight = StartLightState.Mie;
-					XkGameCtrl.IsLoadingLevel = true;
+					//XkGameCtrl.IsLoadingLevel = true;
                     IsOpenSetPanel = false;
                     Resources.UnloadUnusedAssets();
                     GC.Collect();

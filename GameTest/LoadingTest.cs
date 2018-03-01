@@ -7,15 +7,15 @@ public class LoadingTest : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
-		XkGameCtrl.IsLoadingLevel = false;
+		//XkGameCtrl.IsLoadingLevel = false;
 		Invoke("DelayLoadingLevel", 2.5f);
 	}
 
 	void DelayLoadingLevel()
 	{
-		if (XkGameCtrl.IsLoadingLevel) {
-			return;
-		}
+		//if (XkGameCtrl.IsLoadingLevel) {
+		//	return;
+		//}
 		StartCoroutine(CheckUnloadUnusedAssets());
 	}
 
@@ -32,14 +32,14 @@ public class LoadingTest : MonoBehaviour {
 			}
 			else {
 				//Debug.Log("loadedLevel === "+Application.loadedLevel);
-				if (!XkGameCtrl.IsLoadingLevel) {
-					if (Application.loadedLevel < 4) {
-						Application.LoadLevel(4);
-					}
-					else {
-						Application.LoadLevel(0);
-					}
-				}
+				//if (!XkGameCtrl.IsLoadingLevel) {
+				//	if (Application.loadedLevel < 4) {
+				//		Application.LoadLevel(4);
+				//	}
+				//	else {
+				//		Application.LoadLevel(0);
+				//	}
+				//}
 				yield break;
 			}
 		} while (isLoop);

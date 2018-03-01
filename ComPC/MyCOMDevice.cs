@@ -65,9 +65,9 @@ public class MyCOMDevice : MonoBehaviour
 				}
 				catch (Exception exception)
 				{
-					if (XkGameCtrl.IsGameOnQuit || ComThread == null) {
-						return;
-					}
+					//if (XkGameCtrl.IsGameOnQuit || ComThread == null) {
+					//	return;
+					//}
 					Debug.Log("error:COM already opened by other PRG... " + exception);
 				}
 			}
@@ -105,9 +105,9 @@ public class MyCOMDevice : MonoBehaviour
 
 		void COMTxData()
 		{
-			if (XkGameCtrl.IsGameOnQuit) {
-				return;
-			}
+			//if (XkGameCtrl.IsGameOnQuit) {
+			//	return;
+			//}
 
 			try
 			{
@@ -117,18 +117,18 @@ public class MyCOMDevice : MonoBehaviour
 			}
 			catch (Exception exception)
 			{
-				if (XkGameCtrl.IsGameOnQuit || ComThread == null) {
-					return;
-				}
+				//if (XkGameCtrl.IsGameOnQuit || ComThread == null) {
+				//	return;
+				//}
 				Debug.Log("Tx error:COM!!! " + exception);
 			}
 		}
 
 		void COMRxData()
 		{
-			if (XkGameCtrl.IsGameOnQuit) {
-				return;
-			}
+			//if (XkGameCtrl.IsGameOnQuit) {
+			//	return;
+			//}
 
 			try
 			{
@@ -140,9 +140,9 @@ public class MyCOMDevice : MonoBehaviour
 			}
 			catch (Exception exception)
 			{
-				if (XkGameCtrl.IsGameOnQuit || ComThread == null) {
-					return;
-				}
+				//if (XkGameCtrl.IsGameOnQuit || ComThread == null) {
+				//	return;
+				//}
 
 				Debug.Log("Rx error:COM..." + exception);
 				IsReadMsgComTimeOut = true;
@@ -234,7 +234,7 @@ public class MyCOMDevice : MonoBehaviour
 	void OnApplicationQuit()
 	{
 		Debug.Log("OnApplicationQuit...Com");
-		XkGameCtrl.IsGameOnQuit = true;
+		//XkGameCtrl.IsGameOnQuit = true;
 		ComThreadClass.CloseComPort();
 		Invoke("CloseComThread", 2f);
 	}
