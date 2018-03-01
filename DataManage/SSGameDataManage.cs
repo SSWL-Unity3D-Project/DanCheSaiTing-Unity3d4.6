@@ -141,22 +141,50 @@ public class SSGameDataManage : MonoBehaviour
         /// <summary>
         /// 主角预制.
         /// </summary>
-        public GameObject PlayerPrefab;
+        public GameObject mPlayerPrefab;
+        /// <summary>
+        /// Npc预制.
+        /// </summary>
+        public GameObject mNpcPrefab;
         /// <summary>
         /// 主角/npc产生点.
         /// </summary>
         public Transform[] SpawnPointArray = new Transform[4];
+        /// <summary>
+        /// 创建主角.
+        /// </summary>
         public void SpawnPlayer(int indexVal)
         {
             Object obj = null;
             if (Network.peerType == NetworkPeerType.Disconnected)
             {
-                obj = Instantiate(PlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
+                obj = Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
             }
             else
             {
 
             }
+        }
+
+        /// <summary>
+        /// 创建Npc.
+        /// </summary>
+        public void SpawnNpc(int indexVal)
+        {
+            GameObject obj = null;
+            NpcController npcScript = null;
+            NpcController.NpcEnum npcState = (NpcController.NpcEnum)indexVal;
+            if (Network.peerType == NetworkPeerType.Disconnected)
+            {
+                obj = (GameObject)Instantiate(mNpcPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
+            }
+            else
+            {
+
+            }
+
+            npcScript = obj.GetComponent<NpcController>();
+            npcScript.SetNpcState(npcState);
         }
     }
     public GameData mGameData;

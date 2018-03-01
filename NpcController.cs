@@ -246,6 +246,9 @@ public class NpcController : MonoBehaviour
         m_IsHit = true;
     }
 
+    /// <summary>
+    /// 获取主角控制脚本.
+    /// </summary>
     PlayerController GetPlayerController()
     {
         int count = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerControllerList.Count;
@@ -258,4 +261,12 @@ public class NpcController : MonoBehaviour
         return SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerControllerList[randVal];
     }
 
+    /// <summary>
+    /// 设置Npc的枚举状态.
+    /// </summary>
+    public void SetNpcState(NpcEnum npcState)
+    {
+        NpcState = npcState;
+        name = npcState.ToString();
+    }
 }
