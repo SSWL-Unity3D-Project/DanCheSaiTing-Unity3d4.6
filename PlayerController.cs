@@ -422,6 +422,7 @@ public class PlayerController : MonoBehaviour
         LaBaAudio = playerDt.LaBaAudio;
 
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerControllerList.Add(this);
+        SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController = this;
     }
 
     void Awake()

@@ -101,7 +101,12 @@ public class SSGameDataManage : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public List<PlayerController> mPlayerControllerList = new List<PlayerController>();
-    
+    /// <summary>
+    /// 游戏主角控制脚本.
+    /// </summary>
+    [HideInInspector]
+    public PlayerController mPlayerController;
+
     /// <summary>
     /// Npc数据.
     /// </summary>

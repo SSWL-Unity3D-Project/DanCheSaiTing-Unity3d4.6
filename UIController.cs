@@ -105,6 +105,7 @@ public class UIController : MonoBehaviour
 
 	void Start () 
 	{
+        m_Player = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController;
         m_pGameTime = 120.0f;   //gzknu
         m_pMiaoshiwei.spriteName = "2"; //gzknu
 
