@@ -460,18 +460,18 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
     {
-        InputEventCtrl.GetInstance().ClickFireBtEvent += ClickFireBtEvent;
-        InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
+        InputEventCtrl.GetInstance().mListenPcInputEvent.ClickFireBtEvent += ClickFireBtEvent;
+        InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
         m_PlayerAnimator = m_pChuan.GetComponent<Animator>();
         m_StartForEfferct = m_ParameterForEfferct;
         //PlayerMinSpeedVal = ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
         PlayerMinSpeedVal = 80f;
         Loading.m_HasBegin = false;
-		pcvr.ShaCheBtLight = StartLightState.Liang;
-		pcvr.IsSlowLoopCom = false;
-		pcvr.CountFXZD = 0;
-		pcvr.CountQNZD = 0;
-		pcvr.OpenFangXiangPanPower();
+		//pcvr.ShaCheBtLight = StartLightState.Liang;
+		//pcvr.IsSlowLoopCom = false;
+		//pcvr.CountFXZD = 0;
+		//pcvr.CountQNZD = 0;
+		//pcvr.OpenFangXiangPanPower();
 		Screen.showCursor = false;
 		Time.timeScale = 1f;
 
@@ -494,7 +494,7 @@ public class PlayerController : MonoBehaviour
 //		m_SpeedRecord = rigidbody.velocity.magnitude;
 		Instance = this;
 		//InputEventCtrl.GetInstance().ClickShaCheBtEvent += ClickShaCheBtEvent;
-		InputEventCtrl.GetInstance().ClickLaBaBtEvent += ClickLaBaBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickLaBaBtEvent += ClickLaBaBtEvent;
 		Invoke("DelayCallClickShaCheBtEvent", 0.5f);
 
         StartCoroutine(GameObjectHide());   //gzknu
@@ -510,7 +510,7 @@ public class PlayerController : MonoBehaviour
         if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0)
         {
             m_UIController.mPlayerDaoJuManageUI.DaoDanNum--;
-            GameObject zhangAiWuObj = pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
+            GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
             OnPlayerHitDaoDanDaoJu(zhangAiWuObj);
             return;
         }
@@ -518,7 +518,7 @@ public class PlayerController : MonoBehaviour
         if (m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
         {
             m_UIController.mPlayerDaoJuManageUI.DiLeiNum--;
-            GameObject zhangAiWuObj = pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
+            GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
             OnPlayerHitDiLeiDaoJu(zhangAiWuObj);
             return;
         }
@@ -536,12 +536,12 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum < pcvr.GetInstance().mPlayerDataManage.CoinNumFeiXing)
+        if (SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum < SSGameCtrl.GetInstance().mPlayerDataManage.CoinNumFeiXing)
         {
             m_UIController.PlayInsertCoinAniOnClickJiaSu();
             return;
         }
-        pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum -= pcvr.GetInstance().mPlayerDataManage.CoinNumFeiXing;
+        SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum -= SSGameCtrl.GetInstance().mPlayerDataManage.CoinNumFeiXing;
         m_UIController.mTouBiInfo.UpdateInsertCoin();
         OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType.FeiXingYi);
     }
@@ -709,21 +709,21 @@ public class PlayerController : MonoBehaviour
 			if(SpeedMovePlayer > 105f && !m_IsFinished)
 			{
 				if (!m_IsHitshake) {
-					if (pcvr.m_IsOpneLeftQinang || pcvr.m_IsOpneRightQinang) {
-						pcvr.m_IsOpneForwardQinang = false;
-						pcvr.m_IsOpneBehindQinang = false;
-					}
-					else {
-						pcvr.m_IsOpneForwardQinang = true;
-						pcvr.m_IsOpneBehindQinang = false;
-					}
+					//if (pcvr.m_IsOpneLeftQinang || pcvr.m_IsOpneRightQinang) {
+					//	pcvr.m_IsOpneForwardQinang = false;
+					//	pcvr.m_IsOpneBehindQinang = false;
+					//}
+					//else {
+						//pcvr.m_IsOpneForwardQinang = true;
+						//pcvr.m_IsOpneBehindQinang = false;
+					//}
 				}
 			}
 			else
 			{
 				if (!m_IsHitshake) {
-					pcvr.m_IsOpneForwardQinang = false;
-					pcvr.m_IsOpneBehindQinang = false;
+					//pcvr.m_IsOpneForwardQinang = false;
+					//pcvr.m_IsOpneBehindQinang = false;
 				}
 			}
 			if(!m_BeijingAudio.isPlaying)
@@ -840,14 +840,14 @@ public class PlayerController : MonoBehaviour
 		//throttle = 1f;
         if (m_UIController.mPlayerDaoJuManageUI.DianLiangVal > 0f)
         {
-            throttle = pcvr.mGetPower;
+            //throttle = pcvr.mGetPower;
         }
         else
         {
             throttle = 0f;
         }
-        jiaoTaBan = pcvr.mGetJiaoTaBan;
-        mSteer = pcvr.mGetSteer;
+        //jiaoTaBan = pcvr.mGetJiaoTaBan;
+        //mSteer = pcvr.mGetSteer;
         //if (!IsClickShaCheBt)
         //{
         //    throttle = pcvr.mGetPower;
@@ -920,7 +920,7 @@ public class PlayerController : MonoBehaviour
 				m_PlayerAnimator.SetBool("IsTurnleft",true);
 			}
 			if (SpeedMovePlayer > 15f && !m_IsHitshake) {
-				pcvr.m_IsOpneRightQinang = true;
+				//pcvr.m_IsOpneRightQinang = true;
 			}
 		}
 		else
@@ -930,7 +930,7 @@ public class PlayerController : MonoBehaviour
 				m_PlayerAnimator.SetBool("IsTurnleft",false);
 			}
 			if (!m_IsHitshake) {
-				pcvr.m_IsOpneRightQinang = false;
+				//pcvr.m_IsOpneRightQinang = false;
 			}
 		}
 
@@ -941,7 +941,7 @@ public class PlayerController : MonoBehaviour
 				m_PlayerAnimator.SetBool("IsTurnRight",true);
 			}
 			if (SpeedMovePlayer > 15f && !m_IsHitshake) {
-				pcvr.m_IsOpneLeftQinang = true;
+				//pcvr.m_IsOpneLeftQinang = true;
 			}
 		}
 		else
@@ -951,7 +951,7 @@ public class PlayerController : MonoBehaviour
 				m_PlayerAnimator.SetBool("IsTurnRight",false);
 			}
 			if (!m_IsHitshake) {
-				pcvr.m_IsOpneLeftQinang = false;
+				//pcvr.m_IsOpneLeftQinang = false;
 			}
 		}
 		//if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
@@ -1156,12 +1156,12 @@ public class PlayerController : MonoBehaviour
         PlayerMoveSpeed = (int)sp;
 
 #if UNITY_EDITOR
-        if (!pcvr.bIsHardWare || pcvr.IsTestGame) {
+        if (!pcvr.bIsHardWare) {
 			string strA = sp.ToString() + "km/h";
 			GUI.Box(new Rect(0f, 0f, wVal, hVal), strA);
 			
-			string strB = "throttle "+throttle.ToString("f3") + ", steer " + pcvr.mGetSteer.ToString("f3");
-			GUI.Box(new Rect(0f, hVal, wVal, hVal), strB);
+			//string strB = "throttle "+throttle.ToString("f3") + ", steer " + pcvr.mGetSteer.ToString("f3");
+			//GUI.Box(new Rect(0f, hVal, wVal, hVal), strB);
 		}
 #endif
 	}
@@ -1246,8 +1246,8 @@ public class PlayerController : MonoBehaviour
 
 			//gzknu
 			if (!m_IsHitshake) {
-				pcvr.m_IsOpneForwardQinang = true;
-				pcvr.m_IsOpneBehindQinang = false;
+				//pcvr.m_IsOpneForwardQinang = true;
+				//pcvr.m_IsOpneBehindQinang = false;
 			}
 		}
 		//OnNpcHitPlayer();
@@ -1282,7 +1282,7 @@ public class PlayerController : MonoBehaviour
 		if(other.tag == "road")
 		{
 			if (!m_IsOnRoad) {
-				pcvr.GetInstance().OpenFangXiangPanZhenDong();
+				//pcvr.GetInstance().OpenFangXiangPanZhenDong();
 			}
 			m_IsOnRoad = true;
 		}
@@ -1583,37 +1583,37 @@ public class PlayerController : MonoBehaviour
 				m_HitshakeTimmer+=Time.deltaTime;
 				if(m_HitshakeTimmer<m_HitshakeTimmerSet*0.25f || (m_HitshakeTimmer>=m_HitshakeTimmerSet*0.5f && m_HitshakeTimmer<m_HitshakeTimmerSet*0.75f))
 				{
-					pcvr.m_IsOpneForwardQinang = IsHitRock;
-					pcvr.m_IsOpneBehindQinang = IsHitRock;
-					pcvr.m_IsOpneLeftQinang = false;
-					pcvr.m_IsOpneRightQinang = true;
+					//pcvr.m_IsOpneForwardQinang = IsHitRock;
+					//pcvr.m_IsOpneBehindQinang = IsHitRock;
+					//pcvr.m_IsOpneLeftQinang = false;
+					//pcvr.m_IsOpneRightQinang = true;
 				}
 				else if((m_HitshakeTimmer>=m_HitshakeTimmerSet*0.25f &&m_HitshakeTimmer<m_HitshakeTimmerSet*0.5f) || m_HitshakeTimmer>=m_HitshakeTimmerSet*0.75f)
 				{
-					pcvr.m_IsOpneForwardQinang = IsHitRock;
-					pcvr.m_IsOpneBehindQinang = IsHitRock;
-					pcvr.m_IsOpneLeftQinang = true;
-					pcvr.m_IsOpneRightQinang = false;
+					//pcvr.m_IsOpneForwardQinang = IsHitRock;
+					//pcvr.m_IsOpneBehindQinang = IsHitRock;
+					//pcvr.m_IsOpneLeftQinang = true;
+					//pcvr.m_IsOpneRightQinang = false;
 				}
 			}
 			else
 			{
 				TimeHitRock+=Time.deltaTime;
-				pcvr.m_IsOpneLeftQinang = false;
-				pcvr.m_IsOpneRightQinang = false;
+				//pcvr.m_IsOpneLeftQinang = false;
+				//pcvr.m_IsOpneRightQinang = false;
 				if (TimeHitRock >= 2f) {
-					pcvr.CountQNZD++;
+					//pcvr.CountQNZD++;
 					TimeHitRock = 0f;
 					m_HitshakeTimmer = 0.0f;
 					m_IsHitshake = false;
 					IsHitRock = false;
-					pcvr.m_IsOpneForwardQinang = false;
-					pcvr.m_IsOpneBehindQinang = false;
+					//pcvr.m_IsOpneForwardQinang = false;
+					//pcvr.m_IsOpneBehindQinang = false;
 //					pcvr.m_IsOpneLeftQinang = false;
 //					pcvr.m_IsOpneRightQinang = false;
 				}
 			}
-			pcvr.GetInstance().OpenFangXiangPanZhenDong();
+			//pcvr.GetInstance().OpenFangXiangPanZhenDong();
 		}
 	}
 	static float TimeHitRock;
@@ -1904,7 +1904,7 @@ public class PlayerController : MonoBehaviour
         GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation);
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
-        GameObject aimNpc =  pcvr.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
         if (aimNpc != null)
         {
             isFollowNpc = true;
@@ -1979,7 +1979,7 @@ public class PlayerController : MonoBehaviour
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         ammoDt.HightVal = UnityEngine.Random.Range(2.5f, 5f);
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
-        GameObject aimNpc = pcvr.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
 
         if (aimNpc != null)
         {

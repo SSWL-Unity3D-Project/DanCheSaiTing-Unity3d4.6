@@ -10,6 +10,11 @@ public class SSGameCtrl : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public SSGameRoot mSSGameRoot;
+    /// <summary>
+    /// Íæ¼Ò”µ“þ¹ÜÀí.
+    /// </summary>
+    [HideInInspector]
+    public PlayerDataManage mPlayerDataManage;
     static SSGameCtrl _Instance;
     public static SSGameCtrl GetInstance()
     {
@@ -17,6 +22,7 @@ public class SSGameCtrl : MonoBehaviour
         {
             GameObject obj = new GameObject("_SSGameCtrl");
             _Instance = obj.AddComponent<SSGameCtrl>();
+            _Instance.mPlayerDataManage = new PlayerDataManage();
             DontDestroyOnLoad(obj);
         }
         return _Instance;

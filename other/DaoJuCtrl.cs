@@ -73,14 +73,14 @@ public class DaoJuCtrl : MonoBehaviour
     {
         if (DaoJuState == DaoJuType.ZhangAiWu)
         {
-            if (pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData == null)
+            if (SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData == null)
             {
-                pcvr.GetInstance().mPlayerDataManage.CreatDaoJuZhangAiWuData();
+                SSGameCtrl.GetInstance().mPlayerDataManage.CreatDaoJuZhangAiWuData();
             }
 
-            if (pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData != null)
+            if (SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData != null)
             {
-                pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.AddZhangAiWuTr(transform);
+                SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.AddZhangAiWuTr(transform);
             }
         }
     }
@@ -203,7 +203,7 @@ public class DaoJuCtrl : MonoBehaviour
                     {
                         PlayerController.GetInstance().OnPlayerHitDaoJuZhangAiWu();
                     }
-                    pcvr.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.RemoveZhangAiWuTr(transform);
+                    SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.RemoveZhangAiWuTr(transform);
                     //GameObject childObj = null;
                     //DestroyThisTimed destroyCom = null;
                     //for (int i = 0; i < transform.childCount; i++)

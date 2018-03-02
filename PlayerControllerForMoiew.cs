@@ -68,8 +68,8 @@ public class PlayerControllerForMoiew : MonoBehaviour
 	{
 		IsLoadMovieLevel = false;
 		HuiEffectSaturation = m_HuiEffect.saturation;
-		pcvr.IsSlowLoopCom = true;
-		pcvr.CloseFangXiangPanPower();
+		//pcvr.IsSlowLoopCom = true;
+		//pcvr.CloseFangXiangPanPower();
 		Screen.showCursor = false;
 		if (IsThreeScreen) {
 			//Screen.SetResolution(1360*3, 768, true);
@@ -95,7 +95,7 @@ public class PlayerControllerForMoiew : MonoBehaviour
 	void DelayPcvrJiaMiJiaoYan()
 	{
 		//Debug.Log("DelayPcvrJiaMiJiaoYan...");
-		pcvr.GetInstance().StartJiaoYanIO();
+		//pcvr.GetInstance().StartJiaoYanIO();
 	}
 
 	public static PlayerControllerForMoiew GetInstance()

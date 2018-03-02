@@ -42,11 +42,11 @@ public class NpcController : MonoBehaviour
     {
         m_NpcPath = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mNpcDt.m_NpcPathArray[(int)NpcState - 1];
         m_player = GetPlayerController();
-        if (pcvr.GetInstance().mPlayerDataManage.mAiNpcData == null)
+        if (SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData == null)
         {
-            pcvr.GetInstance().mPlayerDataManage.CreatAiNpcData();
+            SSGameCtrl.GetInstance().mPlayerDataManage.CreatAiNpcData();
         }
-        pcvr.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
+        SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
         
         if (NpcIndexVal >= NpcObjArray.Length - 1)
         {

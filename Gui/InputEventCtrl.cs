@@ -7,197 +7,176 @@ public class InputEventCtrl : MonoBehaviour
         UP = 1,
         DOWN = -1
     }
-    public static bool IsClickFireBtDown;
-	public static uint SteerValCur;
-	public static uint TaBanValCur;
-	static private InputEventCtrl Instance = null;
-	static public InputEventCtrl GetInstance()
-	{
-		if(Instance == null)
-		{
-			GameObject obj = new GameObject("_InputEventCtrl");
-			Instance = obj.AddComponent<InputEventCtrl>();
-			pcvr.GetInstance();
-		}
-		return Instance;
-	}
+    /// <summary>
+    /// 监听电脑按键响应.
+    /// </summary>
+    [HideInInspector]
+    public ListenPcInputEvent mListenPcInputEvent;
+    static InputEventCtrl _Instance = null;
+    public static InputEventCtrl GetInstance()
+    {
+        if (_Instance == null)
+        {
+            GameObject obj = new GameObject("_InputEventCtrl");
+            _Instance = obj.AddComponent<InputEventCtrl>();
+            _Instance.mListenPcInputEvent = obj.AddComponent<ListenPcInputEvent>();
+            pcvr.GetInstance();
+        }
+        return _Instance;
+    }
 
-	#region Click Button Envent
-	public delegate void EventHandel(ButtonState val);
-	public event EventHandel ClickStartBtOneEvent;
-	public void ClickStartBtOne(ButtonState val)
-	{
-		if(ClickStartBtOneEvent != null)
-		{
-			ClickStartBtOneEvent( val );
-			pcvr.StartBtLight = StartLightState.Mie;
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
+    #region CaiPiaoJi Event
+    /// <summary>
+    /// 彩票机无票事件.
+    /// </summary>
+    public delegate void CaiPiaoJiWuPiaoEvent(pcvrTXManage.CaiPiaoJi val);
+    public event CaiPiaoJiWuPiaoEvent OnCaiPiaJiWuPiaoEvent;
+    public void OnCaiPiaJiWuPiao(pcvrTXManage.CaiPiaoJi val)
+    {
+        if (OnCaiPiaJiWuPiaoEvent != null)
+        {
+            OnCaiPiaJiWuPiaoEvent(val);
+        }
+    }
 
-	public event EventHandel ClickCloseDongGanBtEvent;
-	public void ClickCloseDongGanBt(ButtonState val)
-	{
-		if(ClickCloseDongGanBtEvent != null)
-		{
-			ClickCloseDongGanBtEvent( val );
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
-	
-	public event EventHandel ClickPlayerYouMenBtEvent;
-	public void ClickPlayerYouMenBt(ButtonState val)
-	{
-		if(ClickPlayerYouMenBtEvent != null)
-		{
-			ClickPlayerYouMenBtEvent( val );
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
+    /// <summary>
+    /// 彩票机出票响应事件.
+    /// </summary>
+    public delegate void CaiPiaoJiChuPiaoEvent(pcvrTXManage.CaiPiaoJi val);
+    public event CaiPiaoJiChuPiaoEvent OnCaiPiaJiChuPiaoEvent;
+    public void OnCaiPiaJiChuPiao(pcvrTXManage.CaiPiaoJi val)
+    {
+        if (OnCaiPiaJiChuPiaoEvent != null)
+        {
+            OnCaiPiaJiChuPiaoEvent(val);
+        }
+    }
+    #endregion
 
-	public event EventHandel ClickSetEnterBtEvent;
-	public void ClickSetEnterBt(ButtonState val)
-	{
-		if(ClickSetEnterBtEvent != null)
-		{
-			ClickSetEnterBtEvent( val );
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
-
-	public event EventHandel ClickSetMoveBtEvent;
-	public void ClickSetMoveBt(ButtonState val)
-	{
-		if(ClickSetMoveBtEvent != null)
-		{
-			ClickSetMoveBtEvent( val );
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
-
-	public event EventHandel ClickFireBtEvent;
-	public void ClickFireBt(ButtonState val)
-	{
-		if(ClickFireBtEvent != null)
-		{
-			ClickFireBtEvent( val );
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
-	
-	public event EventHandel ClickShaCheBtEvent;
-	public void ClickShaCheBt(ButtonState val)
-	{
-		if(ClickShaCheBtEvent != null)
-		{
-			ClickShaCheBtEvent( val );
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
-	
-	public event EventHandel ClickLaBaBtEvent;
-	public void ClickLaBaBt(ButtonState val)
-	{
-		if(ClickLaBaBtEvent != null)
-		{
-			ClickLaBaBtEvent( val );
-		}
-		pcvr.SetIsPlayerActivePcvr();
-	}
-	#endregion
-
-	void Update()
-	{
-		if (pcvr.bIsHardWare) {
-			return;
-		}
-
-		//StartBt PlayerOne
-		if(Input.GetKeyUp(KeyCode.K))
-		{
-			ClickStartBtOne( ButtonState.UP );
-		}
-
-		if(Input.GetKeyDown(KeyCode.K))
-		{
-			ClickStartBtOne( ButtonState.DOWN );
-		}
-
-		if(Input.GetKeyUp(KeyCode.P))
-		{
-			ClickCloseDongGanBt( ButtonState.UP );
-		}
-		
-		if(Input.GetKeyDown(KeyCode.P))
-		{
-			ClickCloseDongGanBt( ButtonState.DOWN );
-		}
-
-		if(Input.GetKeyUp(KeyCode.W))
-		{
-			ClickPlayerYouMenBt( ButtonState.UP );
-		}
-
-		if(Input.GetKeyDown(KeyCode.W))
-		{
-			ClickPlayerYouMenBt( ButtonState.DOWN );
-		}
-
-		//setPanel enter button
-		if(Input.GetKeyUp(KeyCode.F4))
-		{
-			ClickSetEnterBt( ButtonState.UP );
-		}
-		
-		if(Input.GetKeyDown(KeyCode.F4))
-		{
-			ClickSetEnterBt( ButtonState.DOWN );
-		}
-
-		//setPanel move button
-		if(Input.GetKeyUp(KeyCode.F5))
-		{
-			ClickSetMoveBt( ButtonState.UP );
-			//FramesPerSecond.GetInstance().ClickSetMoveBtEvent( ButtonState.UP );
-		}
-		
-		if(Input.GetKeyDown(KeyCode.F5))
-		{
-			ClickSetMoveBt( ButtonState.DOWN );
-			//FramesPerSecond.GetInstance().ClickSetMoveBtEvent( ButtonState.DOWN );
-		}
-
-		//Fire button
-		if(Input.GetKeyUp(KeyCode.Space))
-		{
-			IsClickFireBtDown = false;
-			ClickFireBt( ButtonState.UP );
-		}
-
-		if(Input.GetKeyDown(KeyCode.Space))
-		{
-			IsClickFireBtDown = true;
-			ClickFireBt( ButtonState.DOWN );
-		}
-
-		//if(Input.GetKeyUp(KeyCode.Space))
-		//{
-		//	ClickShaCheBt( ButtonState.UP );
-		//}
-		
-		//if(Input.GetKeyDown(KeyCode.Space))
-		//{
-		//	ClickShaCheBt( ButtonState.DOWN );
-		//}
-
-		//if(Input.GetKeyUp(KeyCode.G))
-		//{
-		//	ClickLaBaBt( ButtonState.UP );
-		//}
-
-		//if(Input.GetKeyDown(KeyCode.G))
-		//{
-		//	ClickLaBaBt( ButtonState.DOWN );
-		//}
-	}
+    #region Click Button Event
+    /// <summary>
+    /// 按键响应事件.
+    /// </summary>
+    public delegate void EventHandel(ButtonState val);
+    public event EventHandel ClickPcvrBtEvent01;
+    public void ClickPcvrBt01(ButtonState val)
+    {
+        if (ClickPcvrBtEvent01 != null)
+        {
+            ClickPcvrBtEvent01(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent02;
+    public void ClickPcvrBt02(ButtonState val)
+    {
+        if (ClickPcvrBtEvent02 != null)
+        {
+            ClickPcvrBtEvent02(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent03;
+    public void ClickPcvrBt03(ButtonState val)
+    {
+        if (ClickPcvrBtEvent03 != null)
+        {
+            ClickPcvrBtEvent03(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent04;
+    public void ClickPcvrBt04(ButtonState val)
+    {
+        if (ClickPcvrBtEvent04 != null)
+        {
+            ClickPcvrBtEvent04(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent05;
+    public void ClickPcvrBt05(ButtonState val)
+    {
+        if (ClickPcvrBtEvent05 != null)
+        {
+            ClickPcvrBtEvent05(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent06;
+    public void ClickPcvrBt06(ButtonState val)
+    {
+        if (ClickPcvrBtEvent06 != null)
+        {
+            ClickPcvrBtEvent06(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent07;
+    public void ClickPcvrBt07(ButtonState val)
+    {
+        if (ClickPcvrBtEvent07 != null)
+        {
+            ClickPcvrBtEvent07(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent08;
+    public void ClickPcvrBt08(ButtonState val)
+    {
+        if (ClickPcvrBtEvent08 != null)
+        {
+            ClickPcvrBtEvent08(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent09;
+    public void ClickPcvrBt09(ButtonState val)
+    {
+        if (ClickPcvrBtEvent09 != null)
+        {
+            ClickPcvrBtEvent09(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent10;
+    public void ClickPcvrBt10(ButtonState val)
+    {
+        if (ClickPcvrBtEvent10 != null)
+        {
+            ClickPcvrBtEvent10(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent11;
+    public void ClickPcvrBt11(ButtonState val)
+    {
+        if (ClickPcvrBtEvent11 != null)
+        {
+            ClickPcvrBtEvent11(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent12;
+    public void ClickPcvrBt12(ButtonState val)
+    {
+        if (ClickPcvrBtEvent12 != null)
+        {
+            ClickPcvrBtEvent12(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent13;
+    public void ClickPcvrBt13(ButtonState val)
+    {
+        if (ClickPcvrBtEvent13 != null)
+        {
+            ClickPcvrBtEvent13(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent14;
+    public void ClickPcvrBt14(ButtonState val)
+    {
+        if (ClickPcvrBtEvent14 != null)
+        {
+            ClickPcvrBtEvent14(val);
+        }
+    }
+    public event EventHandel ClickPcvrBtEvent15;
+    public void ClickPcvrBt15(ButtonState val)
+    {
+        if (ClickPcvrBtEvent15 != null)
+        {
+            ClickPcvrBtEvent15(val);
+        }
+    }
+    #endregion
 }

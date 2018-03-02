@@ -10,10 +10,17 @@ public class ListenPcInputEvent : MonoBehaviour
         //InputEventCtrl.GetInstance().ClickPcvrBtEvent10 += ClickCloseDongGanBt;
     }
 
-    #region Click Button Event
-    /// <summary>
-    /// 关闭/打开动感按键.
-    /// </summary>
+    #region Click Button Envent
+    public event InputEventCtrl.EventHandel ClickStartBtOneEvent;
+    public void ClickStartBtOne(InputEventCtrl.ButtonState val)
+    {
+        if (ClickStartBtOneEvent != null)
+        {
+            ClickStartBtOneEvent(val);
+            //pcvr.StartBtLight = StartLightState.Mie;
+        }
+    }
+
     public event InputEventCtrl.EventHandel ClickCloseDongGanBtEvent;
     public void ClickCloseDongGanBt(InputEventCtrl.ButtonState val)
     {
@@ -23,9 +30,15 @@ public class ListenPcInputEvent : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 设置按键.
-    /// </summary>
+    public event InputEventCtrl.EventHandel ClickPlayerYouMenBtEvent;
+    public void ClickPlayerYouMenBt(InputEventCtrl.ButtonState val)
+    {
+        if (ClickPlayerYouMenBtEvent != null)
+        {
+            ClickPlayerYouMenBtEvent(val);
+        }
+    }
+
     public event InputEventCtrl.EventHandel ClickSetEnterBtEvent;
     public void ClickSetEnterBt(InputEventCtrl.ButtonState val)
     {
@@ -35,15 +48,39 @@ public class ListenPcInputEvent : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 移动按键.
-    /// </summary>
     public event InputEventCtrl.EventHandel ClickSetMoveBtEvent;
     public void ClickSetMoveBt(InputEventCtrl.ButtonState val)
     {
         if (ClickSetMoveBtEvent != null)
         {
             ClickSetMoveBtEvent(val);
+        }
+    }
+
+    public event InputEventCtrl.EventHandel ClickFireBtEvent;
+    public void ClickFireBt(InputEventCtrl.ButtonState val)
+    {
+        if (ClickFireBtEvent != null)
+        {
+            ClickFireBtEvent(val);
+        }
+    }
+
+    public event InputEventCtrl.EventHandel ClickShaCheBtEvent;
+    public void ClickShaCheBt(InputEventCtrl.ButtonState val)
+    {
+        if (ClickShaCheBtEvent != null)
+        {
+            ClickShaCheBtEvent(val);
+        }
+    }
+
+    public event InputEventCtrl.EventHandel ClickLaBaBtEvent;
+    public void ClickLaBaBt(InputEventCtrl.ButtonState val)
+    {
+        if (ClickLaBaBtEvent != null)
+        {
+            ClickLaBaBtEvent(val);
         }
     }
     #endregion
@@ -55,6 +92,17 @@ public class ListenPcInputEvent : MonoBehaviour
             return;
         }
 
+        //StartBt PlayerOne
+        if (Input.GetKeyUp(KeyCode.K))
+        {
+            ClickStartBtOne(InputEventCtrl.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            ClickStartBtOne(InputEventCtrl.ButtonState.DOWN);
+        }
+
         if (Input.GetKeyUp(KeyCode.P))
         {
             ClickCloseDongGanBt(InputEventCtrl.ButtonState.UP);
@@ -63,6 +111,16 @@ public class ListenPcInputEvent : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             ClickCloseDongGanBt(InputEventCtrl.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            ClickPlayerYouMenBt(InputEventCtrl.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            ClickPlayerYouMenBt(InputEventCtrl.ButtonState.DOWN);
         }
 
         //setPanel enter button
@@ -80,13 +138,26 @@ public class ListenPcInputEvent : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.F5))
         {
             ClickSetMoveBt(InputEventCtrl.ButtonState.UP);
-            //FramesPerSecond.GetInstance().ClickSetMoveBtEvent( ButtonState.UP );
+            //FramesPerSecond.GetInstance().ClickSetMoveBtEvent( InputEventCtrl.ButtonState.UP );
         }
 
         if (Input.GetKeyDown(KeyCode.F5))
         {
             ClickSetMoveBt(InputEventCtrl.ButtonState.DOWN);
-            //FramesPerSecond.GetInstance().ClickSetMoveBtEvent( ButtonState.DOWN );
+            //FramesPerSecond.GetInstance().ClickSetMoveBtEvent( InputEventCtrl.ButtonState.DOWN );
+        }
+
+        //Fire button
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            //IsClickFireBtDown = false;
+            ClickFireBt(InputEventCtrl.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //IsClickFireBtDown = true;
+            ClickFireBt(InputEventCtrl.ButtonState.DOWN);
         }
     }
 }

@@ -69,10 +69,10 @@ public class Loading : MonoBehaviour
 		}
 		//Invoke("OnClickBeginBt", UnityEngine.Random.Range(1f, 5f)); //test
 		m_Loading.SetActive(false);
-		pcvr.ShaCheBtLight = StartLightState.Mie;
+		//pcvr.ShaCheBtLight = StartLightState.Mie;
 
-		InputEventCtrl.GetInstance().ClickSetEnterBtEvent += ClickSetEnterBtEvent;
-		InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickSetEnterBtEvent += ClickSetEnterBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
 	}
 	void Update ()
 	{
@@ -130,7 +130,7 @@ public class Loading : MonoBehaviour
 		int n = 1;
 		int num = m_InserNum;
 		int temp = num;
-        pcvr.GetInstance().mPlayerDataManage.PlayerCoinNum = m_InserNum;
+        SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum = m_InserNum;
         while (num > 9)
 		{
 			num /= 10;
@@ -180,11 +180,11 @@ public class Loading : MonoBehaviour
 			{
 				m_PressTimmer = 0.0f;
 			}
-			pcvr.StartBtLight = StartLightState.Shan;
+			//pcvr.StartBtLight = StartLightState.Shan;
 		}
 		else
 		{
-			pcvr.StartBtLight = StartLightState.Mie;
+			//pcvr.StartBtLight = StartLightState.Mie;
 			m_InserTimmer+=(Time.deltaTime / Time.timeScale);
 			m_IsBeginOk = false;
 			m_InsertTex.enabled = true;
@@ -237,9 +237,9 @@ public class Loading : MonoBehaviour
 				UpdateInsertCoin();
 				ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
 
-				if (pcvr.bIsHardWare) {
-					pcvr.GetInstance().SubPlayerCoin(Convert.ToInt32(CoinNumSet));
-				}
+				//if (pcvr.bIsHardWare) {
+				//	pcvr.GetInstance().SubPlayerCoin(Convert.ToInt32(CoinNumSet));
+				//}
 			}
 			m_Tishi.SetActive(false);
 			m_Loading.SetActive(true);

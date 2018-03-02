@@ -17,34 +17,45 @@ public class HardWareTest : MonoBehaviour
 	public UILabel YouMenLabel;
 	public UILabel FangXiangLabel;
 	public static bool IsTestHardWare;
-	public static HardWareTest Instance;
-	void Start ()
+    static HardWareTest Instance;
+    public static HardWareTest GetInstance()
+    {
+        return Instance;
+    }
+
+    void Start ()
 	{
 		Instance = this;
 		JiaMiJiaoYanCtrlObj.SetActive(IsJiaMiTest);
 		IsTestHardWare = true;
 		AnJianLabel.text = "";
-		InputEventCtrl.GetInstance().ClickSetEnterBtEvent += ClickSetEnterBtEvent;
-		InputEventCtrl.GetInstance().ClickSetMoveBtEvent += ClickSetMoveBtEvent;
-		InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
-		InputEventCtrl.GetInstance().ClickCloseDongGanBtEvent += ClickCloseDongGanBtEvent;
-		InputEventCtrl.GetInstance().ClickLaBaBtEvent += ClickLaBaBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickSetEnterBtEvent += ClickSetEnterBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickSetMoveBtEvent += ClickSetMoveBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickCloseDongGanBtEvent += ClickCloseDongGanBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickLaBaBtEvent += ClickLaBaBtEvent;
 		pcvr.GetInstance();
-		pcvr.CloseFangXiangPanPower();
+		//pcvr.CloseFangXiangPanPower();
 	}
 	public UILabel BeiYongYouMenLabel;
-	void Update () 
+    
+    public void CheckReadComMsg(byte[] buffer)
+    {
+        UpdatePcvrInfo(buffer);
+    }
+
+    void UpdatePcvrInfo(byte[] buffer) 
 	{
 		TouBiLabel.text = GlobalData.CoinCur.ToString();
-		ShaCheLabel.text = pcvr.ShaCheCurPcvr.ToString();
-		YouMenLabel.text = pcvr.BikePowerCurPcvr.ToString();
-		BeiYongYouMenLabel.text = pcvr.BikeBeiYongPowerCurPcvr.ToString();
-		FangXiangLabel.text = pcvr.SteerValCur.ToString();
+		//ShaCheLabel.text = pcvr.ShaCheCurPcvr.ToString();
+		//YouMenLabel.text = pcvr.BikePowerCurPcvr.ToString();
+		//BeiYongYouMenLabel.text = pcvr.BikeBeiYongPowerCurPcvr.ToString();
+		//FangXiangLabel.text = pcvr.SteerValCur.ToString();
 
-		m_HitTimmerSet.text = ((float)(Convert.ToDouble(m_HitTimmerValue.value)*5.0f)).ToString();
-		m_FallTimmerSet.text = ((float)(Convert.ToDouble(m_FallTimmerValue.value)*5.0f)).ToString();
-		m_HitshakeTimmerSet = (float)(Convert.ToDouble(m_HitTimmerSet.text));
-		OnShakeHit();
+		//m_HitTimmerSet.text = ((float)(Convert.ToDouble(m_HitTimmerValue.value)*5.0f)).ToString();
+		//m_FallTimmerSet.text = ((float)(Convert.ToDouble(m_FallTimmerValue.value)*5.0f)).ToString();
+		//m_HitshakeTimmerSet = (float)(Convert.ToDouble(m_HitTimmerSet.text));
+		//OnShakeHit();
 	}
 	void ClickSetEnterBtEvent(InputEventCtrl.ButtonState val)
 	{
@@ -93,82 +104,82 @@ public class HardWareTest : MonoBehaviour
 	}
 	public void OnClickForwardBt()
 	{
-		if(pcvr.m_IsOpneQinang3)
-		{
-			pcvr.m_IsOpneQinang3 = false;
-			m_Label[0].text = "OffQN3";
-		}
-		else
-		{
-			pcvr.m_IsOpneQinang3 = true;
-			m_Label[0].text = "OpenQN3";
-		}
+		//if(pcvr.m_IsOpneQinang3)
+		//{
+		//	pcvr.m_IsOpneQinang3 = false;
+		//	m_Label[0].text = "OffQN3";
+		//}
+		//else
+		//{
+		//	pcvr.m_IsOpneQinang3 = true;
+		//	m_Label[0].text = "OpenQN3";
+		//}
 	}
 	public void OnClickBehindBt()
 	{
-		if(pcvr.m_IsOpneQinang4)
-		{
-			pcvr.m_IsOpneQinang4 = false;
-			m_Label[1].text = "OffQN4";
-		}
-		else
-		{
-			pcvr.m_IsOpneQinang4 = true;
-			m_Label[1].text = "OpenQN4";
-		}
+		//if(pcvr.m_IsOpneQinang4)
+		//{
+		//	pcvr.m_IsOpneQinang4 = false;
+		//	m_Label[1].text = "OffQN4";
+		//}
+		//else
+		//{
+		//	pcvr.m_IsOpneQinang4 = true;
+		//	m_Label[1].text = "OpenQN4";
+		//}
 	}
 	public void OnClickLeftBt()
 	{
-		if(pcvr.m_IsOpneQinang1)
-		{
-			pcvr.m_IsOpneQinang1 = false;
-			m_Label[2].text = "OffQN1";
-		}
-		else
-		{
-			pcvr.m_IsOpneQinang1 = true;
-			m_Label[2].text = "OpenQN1";
-		}
+		//if(pcvr.m_IsOpneQinang1)
+		//{
+		//	pcvr.m_IsOpneQinang1 = false;
+		//	m_Label[2].text = "OffQN1";
+		//}
+		//else
+		//{
+		//	pcvr.m_IsOpneQinang1 = true;
+		//	m_Label[2].text = "OpenQN1";
+		//}
 	}
 	public void OnClickRightBt()
 	{
-		if(pcvr.m_IsOpneQinang2)
-		{
-			pcvr.m_IsOpneQinang2 = false;
-			m_Label[3].text = "OffQN2";
-		}
-		else
-		{
-			pcvr.m_IsOpneQinang2 = true;
-			m_Label[3].text = "OpenQN2";
-		}
+		//if(pcvr.m_IsOpneQinang2)
+		//{
+		//	pcvr.m_IsOpneQinang2 = false;
+		//	m_Label[3].text = "OffQN2";
+		//}
+		//else
+		//{
+		//	pcvr.m_IsOpneQinang2 = true;
+		//	m_Label[3].text = "OpenQN2";
+		//}
 	}
 	public void OnClickSubCoinBt()
 	{
-		pcvr.GetInstance().SubPlayerCoin(1);
+		//pcvr.GetInstance().SubPlayerCoin(1);
 	}
 	public UILabel ShaCheDengLabel;
 	int ShaCheCount;
 	public void OnClickShaCheLightBt()
 	{
-		ShaCheCount++;
-		switch (ShaCheCount) {
-		case 0:
-			ShaCheDengLabel.text = "刹车灯灭";
-			pcvr.ShaCheBtLight = StartLightState.Mie;
-			break;
+		//ShaCheCount++;
+		//switch (ShaCheCount) {
+		//case 0:
+		//	ShaCheDengLabel.text = "刹车灯灭";
+		//	pcvr.ShaCheBtLight = StartLightState.Mie;
+		//	break;
 
-		case 1:
-			ShaCheDengLabel.text = "刹车灯半亮";
-			pcvr.ShaCheBtLight = StartLightState.Shan;
-			break;
+		//case 1:
+		//	ShaCheDengLabel.text = "刹车灯半亮";
+		//	pcvr.ShaCheBtLight = StartLightState.Shan;
+		//	break;
 			
-		case 2:
-			ShaCheDengLabel.text = "刹车灯全亮";
-			pcvr.ShaCheBtLight = StartLightState.Liang;
-			ShaCheCount = -1;
-			break;
-		}
+		//case 2:
+		//	ShaCheDengLabel.text = "刹车灯全亮";
+		//	pcvr.ShaCheBtLight = StartLightState.Liang;
+		//	ShaCheCount = -1;
+		//	break;
+		//}
 	}
 	public void OnClickCloseAppBt()
 	{
@@ -205,7 +216,7 @@ public class HardWareTest : MonoBehaviour
 	public static bool m_IsHitshake = false;
 	public void OnHitShake()
 	{
-		pcvr.GetInstance().OpenFangXiangPanZhenDong();
+		//pcvr.GetInstance().OpenFangXiangPanZhenDong();
 		if (m_IsHitshake) {
 			return;
 		}
@@ -215,40 +226,40 @@ public class HardWareTest : MonoBehaviour
 	void TestLoopOpenFangXiangPanZhenDong()
 	{
 //		UnityEngine.Debug.Log("TestLoopOpenFangXiangPanZhenDong...");
-		pcvr.GetInstance().OpenFangXiangPanZhenDong();
+		//pcvr.GetInstance().OpenFangXiangPanZhenDong();
 	}
 	void OnShakeHit()
 	{
-		if(m_IsHitshake)
-		{
-			if(m_HitshakeTimmer<m_HitshakeTimmerSet)
-			{
-				m_HitshakeTimmer+=Time.deltaTime;
-				if(m_HitshakeTimmer<m_HitshakeTimmerSet*0.25f || (m_HitshakeTimmer>=m_HitshakeTimmerSet*0.5f && m_HitshakeTimmer<m_HitshakeTimmerSet*0.75f))
-				{
-					pcvr.m_IsOpneForwardQinang = false;
-					pcvr.m_IsOpneBehindQinang = false;
-					pcvr.m_IsOpneLeftQinang = false;
-					pcvr.m_IsOpneRightQinang = true;
-				}
-				else if((m_HitshakeTimmer>=m_HitshakeTimmerSet*0.25f &&m_HitshakeTimmer<m_HitshakeTimmerSet*0.5f) || m_HitshakeTimmer>=m_HitshakeTimmerSet*0.75f)
-				{
-					pcvr.m_IsOpneForwardQinang = false;
-					pcvr.m_IsOpneBehindQinang = false;
-					pcvr.m_IsOpneLeftQinang = true;
-					pcvr.m_IsOpneRightQinang = false;
-				}
-			}
-			else
-			{
-				m_HitshakeTimmer = 0.0f;
-				m_IsHitshake = false;
-				pcvr.m_IsOpneForwardQinang = false;
-				pcvr.m_IsOpneBehindQinang = false;
-				pcvr.m_IsOpneLeftQinang = false;
-				pcvr.m_IsOpneRightQinang = false;
-			}
-		}
+		//if(m_IsHitshake)
+		//{
+		//	if(m_HitshakeTimmer<m_HitshakeTimmerSet)
+		//	{
+		//		m_HitshakeTimmer+=Time.deltaTime;
+		//		if(m_HitshakeTimmer<m_HitshakeTimmerSet*0.25f || (m_HitshakeTimmer>=m_HitshakeTimmerSet*0.5f && m_HitshakeTimmer<m_HitshakeTimmerSet*0.75f))
+		//		{
+		//			pcvr.m_IsOpneForwardQinang = false;
+		//			pcvr.m_IsOpneBehindQinang = false;
+		//			pcvr.m_IsOpneLeftQinang = false;
+		//			pcvr.m_IsOpneRightQinang = true;
+		//		}
+		//		else if((m_HitshakeTimmer>=m_HitshakeTimmerSet*0.25f &&m_HitshakeTimmer<m_HitshakeTimmerSet*0.5f) || m_HitshakeTimmer>=m_HitshakeTimmerSet*0.75f)
+		//		{
+		//			pcvr.m_IsOpneForwardQinang = false;
+		//			pcvr.m_IsOpneBehindQinang = false;
+		//			pcvr.m_IsOpneLeftQinang = true;
+		//			pcvr.m_IsOpneRightQinang = false;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		m_HitshakeTimmer = 0.0f;
+		//		m_IsHitshake = false;
+		//		pcvr.m_IsOpneForwardQinang = false;
+		//		pcvr.m_IsOpneBehindQinang = false;
+		//		pcvr.m_IsOpneLeftQinang = false;
+		//		pcvr.m_IsOpneRightQinang = false;
+		//	}
+		//}
 	}
 
 	public UILabel StartLightLabel;
@@ -257,67 +268,67 @@ public class HardWareTest : MonoBehaviour
 	{
 		LightStart++;
 		//Debug.Log("**************LightStart "+LightStart);
-		switch (LightStart) {
-		case 1:
-			StartLightLabel.text = "开始灯亮";
-			pcvr.StartBtLight = StartLightState.Liang;
-			break;
+		//switch (LightStart) {
+		//case 1:
+		//	StartLightLabel.text = "开始灯亮";
+		//	pcvr.StartBtLight = StartLightState.Liang;
+		//	break;
 
-		case 2:
-			StartLightLabel.text = "开始灯闪";
-			pcvr.StartBtLight = StartLightState.Shan;
-			break;
+		//case 2:
+		//	StartLightLabel.text = "开始灯闪";
+		//	pcvr.StartBtLight = StartLightState.Shan;
+		//	break;
 
-		case 3:
-			StartLightLabel.text = "开始灯灭";
-			pcvr.StartBtLight = StartLightState.Mie;
-			LightStart = 1;
-			break;
-		}
+		//case 3:
+		//	StartLightLabel.text = "开始灯灭";
+		//	pcvr.StartBtLight = StartLightState.Mie;
+		//	LightStart = 1;
+		//	break;
+		//}
 	}
 
 	public UILabel FangXiangPanPowerLabel;
 	public void OnClickFangXiangPanPowerBt()
 	{
-		switch (FangXiangPanPowerLabel.text) {
-		case "方向盘力关闭":
-			FangXiangPanPowerLabel.text = "方向盘力打开";
-			pcvr.OpenFangXiangPanPower();
-			CancelInvoke("TestLoopOpenFangXiangPanZhenDong");
-			InvokeRepeating("TestLoopOpenFangXiangPanZhenDong", 0f, 0.2f);
-			break;
+		//switch (FangXiangPanPowerLabel.text) {
+		//case "方向盘力关闭":
+		//	FangXiangPanPowerLabel.text = "方向盘力打开";
+		//	pcvr.OpenFangXiangPanPower();
+		//	CancelInvoke("TestLoopOpenFangXiangPanZhenDong");
+		//	InvokeRepeating("TestLoopOpenFangXiangPanZhenDong", 0f, 0.2f);
+		//	break;
 
-		case "方向盘力打开":
-			FangXiangPanPowerLabel.text = "方向盘力关闭";
-			pcvr.CloseFangXiangPanPower();
-			CancelInvoke("TestLoopOpenFangXiangPanZhenDong");
-			break;
-		}
+		//case "方向盘力打开":
+		//	FangXiangPanPowerLabel.text = "方向盘力关闭";
+		//	pcvr.CloseFangXiangPanPower();
+		//	CancelInvoke("TestLoopOpenFangXiangPanZhenDong");
+		//	break;
+		//}
 	}
 
 	public UILabel DongGanLightLabel;
 	int LightDongGan = 1;
 	public void OnClickDongGanLightBt()
 	{
-		LightDongGan++;
-		//Debug.Log("**************LightDongGan "+LightDongGan);
-		switch (LightDongGan) {
-		case 1:
-			DongGanLightLabel.text = "动感灯亮";
-			pcvr.DongGanBtLight = StartLightState.Liang;
-			break;
+		//LightDongGan++;
+		////Debug.Log("**************LightDongGan "+LightDongGan);
+		//switch (LightDongGan) {
+		//case 1:
+		//	DongGanLightLabel.text = "动感灯亮";
+		//	pcvr.DongGanBtLight = StartLightState.Liang;
+		//	break;
 			
-		case 2:
-			DongGanLightLabel.text = "动感灯闪";
-			pcvr.DongGanBtLight = StartLightState.Shan;
-			break;
+		//case 2:
+		//	DongGanLightLabel.text = "动感灯闪";
+		//	pcvr.DongGanBtLight = StartLightState.Shan;
+		//	break;
 			
-		case 3:
-			DongGanLightLabel.text = "动感灯灭";
-			pcvr.DongGanBtLight = StartLightState.Mie;
-			LightDongGan = 1;
-			break;
-		}
+		//case 3:
+		//	DongGanLightLabel.text = "动感灯灭";
+		//	pcvr.DongGanBtLight = StartLightState.Mie;
+		//	LightDongGan = 1;
+		//	break;
+		//}
 	}
 	
 	public UILabel JiaMiJYLabel;
@@ -349,7 +360,7 @@ public class HardWareTest : MonoBehaviour
 		IsOpenJiaMiJiaoYan = true;
 		//Instance.DelayCloseJiaMiJiaoYan();
 
-		pcvr.GetInstance().StartJiaoYanIO();
+		//pcvr.GetInstance().StartJiaoYanIO();
 	}
 	
 	public void DelayCloseJiaMiJiaoYan()

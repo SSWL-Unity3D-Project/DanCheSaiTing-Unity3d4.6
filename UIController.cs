@@ -137,10 +137,10 @@ public class UIController : MonoBehaviour
             //gzkun void CloseAllQiNang()
             if (!SetPanel.IsOpenSetPanel)
             {                
-                pcvr.m_IsOpneForwardQinang = false;
-                pcvr.m_IsOpneBehindQinang = false;
-                pcvr.m_IsOpneLeftQinang = false;
-                pcvr.m_IsOpneRightQinang = false;
+                //pcvr.m_IsOpneForwardQinang = false;
+                //pcvr.m_IsOpneBehindQinang = false;
+                //pcvr.m_IsOpneLeftQinang = false;
+                //pcvr.m_IsOpneRightQinang = false;
             }
 
             UpdateBeginDaojishi();
@@ -148,14 +148,14 @@ public class UIController : MonoBehaviour
 		else
 		{
             //充电动画控制.
-            if (pcvr.mGetJiaoTaBan > 0f && !ChongDianObj.activeInHierarchy)
-            {
-                ChongDianObj.SetActive(true);
-            }
-            else if (pcvr.mGetJiaoTaBan <= 0f && ChongDianObj.activeInHierarchy)
-            {
-                ChongDianObj.SetActive(false);
-            }
+            //if (pcvr.mGetJiaoTaBan > 0f && !ChongDianObj.activeInHierarchy)
+            //{
+            //    ChongDianObj.SetActive(true);
+            //}
+            //else if (pcvr.mGetJiaoTaBan <= 0f && ChongDianObj.activeInHierarchy)
+            //{
+            //    ChongDianObj.SetActive(false);
+            //}
 
             //电量低动画控制.
             if (PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DianLiangVal <= 0.15f && !DianLiangJiangGaoObj.activeInHierarchy)
@@ -173,33 +173,33 @@ public class UIController : MonoBehaviour
 				m_BeginDaojishiAudio.Stop();
 			}
 
-            if (Mathf.Abs(pcvr.mGetPower) > 0f && !IsCloseYouMenTiShi)
-            {
-                //关闭方向盘提示.
-                IsCloseYouMenTiShi = true;
-                m_HasTishi = true;
-                m_YoumenTishi.enabled = false;
-                m_YoumenTimmer = 0.0f;
-            }
+            //if (Mathf.Abs(pcvr.mGetPower) > 0f && !IsCloseYouMenTiShi)
+            //{
+            //    //关闭方向盘提示.
+            //    IsCloseYouMenTiShi = true;
+            //    m_HasTishi = true;
+            //    m_YoumenTishi.enabled = false;
+            //    m_YoumenTimmer = 0.0f;
+            //}
 
             if (m_pGameTime >= 0.0f && !m_Player.m_IsFinished)
             {
                 if (IsCloseYouMenTiShi && m_HasTishi)
                 {
-                    if (Mathf.Abs(pcvr.mGetPower) == 0f)
-                    {
-                        m_YoumenTimmer += Time.deltaTime;
-                        if (m_YoumenTimmer >= 5f)
-                        {
-                            //打开油门提示.
-                            IsCloseYouMenTiShi = false;
-                            m_HasTishi = false;
-                        }
-                    }
-                    else
-                    {
-                        m_YoumenTimmer = 0.0f;
-                    }
+                    //if (Mathf.Abs(pcvr.mGetPower) == 0f)
+                    //{
+                    //    m_YoumenTimmer += Time.deltaTime;
+                    //    if (m_YoumenTimmer >= 5f)
+                    //    {
+                    //        //打开油门提示.
+                    //        IsCloseYouMenTiShi = false;
+                    //        m_HasTishi = false;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    m_YoumenTimmer = 0.0f;
+                    //}
                 }
             }
             else

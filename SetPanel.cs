@@ -36,9 +36,9 @@ public class SetPanel : MonoBehaviour
 
 		IsOpenSetPanel = true;
 		CloseAllQiNang();
-		pcvr.ShaCheBtLight = StartLightState.Mie;
-		pcvr.CloseFangXiangPanPower();
-		pcvr.IsSlowLoopCom = false;
+		//pcvr.ShaCheBtLight = StartLightState.Mie;
+		//pcvr.CloseFangXiangPanPower();
+		//pcvr.IsSlowLoopCom = false;
 		m_InserNum = Convert.ToInt32(ReadGameInfo.GetInstance().ReadInsertCoinNum());
 		UpdateInsertCoin();
 
@@ -68,12 +68,12 @@ public class SetPanel : MonoBehaviour
 			JiaoZhunObj.SetActive(false);
 		}
 		
-		InputEventCtrl.GetInstance().ClickSetEnterBtEvent += ClickSetEnterBtEvent;
-		InputEventCtrl.GetInstance().ClickSetMoveBtEvent += ClickSetMoveBtEvent;
-		InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickSetEnterBtEvent += ClickSetEnterBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickSetMoveBtEvent += ClickSetMoveBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
 		//InputEventCtrl.GetInstance().ClickShaCheBtEvent += ClickShaCheBtEvent;
-		InputEventCtrl.GetInstance().ClickLaBaBtEvent += ClickLaBaBtEvent;
-		InputEventCtrl.GetInstance().ClickCloseDongGanBtEvent += ClickCloseDongGanBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickLaBaBtEvent += ClickLaBaBtEvent;
+		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickCloseDongGanBtEvent += ClickCloseDongGanBtEvent;
 
         if (PlayerPrefs.GetInt("Grade") == 0)
         {
@@ -110,24 +110,24 @@ public class SetPanel : MonoBehaviour
 				OnClickInsertBt();
 			}
 
-			YouMenInfoLabel.text = pcvr.BikePowerCur.ToString();
-			FangXiangInfoLabel.text = pcvr.SteerValCur.ToString();
+			//YouMenInfoLabel.text = pcvr.BikePowerCur.ToString();
+			//FangXiangInfoLabel.text = pcvr.SteerValCur.ToString();
 
 			if (!IsInitJiaoZhunPcvr) {
-				if (pcvr.mGetPower > pcvr.YouMemnMinVal) {				
-					YouMenInfoLabel.text += ", Throttle Response";
-				}
+				//if (pcvr.mGetPower > pcvr.YouMemnMinVal) {				
+				//	YouMenInfoLabel.text += ", Throttle Response";
+				//}
 
 				float offsetSteer = 0.05f;
-				if (pcvr.mGetSteer < -offsetSteer) {
-					FangXiangInfoLabel.text += ", Turn Left";
-				}
-				else if (pcvr.mGetSteer > offsetSteer) {
-					FangXiangInfoLabel.text += ", Turn Right";
-				}
-				else {
-					FangXiangInfoLabel.text += ", Turn Middle";
-				}
+				//if (pcvr.mGetSteer < -offsetSteer) {
+				//	FangXiangInfoLabel.text += ", Turn Left";
+				//}
+				//else if (pcvr.mGetSteer > offsetSteer) {
+				//	FangXiangInfoLabel.text += ", Turn Right";
+				//}
+				//else {
+				//	FangXiangInfoLabel.text += ", Turn Middle";
+				//}
 			}
 		}
 		else {
@@ -135,8 +135,9 @@ public class SetPanel : MonoBehaviour
 				OnClickInsertBt();
 			}
 
-			int val = (int)(pcvr.mGetSteer * 100);
-			FangXiangInfoLabel.text = val.ToString();
+			int val = 0;
+			//int val = (int)(pcvr.mGetSteer * 100);
+            FangXiangInfoLabel.text = val.ToString();
 			if (!IsInitJiaoZhunPcvr) {
 				if (val < 0) {
 					FangXiangInfoLabel.text += ", Turn Left";
@@ -149,7 +150,7 @@ public class SetPanel : MonoBehaviour
 				}
 			}
 
-			val = (int)(pcvr.mGetPower * 100);
+			//val = (int)(pcvr.mGetPower * 100);
 			YouMenInfoLabel.text = val.ToString();
 			if (!IsInitJiaoZhunPcvr) {
 				if (val > 0) {				
@@ -231,7 +232,7 @@ public class SetPanel : MonoBehaviour
 		if (IsInitJiaoZhunPcvr) {
 			return;
 		}
-		pcvr.GetInstance().InitFangXiangJiaoZhun();
+		//pcvr.GetInstance().InitFangXiangJiaoZhun();
 		m_ZhujiemianXingXing.gameObject.SetActive(false);
 		IsInitJiaoZhunPcvr = true;
 
@@ -401,49 +402,49 @@ public class SetPanel : MonoBehaviour
                 }
             case 4:
                 {
-                    pcvr.StartBtLight = StartLightState.Liang;
+                    //pcvr.StartBtLight = StartLightState.Liang;
                     break;
                 }
             case 5:
                 {
-                    pcvr.StartBtLight = StartLightState.Shan;
+                    //pcvr.StartBtLight = StartLightState.Shan;
                     break;
                 }
             case 6:
                 {
-                    pcvr.StartBtLight = StartLightState.Mie;
+                    //pcvr.StartBtLight = StartLightState.Mie;
                     break;
                 }
             case 7:
                 {
-                    pcvr.m_IsOpneForwardQinang = true;
-                    pcvr.m_IsOpneBehindQinang = false;
-                    pcvr.m_IsOpneLeftQinang = false;
-                    pcvr.m_IsOpneRightQinang = false;
+                    //pcvr.m_IsOpneForwardQinang = true;
+                    //pcvr.m_IsOpneBehindQinang = false;
+                    //pcvr.m_IsOpneLeftQinang = false;
+                    //pcvr.m_IsOpneRightQinang = false;
                     break;
                 }
             case 8:
                 {
-                    pcvr.m_IsOpneForwardQinang = false;
-                    pcvr.m_IsOpneBehindQinang = true;
-                    pcvr.m_IsOpneLeftQinang = false;
-                    pcvr.m_IsOpneRightQinang = false;
+                    //pcvr.m_IsOpneForwardQinang = false;
+                    //pcvr.m_IsOpneBehindQinang = true;
+                    //pcvr.m_IsOpneLeftQinang = false;
+                    //pcvr.m_IsOpneRightQinang = false;
                     break;
                 }
             case 9:
                 {
-                    pcvr.m_IsOpneForwardQinang = false;
-                    pcvr.m_IsOpneBehindQinang = false;
-                    pcvr.m_IsOpneLeftQinang = true;
-                    pcvr.m_IsOpneRightQinang = false;
+                    //pcvr.m_IsOpneForwardQinang = false;
+                    //pcvr.m_IsOpneBehindQinang = false;
+                    //pcvr.m_IsOpneLeftQinang = true;
+                    //pcvr.m_IsOpneRightQinang = false;
                     break;
                 }
             case 10:
                 {
-                    pcvr.m_IsOpneForwardQinang = false;
-                    pcvr.m_IsOpneBehindQinang = false;
-                    pcvr.m_IsOpneLeftQinang = false;
-                    pcvr.m_IsOpneRightQinang = true;
+                    //pcvr.m_IsOpneForwardQinang = false;
+                    //pcvr.m_IsOpneBehindQinang = false;
+                    //pcvr.m_IsOpneLeftQinang = false;
+                    //pcvr.m_IsOpneRightQinang = true;
                     break;
                 }
 			case 11:
@@ -511,7 +512,7 @@ public class SetPanel : MonoBehaviour
             case 18:
                 {
                     CloseAllQiNang();
-					pcvr.StartBtLight = StartLightState.Mie;
+					//pcvr.StartBtLight = StartLightState.Mie;
 					//XkGameCtrl.IsLoadingLevel = true;
                     IsOpenSetPanel = false;
                     Resources.UnloadUnusedAssets();
@@ -526,10 +527,10 @@ public class SetPanel : MonoBehaviour
 	public UILabel GameAudioVolumeLB;
 	void CloseAllQiNang()
 	{
-		pcvr.m_IsOpneForwardQinang = false;
-		pcvr.m_IsOpneBehindQinang = false;
-		pcvr.m_IsOpneLeftQinang = false;
-		pcvr.m_IsOpneRightQinang = false;
+		//pcvr.m_IsOpneForwardQinang = false;
+		//pcvr.m_IsOpneBehindQinang = false;
+		//pcvr.m_IsOpneLeftQinang = false;
+		//pcvr.m_IsOpneRightQinang = false;
 	}
 
 	void ResetFactory()
@@ -543,7 +544,7 @@ public class SetPanel : MonoBehaviour
 		GameAudioVolumeLB.text = GameAudioVolume.ToString();
 
 		if (pcvr.bIsHardWare) {
-			pcvr.GetInstance().SubPlayerCoin(m_InserNum);
+			//pcvr.GetInstance().SubPlayerCoin(m_InserNum);
 		}
 		m_InserNum = 0;
 		UpdateInsertCoin();
