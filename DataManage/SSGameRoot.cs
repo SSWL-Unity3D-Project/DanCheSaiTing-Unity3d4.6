@@ -9,9 +9,17 @@ public class SSGameRoot : MonoBehaviour
     void Awake()
     {
         SSGameCtrl.GetInstance().mSSGameRoot = this;
-        mSSGameDataManage.mGameData.SpawnPlayer(0);
-        mSSGameDataManage.mGameData.SpawnNpc(1);
-        mSSGameDataManage.mGameData.SpawnNpc(2);
-        mSSGameDataManage.mGameData.SpawnNpc(3);
+        Debug.Log("SSGameRoot::Awake -> peerType " + Network.peerType + ", eGameMode " + SSGameCtrl.GetInstance().eGameMode);
+        switch (SSGameCtrl.GetInstance().eGameMode)
+        {
+            case GameModeSelect.GameMode.NoLink:
+                {
+                    mSSGameDataManage.mGameData.SpawnPlayer(0);
+                    mSSGameDataManage.mGameData.SpawnNpc(1);
+                    mSSGameDataManage.mGameData.SpawnNpc(2);
+                    mSSGameDataManage.mGameData.SpawnNpc(3);
+                    break;
+                }
+        }
     }
 }

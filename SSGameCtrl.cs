@@ -11,6 +11,11 @@ public class SSGameCtrl : MonoBehaviour
     [HideInInspector]
     public SSGameRoot mSSGameRoot;
     /// <summary>
+    /// 玩家选择的游戏模式.
+    /// </summary>
+    [HideInInspector]
+    public GameModeSelect.GameMode eGameMode = GameModeSelect.GameMode.Null;
+    /// <summary>
     /// 玩家數據管理.
     /// </summary>
     [HideInInspector]

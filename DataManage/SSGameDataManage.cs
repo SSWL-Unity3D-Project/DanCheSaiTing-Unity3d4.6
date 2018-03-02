@@ -177,7 +177,6 @@ public class SSGameDataManage : MonoBehaviour
             GameObject obj = null;
             NpcController npcScript = null;
             NpcController.NpcEnum npcState = (NpcController.NpcEnum)indexVal;
-            Debug.Log("SpawnNpc -> peerType " + Network.peerType);
             if (Network.peerType == NetworkPeerType.Disconnected)
             {
                 obj = (GameObject)Instantiate(mNpcPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);

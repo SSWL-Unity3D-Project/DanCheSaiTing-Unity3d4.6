@@ -106,28 +106,31 @@ public class NetworkServerNet : MonoBehaviour
 
     IEnumerator CheckConnectToServer()
     {
-        if (GlobalData.GetInstance().gameLeve != GameLeve.WaterwheelNet)
-        {
-            yield break;
-        }
+        //if (GlobalData.GetInstance().gameLeve != GameLeve.WaterwheelNet)
+        //{
+        //    yield break;
+        //}
 
+        yield break;
         while (true)
         {
+            Debug.Log("CheckConnectToServer...");
+            break;
             //Debug.Log("loadedLevel " + Application.loadedLevel + ", IsIntoPlayGame " + Toubi.GetInstance().IsIntoPlayGame);
-            if (Application.loadedLevel == (int)GameLeve.WaterwheelNet)
-            {
-                break;
-            }
+            //if (Application.loadedLevel == (int)GameLeve.WaterwheelNet)
+            //{
+            //    break;
+            //}
 
-            if (Application.loadedLevel == (int)GameLeve.Movie)
-            {
-                //if (!Toubi.GetInstance().IsIntoPlayGame)
-                //{
-                //    Toubi.GetInstance().StartIntoGame();
-                //    Toubi.GetInstance().IsIntoPlayGame = true;
-                //}
-                yield return new WaitForSeconds(0.5f);
-            }
+            //if (Application.loadedLevel == (int)GameLeve.Movie)
+            //{
+            //    //if (!Toubi.GetInstance().IsIntoPlayGame)
+            //    //{
+            //    //    Toubi.GetInstance().StartIntoGame();
+            //    //    Toubi.GetInstance().IsIntoPlayGame = true;
+            //    //}
+            //    yield return new WaitForSeconds(0.5f);
+            //}
         }
 
         //if (NetworkRpcMsgCtrl.GetInstance() != null)
@@ -148,34 +151,32 @@ public class NetworkServerNet : MonoBehaviour
 
     void OnConnectedToServer()
     {
-        Debug.Log("OnConnectedToServer, gameLevel " + GlobalData.GetInstance().gameLeve
-                  + ", appLevel " + Application.loadedLevel);
+        Debug.Log("OnConnectedToServer -> appLevel " + Application.loadedLevel);
 
-        if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet)
-        {
-            StartCoroutine(CheckConnectToServer());
-        }
+        //if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet)
+        //{
+        //    StartCoroutine(CheckConnectToServer());
+        //}
     }
 
     void OnFailedToConnect(NetworkConnectionError error)
     {
         ScreenLog.Log("Could not connect to server: " + error);
-        if (GlobalData.GetInstance().gameLeve == GameLeve.Movie)
-        {
-            InitCreateServer();
-        }
+        //if (GlobalData.GetInstance().gameLeve == GameLeve.Movie)
+        //{
+        //    InitCreateServer();
+        //}
     }
 
     void OnServerInitialized()
     {
-        Debug.Log("OnServerInitialized, gameLevel " + GlobalData.GetInstance().gameLeve
-                  + ", appLevel " + Application.loadedLevel);
+        Debug.Log("OnServerInitialized -> appLevel " + Application.loadedLevel);
 
         //create player
-        if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet)
-        {
-            StartCoroutine(CheckServerInitialized());
-        }
+        //if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet)
+        //{
+        //    StartCoroutine(CheckServerInitialized());
+        //}
     }
 
     IEnumerator CheckServerInitialized()
@@ -185,16 +186,16 @@ public class NetworkServerNet : MonoBehaviour
         {
 
             yield return new WaitForSeconds(0.1f);
-            if (Application.loadedLevel != (int)GameLeve.WaterwheelNet || Network.peerType == NetworkPeerType.Disconnected)
-            {
+            //if (Application.loadedLevel != (int)GameLeve.WaterwheelNet || Network.peerType == NetworkPeerType.Disconnected)
+            //{
 
                 //if (Toubi.GetInstance() != null
                 //    && !Toubi.GetInstance().IsIntoPlayGame)
                 //{
                 //    Toubi.GetInstance().IsIntoPlayGame = true;
                 //}
-                continue;
-            }
+            //    continue;
+            //}
             isCheck = false;
         }
 
@@ -244,15 +245,14 @@ public class NetworkServerNet : MonoBehaviour
     {
         //CheckShowAllCamera();
         ScreenLog.Log("NetworkServerNet::OnPlayerConnected -> ip " + playerNet.ipAddress
-                      + ", gameLevel " + GlobalData.GetInstance().gameLeve
                       + ", appGameLevel " + Application.loadedLevel);
 
-        if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet
-            && Application.loadedLevel == (int)GameLeve.WaterwheelNet)
-        {
+        //if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet
+        //    && Application.loadedLevel == (int)GameLeve.WaterwheelNet)
+        //{
 
-            StartCoroutine(CheckOpenAllCamera());
-        }
+        //    StartCoroutine(CheckOpenAllCamera());
+        //}
         //else if (GlobalData.GetInstance().gameLeve == GameLeve.Movie)
         //{
         //    LinkServerCount = Network.connections.Length;
@@ -377,6 +377,9 @@ public class NetworkServerNet : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 删除当前主服务器.
+    /// </summary>
     public void RemoveMasterServerHost()
     {
         if (Network.isServer)
@@ -407,7 +410,8 @@ public class NetworkServerNet : MonoBehaviour
             Invoke("ResetMasterServerHostLoop", 1f);
             return;
         }
-        Application.LoadLevel((int)GameLeve.Movie);
+        //返回循环动画场景.
+        Application.LoadLevel(0);
         ResetMasterServerHost();
     }
 
@@ -440,27 +444,27 @@ public class NetworkServerNet : MonoBehaviour
         //    return;
         //}
 
-        ScreenLog.Log("start create to server, time " + Time.time);
+        ScreenLog.Log("start create server, time " + Time.time);
         Network.InitializeServer(7, port, true);
 
         //		Debug.Log("masterServer.ip " + MasterServer.ipAddress + ", port " + MasterServer.port
         //		          + ", updateRate " + MasterServer.updateRate);
         MasterServer.dedicatedServer = true;
 
-        if (GlobalData.GetInstance().gameLeve == GameLeve.None)
+        //if (GlobalData.GetInstance().gameLeve == GameLeve.None)
+        //{
+        //    GlobalData.GetInstance().gameLeve = (GameLeve)Application.loadedLevel;
+        //}
+        
+        switch (mRequestMasterServer.eMasterComment)
         {
-            GlobalData.GetInstance().gameLeve = (GameLeve)Application.loadedLevel;
-        }
-
-        switch (GlobalData.GetInstance().gameLeve)
-        {
-            case GameLeve.Movie:
+            case RequestMasterServer.MasterServerComment.Movie:
                 mRequestMasterServer.SetMasterServerIp(Network.player.ipAddress);
-                MasterServer.RegisterHost(mGameTypeName, "My game", RequestMasterServer.MasterServerMovieComment);
+                MasterServer.RegisterHost(mGameTypeName, "My game", mRequestMasterServer.MasterServerMovieComment);
                 break;
 
-            case GameLeve.WaterwheelNet:
-                MasterServer.RegisterHost(mGameTypeName, "My game", RequestMasterServer.MasterServerGameNetComment);
+            case RequestMasterServer.MasterServerComment.GameNet:
+                MasterServer.RegisterHost(mGameTypeName, "My game", mRequestMasterServer.MasterServerGameNetComment);
                 break;
         }
     }

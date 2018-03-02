@@ -92,6 +92,11 @@ public class DaoJuCtrl : MonoBehaviour
 			return;
 		}
 
+        if (PlayerController.GetInstance() == null)
+        {
+            return;
+        }
+
         if (DaoJuChild != null)
         {
             if (Time.time - TimeLastUpdate >= 0.5f)

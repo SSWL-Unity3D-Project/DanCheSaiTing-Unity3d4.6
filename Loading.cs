@@ -54,6 +54,14 @@ public class Loading : SSUiRoot
 	private float timmerforstar = 0.0f;
 	public static bool m_HasBegin = false;
 	public bool IsLuPingTest;
+    void Awake()
+    {
+        if (NetworkServerNet.GetInstance() != null)
+        {
+            NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.Movie);
+        }
+    }
+
 	void Start ()
     {
         if (NetworkServerNet.GetInstance() != null)
@@ -277,6 +285,7 @@ public class Loading : SSUiRoot
                                 timmerstar = true;
                                 m_HasBegin = true;
                                 mGameModeSelect.HiddenSelf();
+                                SSGameCtrl.GetInstance().eGameMode = GameModeSelect.GameMode.NoLink;
                                 NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
                                 NetworkServerNet.GetInstance().RemoveMasterServerHost();
                             }
@@ -286,12 +295,32 @@ public class Loading : SSUiRoot
                         {
                             if (mGameLinkPlayer == null)
                             {
+                                m_BeginSource.Play();
                                 mGameModeSelect.HiddenSelf();
                                 SpawnGameLinkPlayerUI();
                             }
                             else
                             {
+                                if (mGameLinkPlayer.StartBtObj.activeInHierarchy)
+                                {
+                                    //开始联机游戏.
+                                    Debug.Log("Start link game...");
+                                    mGameLinkPlayer.OnClickStartBt();
+                                    SSGameCtrl.GetInstance().eGameMode = GameModeSelect.GameMode.Link;
+                                    if (NetworkServerNet.GetInstance() != null)
+                                    {
+                                        NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.GameNet);
+                                    }
+                                    NetworkServerNet.GetInstance().RemoveMasterServerHost();
 
+                                    if (m_IsBeginOk && !m_HasBegin)
+                                    {
+                                        m_BeginSource.Play();
+                                        m_Loading.SetActive(true);
+                                        timmerstar = true;
+                                        m_HasBegin = true;
+                                    }
+                                }
                             }
                         }
                     }
@@ -323,6 +352,7 @@ public class Loading : SSUiRoot
                         m_Loading.SetActive(true);
                         timmerstar = true;
                         m_HasBegin = true;
+                        SSGameCtrl.GetInstance().eGameMode = GameModeSelect.GameMode.NoLink;
                     }
                     break;
                 }

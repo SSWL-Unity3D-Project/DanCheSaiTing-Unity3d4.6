@@ -11,6 +11,7 @@ public class GameLinkPlayer : MonoBehaviour
     /// </summary>
     public UITexture[] PlayerUITextureArray = new UITexture[8];
     public Texture[] PlayerTexureArray = new Texture[8];
+    bool IsClickStartBt = false;
     public void Init()
     {
         SetAcitveStartBt(false);
@@ -21,7 +22,7 @@ public class GameLinkPlayer : MonoBehaviour
     {
         if (Time.frameCount % 30 == 0)
         {
-            if (!StartBtObj.activeSelf)
+            if (!StartBtObj.activeSelf && !IsClickStartBt)
             {
                 if (NetworkServerNet.GetInstance().mRequestMasterServer.GetMovieMasterServerNum() == 1
                     && NetworkServerNet.GetInstance().mRequestMasterServer.ServerIp == Network.player.ipAddress)
@@ -32,9 +33,22 @@ public class GameLinkPlayer : MonoBehaviour
         }
     }
 
-    public void SetAcitveStartBt(bool isActive)
+    void SetAcitveStartBt(bool isActive)
     {
         StartBtObj.SetActive(isActive);
+    }
+
+    /// <summary>
+    /// 点击开始按键.
+    /// </summary>
+    public void OnClickStartBt()
+    {
+        if (!IsClickStartBt)
+        {
+            IsClickStartBt = true;
+            SetAcitveStartBt(false);
+            HiddenSelf();
+        }
     }
 
     /// <summary>
@@ -51,5 +65,10 @@ public class GameLinkPlayer : MonoBehaviour
             }
             PlayerUITextureArray[i].mainTexture = PlayerTexureArray[i];
         }
+    }
+
+    public void HiddenSelf()
+    {
+        gameObject.SetActive(false);
     }
 }

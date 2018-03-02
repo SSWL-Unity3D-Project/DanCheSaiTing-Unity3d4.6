@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class RequestMasterServer : MonoBehaviour
 {
+    public enum MasterServerComment
+    {
+        Null,
+        Movie,
+        GameNet,
+    }
+    /// <summary>
+    /// 主服务器创建时的注解标记.
+    /// </summary>
+    [HideInInspector]
+    public MasterServerComment eMasterComment = MasterServerComment.Null;
+
     public enum GameScene : int
     {
         Movie = 0,
@@ -12,8 +24,16 @@ public class RequestMasterServer : MonoBehaviour
         SetPanel = 3
     }
     bool IsClickConnect;
-    public static string MasterServerMovieComment = "Movie Scene";
-    public static string MasterServerGameNetComment = "GameNet Scene";
+    /// <summary>
+    /// 循环动画场景中主服务器的注解.
+    /// </summary>
+    [HideInInspector]
+    public string MasterServerMovieComment = "Movie Scene";
+    /// <summary>
+    /// 联机游戏场景中主服务器的注解.
+    /// </summary>
+    [HideInInspector]
+    public string MasterServerGameNetComment = "GameNet Scene";
     /// <summary>
     /// 玩家链接游戏的服务器IP.
     /// </summary>
@@ -31,6 +51,7 @@ public class RequestMasterServer : MonoBehaviour
 
     public void Init()
     {
+        eMasterComment = MasterServerComment.Movie;
         SetIsNetScene(true);
     }
 
@@ -59,7 +80,8 @@ public class RequestMasterServer : MonoBehaviour
     void OnGUI()
     {
         //GameScene levelVal = (GameScene)Application.loadedLevel;
-        GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
+        //GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
+        GameScene levelVal = GameScene.Movie;
         HostData[] data = MasterServer.PollHostList();
 
         // Go through all the hosts in the host list
@@ -267,7 +289,7 @@ public class RequestMasterServer : MonoBehaviour
         }
 
         //GameScene levelVal = (GameScene)Application.loadedLevel;
-        GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
+        //GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
         //if (levelVal == GameScene.Scene01 || levelVal == GameScene.SetPanel)
         //{
         //    //不需要网络链接的游戏场景.
@@ -299,13 +321,13 @@ public class RequestMasterServer : MonoBehaviour
                 }
                 else
                 {
-                    if (levelVal == GameScene.Movie)
-                    {
+                    //if (levelVal == GameScene.Movie)
+                    //{
                         //if (Toubi.GetInstance() != null && !Toubi.GetInstance().CheckIsLoopWait())
                         //{
                         //    NetworkServerNet.GetInstance().ResetMasterServerHost();
                         //}
-                    }
+                    //}
                 }
                 break;
         }
@@ -332,5 +354,14 @@ public class RequestMasterServer : MonoBehaviour
                 NetworkRootMovie.GetInstance().CreateNetworkRpc();
             }
         }
+    }
+
+    /// <summary>
+    /// 设置主服务器创建时的注解标记.
+    /// </summary>
+    public void SetMasterServerComment(MasterServerComment comment)
+    {
+        Debug.Log("SetMasterServerComment -> comment " + comment);
+        eMasterComment = comment;
     }
 }
