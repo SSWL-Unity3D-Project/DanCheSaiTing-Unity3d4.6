@@ -17,7 +17,8 @@ public class RequestMasterServer : MonoBehaviour
     /// <summary>
     /// 玩家链接游戏的服务器IP.
     /// </summary>
-    string ServerIp = "";
+    [HideInInspector]
+    public string ServerIp = "";
     float TimeConnect;
     /// <summary>
     /// 访问Host的记录时间.
@@ -193,13 +194,20 @@ public class RequestMasterServer : MonoBehaviour
     public int GetMovieMasterServerNum()
     {
         int masterServerNum = 0;
+        string ip = "";
         HostData[] data = MasterServer.PollHostList();
         foreach (var element in data)
         {
             if (element.comment == MasterServerMovieComment)
             {
                 masterServerNum++;
+                ip = element.ip[0];
             }
+        }
+
+        if (masterServerNum == 1)
+        {
+            SetMasterServerIp(ip);
         }
         return masterServerNum;
     }

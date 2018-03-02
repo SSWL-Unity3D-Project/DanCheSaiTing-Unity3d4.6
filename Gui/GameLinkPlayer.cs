@@ -23,7 +23,8 @@ public class GameLinkPlayer : MonoBehaviour
         {
             if (!StartBtObj.activeSelf)
             {
-                if (NetworkServerNet.GetInstance().mRequestMasterServer.GetMovieMasterServerNum() == 1)
+                if (NetworkServerNet.GetInstance().mRequestMasterServer.GetMovieMasterServerNum() == 1
+                    && NetworkServerNet.GetInstance().mRequestMasterServer.ServerIp == Network.player.ipAddress)
                 {
                     SetAcitveStartBt(true);
                 }
