@@ -2,13 +2,19 @@
 using System.Collections;
 using System;
 
-public class Loading : MonoBehaviour
+public class Loading : SSUiRoot
 {
 	private string CoinNumSet = "1";
 	private string InsertCoinNum = "";
-
-	public UITexture m_BeginTex;
-	public Texture   m_LoadingTex;
+    /// <summary>
+    /// 游戏模式选择UI预制文件.
+    /// </summary>
+    public GameObject GameModePrefab;
+    /// <summary>
+    /// UI摄像机.
+    /// </summary>
+    public UICamera mUICamera;
+    public UITexture m_BeginTex;
 	public UITexture m_InsertTex;
 	public UISprite CoinNumSetTex;
 	public UISprite m_InsertNumS;
@@ -28,7 +34,7 @@ public class Loading : MonoBehaviour
 	public UITexture m_pTishiTexture;
 	public Texture[] m_pTexture;
 
-	public MovieTexture m_MovieTex;
+	//public MovieTexture m_MovieTex;
 	public UITexture m_FreeTexture;
 	public GameObject m_ToubiObj;
 
@@ -226,30 +232,77 @@ public class Loading : MonoBehaviour
 	}
 	void OnClickBeginBt()
 	{
-		if (PlayerControllerForMoiew.IsLoadMovieLevel) {
-			return;
-		}
+        switch(NetworkRootMovie.GetInstance().eNetState)
+        {
+            case NetworkRootMovie.GameNetType.Link:
+                {
+                    if (mGameModeSelect == null)
+                    {
+                        SpawnGameModeUI();
+                        m_BeginSource.Play();
+                        m_IsStartGame = true;
+                        if (GameMode == "oper")
+                        {
+                            m_InserNum -= Convert.ToInt32(CoinNumSet);
+                            UpdateInsertCoin();
+                            ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
+                            if (pcvr.bIsHardWare)
+                            {
+                                pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(Convert.ToInt32(CoinNumSet), pcvrTXManage.PlayerCoinEnum.player01);
+                            }
+                        }
+                        m_Tishi.SetActive(false);
+                    }
+                    else
+                    {
+                        if (mGameModeSelect.eGameMode == GameModeSelect.GameMode.NoLink)
+                        {
+                            //玩家选择单机游戏.
+                            if (m_IsBeginOk && !m_HasBegin)
+                            {
+                                m_BeginSource.Play();
+                                m_Loading.SetActive(true);
+                                timmerstar = true;
+                                m_HasBegin = true;
+                                NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
+                                NetworkServerNet.GetInstance().RemoveMasterServerHost();
+                            }
+                        }
+                    }
+                    break;
+                }
+            case NetworkRootMovie.GameNetType.NoLink:
+                {
+                    if (PlayerControllerForMoiew.IsLoadMovieLevel)
+                    {
+                        return;
+                    }
 
-		if(m_IsBeginOk && !m_HasBegin)
-		{
-			m_BeginSource.Play();
-			m_IsStartGame = true;
-			if(GameMode == "oper")
-			{
-				m_InserNum -= Convert.ToInt32(CoinNumSet);
-				UpdateInsertCoin();
-				ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
+                    if (m_IsBeginOk && !m_HasBegin)
+                    {
+                        m_BeginSource.Play();
+                        m_IsStartGame = true;
+                        if (GameMode == "oper")
+                        {
+                            m_InserNum -= Convert.ToInt32(CoinNumSet);
+                            UpdateInsertCoin();
+                            ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
 
-				//if (pcvr.bIsHardWare) {
-				//	pcvr.GetInstance().SubPlayerCoin(Convert.ToInt32(CoinNumSet));
-				//}
-			}
-			m_Tishi.SetActive(false);
-			m_Loading.SetActive(true);
-			timmerstar = true;
-			m_HasBegin = true;
-		}
+                            if (pcvr.bIsHardWare)
+                            {
+                                pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(Convert.ToInt32(CoinNumSet), pcvrTXManage.PlayerCoinEnum.player01);
+                            }
+                        }
+                        m_Tishi.SetActive(false);
+                        m_Loading.SetActive(true);
+                        timmerstar = true;
+                        m_HasBegin = true;
+                    }
+                    break;
+                }
+        }
 	}
+
     static int LoadSceneCount;
 	void OnLoadingClicked()
 	{
@@ -263,5 +316,19 @@ public class Loading : MonoBehaviour
                 LoadSceneCount++;
             }
 		}
-	}
+    }
+
+    /// <summary>
+    /// 游戏模式选择UI界面.
+    /// </summary>
+    GameModeSelect mGameModeSelect;
+    /// <summary>
+    /// 创建游戏模式选择UI界面.
+    /// </summary>
+    void SpawnGameModeUI()
+    {
+        GameObject obj = (GameObject)Instantiate(GameModePrefab, mUICamera.transform);
+        mGameModeSelect = obj.GetComponent<GameModeSelect>();
+        mGameModeSelect.Init();
+    }
 }

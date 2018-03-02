@@ -156,8 +156,8 @@ public class HardWareTest : MonoBehaviour
 	}
 	public void OnClickSubCoinBt()
 	{
-		//pcvr.GetInstance().SubPlayerCoin(1);
-	}
+        pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(1, pcvrTXManage.PlayerCoinEnum.player01);
+    }
 	public UILabel ShaCheDengLabel;
 	int ShaCheCount;
 	public void OnClickShaCheLightBt()

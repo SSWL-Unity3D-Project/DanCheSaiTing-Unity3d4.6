@@ -547,9 +547,10 @@ public class SetPanel : MonoBehaviour
 		GameAudioVolume = 7;
 		GameAudioVolumeLB.text = GameAudioVolume.ToString();
 
-		if (pcvr.bIsHardWare) {
-			//pcvr.GetInstance().SubPlayerCoin(m_InserNum);
-		}
+		if (pcvr.bIsHardWare)
+        {
+            pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(m_InserNum, pcvrTXManage.PlayerCoinEnum.player01);
+        }
 		m_InserNum = 0;
 		UpdateInsertCoin();
 	}
