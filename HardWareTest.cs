@@ -46,45 +46,45 @@ public class HardWareTest : MonoBehaviour
 		m_HitshakeTimmerSet = (float)(Convert.ToDouble(m_HitTimmerSet.text));
 		OnShakeHit();
 	}
-	void ClickSetEnterBtEvent(ButtonState val)
+	void ClickSetEnterBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			AnJianLabel.text = "SetEnter Down";
 		}
 		else {
 			AnJianLabel.text = "SetEnter Up";
 		}
 	}
-	void ClickLaBaBtEvent(ButtonState val)
+	void ClickLaBaBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			AnJianLabel.text = "SpeakerBtDown";
 		}
 		else {
 			AnJianLabel.text = "SpeakerBtUp";
 		}
 	}
-	void ClickSetMoveBtEvent(ButtonState val)
+	void ClickSetMoveBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			AnJianLabel.text = "SetMove Down";
 		}
 		else {
 			AnJianLabel.text = "SetMove Up";
 		}
 	}
-	void ClickStartBtOneEvent(ButtonState val)
+	void ClickStartBtOneEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			AnJianLabel.text = "StartBt Down";
 		}
 		else {
 			AnJianLabel.text = "StartBt Up";
 		}
 	}
-	void ClickCloseDongGanBtEvent(ButtonState val)
+	void ClickCloseDongGanBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			AnJianLabel.text = "DongGanBt Down";
 		}
 		else {

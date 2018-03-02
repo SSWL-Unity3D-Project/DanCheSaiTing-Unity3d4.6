@@ -500,9 +500,9 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(GameObjectHide());   //gzknu
 	}
 
-    void ClickFireBtEvent(ButtonState val)
+    void ClickFireBtEvent(InputEventCtrl.ButtonState val)
     {
-        if (val != ButtonState.DOWN)
+        if (val != InputEventCtrl.ButtonState.DOWN)
         {
             return;
         }
@@ -524,9 +524,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void ClickStartBtOneEvent(ButtonState val)
+    void ClickStartBtOneEvent(InputEventCtrl.ButtonState val)
     {
-        if (val != ButtonState.DOWN)
+        if (val != InputEventCtrl.ButtonState.DOWN)
         {
             return;
         }
@@ -625,7 +625,7 @@ public class PlayerController : MonoBehaviour
 
 	void DelayCallClickShaCheBtEvent()
 	{
-		ClickShaCheBtEvent(ButtonState.UP);
+		ClickShaCheBtEvent(InputEventCtrl.ButtonState.UP);
 	}
 
 	public static PlayerController GetInstance()
@@ -634,7 +634,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 	//bool IsClickShaCheBt;
-	void  ClickShaCheBtEvent(ButtonState val)
+	void  ClickShaCheBtEvent(InputEventCtrl.ButtonState val)
 	{
 		if (Application.loadedLevel != 1) {
 			return;
@@ -650,9 +650,9 @@ public class PlayerController : MonoBehaviour
 //		}
 	}
 
-	void ClickLaBaBtEvent(ButtonState val)
+	void ClickLaBaBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val != ButtonState.DOWN) {
+		if (val != InputEventCtrl.ButtonState.DOWN) {
 			LaBaAudio.Stop();
 			return;
 		}

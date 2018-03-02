@@ -172,25 +172,25 @@ public class SetPanel : MonoBehaviour
 		InsertCoinNumLabel.text = m_InserNum.ToString();
 	}
 
-	void ClickSetMoveBtEvent(ButtonState val)
+	void ClickSetMoveBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			return;
 		}
 		OnClickMoveBtInZhujiemian();
 	}
 
-	void ClickSetEnterBtEvent(ButtonState val)
+	void ClickSetEnterBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			return;
 		}
 		OnClickSelectBtInZhujiemian();
 	}
 
-	void ClickStartBtOneEvent(ButtonState val)
+	void ClickStartBtOneEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			BtInfoLabel.text = "StartBtDown";
 		}
 		else {
@@ -206,9 +206,9 @@ public class SetPanel : MonoBehaviour
 		}
 	}
 
-	void ClickCloseDongGanBtEvent(ButtonState val)
+	void ClickCloseDongGanBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			BtInfoLabel.text = "DongGanBtDown";
 		}
 		else {
@@ -549,9 +549,9 @@ public class SetPanel : MonoBehaviour
 		UpdateInsertCoin();
 	}
 
-	void ClickShaCheBtEvent(ButtonState val)
+	void ClickShaCheBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			BtInfoLabel.text = "BrakeBtDown";
 		}
 		else {
@@ -559,9 +559,9 @@ public class SetPanel : MonoBehaviour
 		}
 	}
 
-	void ClickLaBaBtEvent(ButtonState val)
+	void ClickLaBaBtEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN) {
 			BtInfoLabel.text = "SpeakerBtDown";
 		}
 		else {

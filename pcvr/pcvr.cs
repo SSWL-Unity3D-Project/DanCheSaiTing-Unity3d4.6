@@ -1112,11 +1112,11 @@ public class pcvr : MonoBehaviour {
 
 //		if (!IsActiveSheCheEvent && valTmp > 0.3f) {
 //			IsActiveSheCheEvent = true;
-//			InputEventCtrl.GetInstance().ClickShaCheBt( ButtonState.DOWN );
+//			InputEventCtrl.GetInstance().ClickShaCheBt( InputEventCtrl.ButtonState.DOWN );
 //		}
 //		else if (IsActiveSheCheEvent && valTmp < 0.3f){
 //			IsActiveSheCheEvent = false;
-//			InputEventCtrl.GetInstance().ClickShaCheBt( ButtonState.UP );
+//			InputEventCtrl.GetInstance().ClickShaCheBt( InputEventCtrl.ButtonState.UP );
 //		}
 	}
 
@@ -1443,58 +1443,58 @@ public class pcvr : MonoBehaviour {
 		if ( !IsCloseDongGanBtDown && 0x02 == (buffer[9]&0x02) ) {
 //			ScreenLog.Log("game DongGanBt down!");
 			IsCloseDongGanBtDown = true;
-			InputEventCtrl.GetInstance().ClickCloseDongGanBt( ButtonState.DOWN );
+			InputEventCtrl.GetInstance().ClickCloseDongGanBt( InputEventCtrl.ButtonState.DOWN );
 		}
 		else if ( IsCloseDongGanBtDown && 0x00 == (buffer[9]&0x02) ) {
 //			ScreenLog.Log("game DongGanBt up!");
 			IsCloseDongGanBtDown = false;
-			InputEventCtrl.GetInstance().ClickCloseDongGanBt( ButtonState.UP );
+			InputEventCtrl.GetInstance().ClickCloseDongGanBt( InputEventCtrl.ButtonState.UP );
 		}
 		
 		//if ( !bPlayerStartKeyDown && 0x01 == (buffer[28]&0x01) ) { //test
 		if ( !bPlayerStartKeyDown && 0x01 == (buffer[9]&0x01) ) {
 //			ScreenLog.Log("game startBt down!");
 			bPlayerStartKeyDown = true;
-			InputEventCtrl.GetInstance().ClickStartBtOne( ButtonState.DOWN );
+			InputEventCtrl.GetInstance().ClickStartBtOne( InputEventCtrl.ButtonState.DOWN );
 		}
 		//else if ( bPlayerStartKeyDown && 0x00 == (buffer[28]&0x01) ) { //test
 		else if ( bPlayerStartKeyDown && 0x00 == (buffer[9]&0x01) ) {
 //			ScreenLog.Log("game startBt up!");
 			bPlayerStartKeyDown = false;
-			InputEventCtrl.GetInstance().ClickStartBtOne( ButtonState.UP );
+			InputEventCtrl.GetInstance().ClickStartBtOne( InputEventCtrl.ButtonState.UP );
 		}
 
 		if ( !bSetEnterKeyDown && 0x10 == (buffer[9]&0x10) ) {
 			bSetEnterKeyDown = true;
 //			ScreenLog.Log("game setEnterBt down!");
-			InputEventCtrl.GetInstance().ClickSetEnterBt( ButtonState.DOWN );
+			InputEventCtrl.GetInstance().ClickSetEnterBt( InputEventCtrl.ButtonState.DOWN );
 		}
 		else if ( bSetEnterKeyDown && 0x00 == (buffer[9]&0x10) ) {
 			bSetEnterKeyDown = false;
 //			ScreenLog.Log("game setEnterBt up!");
-			InputEventCtrl.GetInstance().ClickSetEnterBt( ButtonState.UP );
+			InputEventCtrl.GetInstance().ClickSetEnterBt( InputEventCtrl.ButtonState.UP );
 		}
 
 		if ( !bSetMoveKeyDown && 0x20 == (buffer[9]&0x20) ) {
 			bSetMoveKeyDown = true;
 //			ScreenLog.Log("game setMoveBt down!");
-			InputEventCtrl.GetInstance().ClickSetMoveBt( ButtonState.DOWN );
+			InputEventCtrl.GetInstance().ClickSetMoveBt( InputEventCtrl.ButtonState.DOWN );
 		}
 		else if( bSetMoveKeyDown && 0x00 == (buffer[9]&0x20) ) {
 			bSetMoveKeyDown = false;
 //			ScreenLog.Log("game setMoveBt up!");
-			InputEventCtrl.GetInstance().ClickSetMoveBt( ButtonState.UP );
+			InputEventCtrl.GetInstance().ClickSetMoveBt( InputEventCtrl.ButtonState.UP );
 		}
 
 		if ( !IsClickLaBaBt && 0x04 == (buffer[9]&0x04) ) {
 			IsClickLaBaBt = true;
 //			ScreenLog.Log("game LaBaBt down!");
-			InputEventCtrl.GetInstance().ClickLaBaBt( ButtonState.DOWN );
+			InputEventCtrl.GetInstance().ClickLaBaBt( InputEventCtrl.ButtonState.DOWN );
 		}
 		else if( IsClickLaBaBt && 0x00 == (buffer[9]&0x04) ) {
 			IsClickLaBaBt = false;
 //			ScreenLog.Log("game LaBaBt up!");
-			InputEventCtrl.GetInstance().ClickLaBaBt( ButtonState.UP );
+			InputEventCtrl.GetInstance().ClickLaBaBt( InputEventCtrl.ButtonState.UP );
 		}
 	}
 
