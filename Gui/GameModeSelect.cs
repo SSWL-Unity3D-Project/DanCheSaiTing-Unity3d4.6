@@ -63,4 +63,9 @@ public class GameModeSelect : MonoBehaviour
     {
         StartBtObj.SetActive(isActive);
     }
+
+    public void HiddenSelf()
+    {
+        gameObject.SetActive(false);
+    }
 }

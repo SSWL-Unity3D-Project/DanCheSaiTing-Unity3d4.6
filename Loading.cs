@@ -7,9 +7,21 @@ public class Loading : SSUiRoot
 	private string CoinNumSet = "1";
 	private string InsertCoinNum = "";
     /// <summary>
+    /// 选择联机游戏的玩家UI预制文件.
+    /// </summary>
+    public GameObject LinkPlayerPrefab;
+    /// <summary>
+    /// 联机玩家信息UI界面.
+    /// </summary>
+    GameLinkPlayer mGameLinkPlayer;
+    /// <summary>
     /// 游戏模式选择UI预制文件.
     /// </summary>
     public GameObject GameModePrefab;
+    /// <summary>
+    /// 游戏模式选择UI界面.
+    /// </summary>
+    GameModeSelect mGameModeSelect;
     /// <summary>
     /// UI摄像机.
     /// </summary>
@@ -264,8 +276,22 @@ public class Loading : SSUiRoot
                                 m_Loading.SetActive(true);
                                 timmerstar = true;
                                 m_HasBegin = true;
+                                mGameModeSelect.HiddenSelf();
                                 NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
                                 NetworkServerNet.GetInstance().RemoveMasterServerHost();
+                            }
+                        }
+
+                        if (mGameModeSelect.eGameMode == GameModeSelect.GameMode.Link)
+                        {
+                            if (mGameLinkPlayer == null)
+                            {
+                                mGameModeSelect.HiddenSelf();
+                                SpawnGameLinkPlayerUI();
+                            }
+                            else
+                            {
+
                             }
                         }
                     }
@@ -319,10 +345,6 @@ public class Loading : SSUiRoot
     }
 
     /// <summary>
-    /// 游戏模式选择UI界面.
-    /// </summary>
-    GameModeSelect mGameModeSelect;
-    /// <summary>
     /// 创建游戏模式选择UI界面.
     /// </summary>
     void SpawnGameModeUI()
@@ -330,5 +352,15 @@ public class Loading : SSUiRoot
         GameObject obj = (GameObject)Instantiate(GameModePrefab, mUICamera.transform);
         mGameModeSelect = obj.GetComponent<GameModeSelect>();
         mGameModeSelect.Init();
+    }
+
+    /// <summary>
+    /// 创建联机玩家信息UI界面.
+    /// </summary>
+    void SpawnGameLinkPlayerUI()
+    {
+        GameObject obj = (GameObject)Instantiate(LinkPlayerPrefab, mUICamera.transform);
+        mGameLinkPlayer = obj.GetComponent<GameLinkPlayer>();
+        mGameLinkPlayer.Init();
     }
 }

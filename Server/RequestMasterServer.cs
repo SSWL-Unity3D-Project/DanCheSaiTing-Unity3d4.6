@@ -14,6 +14,9 @@ public class RequestMasterServer : MonoBehaviour
     bool IsClickConnect;
     public static string MasterServerMovieComment = "Movie Scene";
     public static string MasterServerGameNetComment = "GameNet Scene";
+    /// <summary>
+    /// 玩家链接游戏的服务器IP.
+    /// </summary>
     string ServerIp = "";
     float TimeConnect;
     /// <summary>
@@ -183,12 +186,14 @@ public class RequestMasterServer : MonoBehaviour
         ServerIp = ip;
     }
 
+    /// <summary>
+    /// 获取当前在主服务器创建MasterServerMovieComment服务的数量.
+    /// 在游戏循环动画界面一般只需要创建一个MasterServerMovieComment服务即可.
+    /// </summary>
     public int GetMovieMasterServerNum()
     {
         int masterServerNum = 0;
         HostData[] data = MasterServer.PollHostList();
-
-        // Go through all the hosts in the host list
         foreach (var element in data)
         {
             if (element.comment == MasterServerMovieComment)
