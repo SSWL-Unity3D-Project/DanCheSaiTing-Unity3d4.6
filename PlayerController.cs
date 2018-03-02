@@ -1162,7 +1162,8 @@ public class PlayerController : MonoBehaviour
 			string strA = sp.ToString() + "km/h";
 			GUI.Box(new Rect(0f, 0f, wVal, hVal), strA);
 
-            string strB = "throttle " + throttle.ToString("f3") + ", steer " + pcvr.GetInstance().mGetSteer.ToString("f3");
+            string strB = "throttle " + throttle.ToString("f3") + ", steer " + pcvr.GetInstance().mGetSteer.ToString("f3")
+                + ", jiaoTaBan " + pcvr.GetInstance().mGetJiaoTaBan.ToString("f2");
             GUI.Box(new Rect(0f, hVal, wVal, hVal), strB);
         }
 #endif

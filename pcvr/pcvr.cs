@@ -35,10 +35,21 @@ public class pcvr : MonoBehaviour
 
     void FixedUpdate()
     {
-        UpdatePcvrJiaoTaBanVal();
+        if (bIsHardWare)
+        {
+            UpdatePcvrJiaoTaBanVal();
+        }
         UpdatePcvrPowerVal();
         UpdatePcvrSteerVal();
         UpdatePlayerCoinDt();
+    }
+
+    void Update()
+    {
+        if (!bIsHardWare)
+        {
+            UpdatePcvrJiaoTaBanVal();
+        }
     }
 
     /// <summary>
