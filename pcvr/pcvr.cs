@@ -35,6 +35,7 @@ public class pcvr : MonoBehaviour
 
     void FixedUpdate()
     {
+        UpdatePcvrJiaoTaBanVal();
         UpdatePcvrPowerVal();
         UpdatePcvrSteerVal();
         UpdatePlayerCoinDt();
@@ -47,20 +48,53 @@ public class pcvr : MonoBehaviour
     {
         if (bIsHardWare)
         {
-            //if (GlobalData.GetInstance().CoinCur != mPcvrTXManage.PlayerCoinArray[0])
-            //{
-            //    GlobalData.GetInstance().CoinCur = mPcvrTXManage.PlayerCoinArray[0];
-            //}
+            if (GlobalData.GetInstance().CoinCur != mPcvrTXManage.PlayerCoinArray[0])
+            {
+                GlobalData.GetInstance().CoinCur = mPcvrTXManage.PlayerCoinArray[0];
+            }
         }
     }
 
-    enum SteerEnum
+    [HideInInspector]
+    public float mGetJiaoTaBan = 0f;
+    bool IsHitJiaoTaBan = false;
+    /// <summary>
+    /// 更新油门信息.
+    /// </summary>
+    void UpdatePcvrJiaoTaBanVal()
     {
-        //Left = 0x55,
-        //Right = 0xaa,
-        Left = 0xaa,
-        Right = 0x55,
-        Center = 0x00,
+        if (!bIsHardWare)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                IsHitJiaoTaBan = true;
+            }
+
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                IsHitJiaoTaBan = false;
+            }
+
+            if (IsHitJiaoTaBan)
+            {
+                mGetJiaoTaBan = Mathf.Lerp(mGetJiaoTaBan, 1f, Time.deltaTime * 0.2f);
+            }
+            else
+            {
+                if (mGetJiaoTaBan >= 0.1f)
+                {
+                    mGetJiaoTaBan = Mathf.Lerp(mGetJiaoTaBan, 0f, Time.deltaTime * 10f);
+                }
+                else
+                {
+                    mGetJiaoTaBan = 0f;
+                }
+            }
+        }
+        else
+        {
+
+        }
     }
 
     [HideInInspector]
@@ -75,6 +109,15 @@ public class pcvr : MonoBehaviour
             mGetPower = Input.GetAxis("Vertical");
             return;
         }
+    }
+
+    enum SteerEnum
+    {
+        //Left = 0x55,
+        //Right = 0xaa,
+        Left = 0xaa,
+        Right = 0x55,
+        Center = 0x00,
     }
 
     [HideInInspector]

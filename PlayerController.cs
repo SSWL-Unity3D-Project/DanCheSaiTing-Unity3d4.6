@@ -848,7 +848,7 @@ public class PlayerController : MonoBehaviour
         {
             throttle = 0f;
         }
-        //jiaoTaBan = pcvr.mGetJiaoTaBan;
+        jiaoTaBan = pcvr.GetInstance().mGetJiaoTaBan;
         mSteer = pcvr.GetInstance().mGetSteer;
         if (!IsClickShaCheBt)
         {
