@@ -35,6 +35,7 @@ public class pcvr : MonoBehaviour
 
     void FixedUpdate()
     {
+        UpdatePcvrPowerVal();
         UpdatePcvrSteerVal();
         UpdatePlayerCoinDt();
     }
@@ -63,12 +64,26 @@ public class pcvr : MonoBehaviour
     }
 
     [HideInInspector]
+    public float mGetPower = 0f;
+    /// <summary>
+    /// 更新油门信息.
+    /// </summary>
+    void UpdatePcvrPowerVal()
+    {
+        if (!bIsHardWare)
+        {
+            mGetPower = Input.GetAxis("Vertical");
+            return;
+        }
+    }
+
+    [HideInInspector]
     public float mGetSteer = 0f;
     float TimeLastSteer = 0f;
     /// <summary>
     /// 更新转向信息.
     /// </summary>
-	public void UpdatePcvrSteerVal()
+	void UpdatePcvrSteerVal()
     {
         if (!bIsHardWare)
         {
@@ -130,13 +145,13 @@ public class pcvr : MonoBehaviour
         }
     }
 
-    void OnGUI()
-    {
-        string info = "ledState:  ";
-        for (int i = 0; i < 7; i++)
-        {
-            info += mPcvrTXManage.LedState[i] == true ? "1  " : "0  ";
-        }
-        GUI.Box(new Rect(10f, 100f, Screen.width - 20f, 30f), info);
-    }
+    //void OnGUI()
+    //{
+    //    string info = "ledState:  ";
+    //    for (int i = 0; i < 7; i++)
+    //    {
+    //        info += mPcvrTXManage.LedState[i] == true ? "1  " : "0  ";
+    //    }
+    //    GUI.Box(new Rect(10f, 100f, Screen.width - 20f, 30f), info);
+    //}
 }

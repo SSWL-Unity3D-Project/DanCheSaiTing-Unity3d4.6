@@ -18,7 +18,7 @@ public enum GameLeve : int
 public class GlobalData
 {
 	public static GameTextType GameTextVal = GameTextType.Chinese;
-	public static int CoinCur;
+	public int CoinCur;
     public GameMode gameMode;
     public GameLeve gameLeve;
     private static  GlobalData Instance;

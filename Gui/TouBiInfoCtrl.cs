@@ -43,9 +43,9 @@ public class TouBiInfoCtrl : MonoBehaviour
 	{
 		if (pcvr.bIsHardWare)
         {
-			if (GlobalData.CoinCur != SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum && GameMode == "oper")
+			if (GlobalData.GetInstance().CoinCur != SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum && GameMode == "oper")
             {
-                SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum = GlobalData.CoinCur - 1;
+                SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum = GlobalData.GetInstance().CoinCur - 1;
 				OnClickInsertBt();
 			}
 		}

@@ -173,33 +173,33 @@ public class UIController : MonoBehaviour
 				m_BeginDaojishiAudio.Stop();
 			}
 
-            //if (Mathf.Abs(pcvr.mGetPower) > 0f && !IsCloseYouMenTiShi)
-            //{
-            //    //关闭方向盘提示.
-            //    IsCloseYouMenTiShi = true;
-            //    m_HasTishi = true;
-            //    m_YoumenTishi.enabled = false;
-            //    m_YoumenTimmer = 0.0f;
-            //}
+            if (Mathf.Abs(pcvr.GetInstance().mGetPower) > 0f && !IsCloseYouMenTiShi)
+            {
+                //关闭方向盘提示.
+                IsCloseYouMenTiShi = true;
+                m_HasTishi = true;
+                m_YoumenTishi.enabled = false;
+                m_YoumenTimmer = 0.0f;
+            }
 
             if (m_pGameTime >= 0.0f && !m_Player.m_IsFinished)
             {
                 if (IsCloseYouMenTiShi && m_HasTishi)
                 {
-                    //if (Mathf.Abs(pcvr.mGetPower) == 0f)
-                    //{
-                    //    m_YoumenTimmer += Time.deltaTime;
-                    //    if (m_YoumenTimmer >= 5f)
-                    //    {
-                    //        //打开油门提示.
-                    //        IsCloseYouMenTiShi = false;
-                    //        m_HasTishi = false;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    m_YoumenTimmer = 0.0f;
-                    //}
+                    if (Mathf.Abs(pcvr.GetInstance().mGetPower) == 0f)
+                    {
+                        m_YoumenTimmer += Time.deltaTime;
+                        if (m_YoumenTimmer >= 5f)
+                        {
+                            //打开油门提示.
+                            IsCloseYouMenTiShi = false;
+                            m_HasTishi = false;
+                        }
+                    }
+                    else
+                    {
+                        m_YoumenTimmer = 0.0f;
+                    }
                 }
             }
             else

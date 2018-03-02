@@ -105,8 +105,9 @@ public class SetPanel : MonoBehaviour
 	void Update () 
 	{
 		if (pcvr.bIsHardWare) {
-			if (GlobalData.CoinCur > m_InserNum) {
-				m_InserNum = GlobalData.CoinCur - 1;
+			if (GlobalData.GetInstance().CoinCur > m_InserNum)
+            {
+				m_InserNum = GlobalData.GetInstance().CoinCur - 1;
 				OnClickInsertBt();
 			}
 
@@ -114,29 +115,32 @@ public class SetPanel : MonoBehaviour
 			//FangXiangInfoLabel.text = pcvr.SteerValCur.ToString();
 
 			if (!IsInitJiaoZhunPcvr) {
-				//if (pcvr.mGetPower > pcvr.YouMemnMinVal) {				
-				//	YouMenInfoLabel.text += ", Throttle Response";
-				//}
+                if (pcvr.GetInstance().mGetPower > 0.1f)
+                {
+                    YouMenInfoLabel.text += ", Throttle Response";
+                }
 
-				float offsetSteer = 0.05f;
-				//if (pcvr.mGetSteer < -offsetSteer) {
-				//	FangXiangInfoLabel.text += ", Turn Left";
-				//}
-				//else if (pcvr.mGetSteer > offsetSteer) {
-				//	FangXiangInfoLabel.text += ", Turn Right";
-				//}
-				//else {
-				//	FangXiangInfoLabel.text += ", Turn Middle";
-				//}
-			}
+                float offsetSteer = 0.05f;
+                if (pcvr.GetInstance().mGetSteer < -offsetSteer)
+                {
+                    FangXiangInfoLabel.text += ", Turn Left";
+                }
+                else if (pcvr.GetInstance().mGetSteer > offsetSteer)
+                {
+                    FangXiangInfoLabel.text += ", Turn Right";
+                }
+                else
+                {
+                    FangXiangInfoLabel.text += ", Turn Middle";
+                }
+            }
 		}
 		else {
 			if (Input.GetKeyDown(KeyCode.T)) {
 				OnClickInsertBt();
 			}
-
-			int val = 0;
-			//int val = (int)(pcvr.mGetSteer * 100);
+            
+            int val = (int)(pcvr.GetInstance().mGetSteer * 100);
             FangXiangInfoLabel.text = val.ToString();
 			if (!IsInitJiaoZhunPcvr) {
 				if (val < 0) {
@@ -150,8 +154,8 @@ public class SetPanel : MonoBehaviour
 				}
 			}
 
-			//val = (int)(pcvr.mGetPower * 100);
-			YouMenInfoLabel.text = val.ToString();
+            val = (int)(pcvr.GetInstance().mGetPower * 100);
+            YouMenInfoLabel.text = val.ToString();
 			if (!IsInitJiaoZhunPcvr) {
 				if (val > 0) {				
 					YouMenInfoLabel.text += ", Throttle Response";

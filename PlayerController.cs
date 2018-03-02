@@ -475,7 +475,7 @@ public class PlayerController : MonoBehaviour
 		Screen.showCursor = false;
 		Time.timeScale = 1f;
 
-		pcvr.GetInstance();
+		//pcvr.GetInstance();
 		//m_pTopSpeed = Convert_Miles_Per_Hour_To_Meters_Per_Second(m_pTopSpeed);
 		rigidbody.centerOfMass = m_massCenter.localPosition;
 		PosRecord = transform.position;
@@ -633,22 +633,24 @@ public class PlayerController : MonoBehaviour
 		return Instance;
 	}
 
-	//bool IsClickShaCheBt;
-	void  ClickShaCheBtEvent(InputEventCtrl.ButtonState val)
+    bool IsClickShaCheBt;
+    void  ClickShaCheBtEvent(InputEventCtrl.ButtonState val)
 	{
 		if (Application.loadedLevel != 1) {
 			return;
 		}
 
-//		if (val == ButtonState.DOWN) {
-			//IsClickShaCheBt = true;
-			//pcvr.ShaCheBtLight = StartLightState.Liang;
-//		}
-//		else {
-//			IsClickShaCheBt = false;
-//			pcvr.ShaCheBtLight = StartLightState.Shan;
-//		}
-	}
+        if (val == InputEventCtrl.ButtonState.DOWN)
+        {
+            IsClickShaCheBt = true;
+            //pcvr.ShaCheBtLight = StartLightState.Liang;
+        }
+        else
+        {
+            IsClickShaCheBt = false;
+            //pcvr.ShaCheBtLight = StartLightState.Shan;
+        }
+    }
 
 	void ClickLaBaBtEvent(InputEventCtrl.ButtonState val)
 	{
@@ -840,26 +842,26 @@ public class PlayerController : MonoBehaviour
 		//throttle = 1f;
         if (m_UIController.mPlayerDaoJuManageUI.DianLiangVal > 0f)
         {
-            //throttle = pcvr.mGetPower;
+            throttle = pcvr.GetInstance().mGetPower;
         }
         else
         {
             throttle = 0f;
         }
         //jiaoTaBan = pcvr.mGetJiaoTaBan;
-        //mSteer = pcvr.mGetSteer;
-        //if (!IsClickShaCheBt)
-        //{
-        //    throttle = pcvr.mGetPower;
-        //}
-        //else
-        //{
-        //    throttle = 0f;
-        //    if (!m_IsJiasu && !IsIntoFeiBan)
-        //    {
-        //        rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime * 3f);
-        //    }
-        //}
+        mSteer = pcvr.GetInstance().mGetSteer;
+        if (!IsClickShaCheBt)
+        {
+            throttle = pcvr.GetInstance().mGetPower;
+        }
+        else
+        {
+            throttle = 0f;
+            if (!m_IsJiasu && !IsIntoFeiBan)
+            {
+                rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime * 3f);
+            }
+        }
 
         if (throttle > 0f)
         {
@@ -1159,10 +1161,10 @@ public class PlayerController : MonoBehaviour
         if (!pcvr.bIsHardWare) {
 			string strA = sp.ToString() + "km/h";
 			GUI.Box(new Rect(0f, 0f, wVal, hVal), strA);
-			
-			//string strB = "throttle "+throttle.ToString("f3") + ", steer " + pcvr.mGetSteer.ToString("f3");
-			//GUI.Box(new Rect(0f, hVal, wVal, hVal), strB);
-		}
+
+            string strB = "throttle " + throttle.ToString("f3") + ", steer " + pcvr.GetInstance().mGetSteer.ToString("f3");
+            GUI.Box(new Rect(0f, hVal, wVal, hVal), strB);
+        }
 #endif
 	}
 

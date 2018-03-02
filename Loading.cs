@@ -80,13 +80,16 @@ public class Loading : MonoBehaviour
 			UpdateTex();
 		}
 
-		if (pcvr.bIsHardWare) {
-			if (GlobalData.CoinCur != m_InserNum && GameMode == "oper") {
-				m_InserNum = GlobalData.CoinCur - 1;
+		if (pcvr.bIsHardWare)
+        {
+			if (GlobalData.GetInstance().CoinCur != m_InserNum && GameMode == "oper")
+            {
+				m_InserNum = GlobalData.GetInstance().CoinCur - 1;
 				OnClickInsertBt();
 			}
 		}
-		else {
+		else
+        {
 			if(Input.GetKeyDown(KeyCode.T) && GameMode == "oper")
 			{
 				OnClickInsertBt();

@@ -34,7 +34,7 @@ public class HardWareTest : MonoBehaviour
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickCloseDongGanBtEvent += ClickCloseDongGanBtEvent;
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickLaBaBtEvent += ClickLaBaBtEvent;
-		pcvr.GetInstance();
+		//pcvr.GetInstance();
 		//pcvr.CloseFangXiangPanPower();
 	}
 	public UILabel BeiYongYouMenLabel;
@@ -46,7 +46,7 @@ public class HardWareTest : MonoBehaviour
 
     void UpdatePcvrInfo(byte[] buffer) 
 	{
-		TouBiLabel.text = GlobalData.CoinCur.ToString();
+		TouBiLabel.text = GlobalData.GetInstance().CoinCur.ToString();
 		//ShaCheLabel.text = pcvr.ShaCheCurPcvr.ToString();
 		//YouMenLabel.text = pcvr.BikePowerCurPcvr.ToString();
 		//BeiYongYouMenLabel.text = pcvr.BikeBeiYongPowerCurPcvr.ToString();
