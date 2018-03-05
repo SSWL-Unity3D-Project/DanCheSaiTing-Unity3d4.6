@@ -61,9 +61,18 @@ public class TouBiInfoCtrl : MonoBehaviour
 	{
 		if (val == InputEventCtrl.ButtonState.DOWN) {
 			return;
-		}
-		//XkGameCtrl.IsLoadingLevel = true;
-		Resources.UnloadUnusedAssets();
+        }
+
+        if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+        {
+            if (SSGameCtrl.GetInstance().mSSGameRoot != null)
+            {
+                //联机游戏中,不允许进入设置界面.
+                return;
+            }
+        }
+        //XkGameCtrl.IsLoadingLevel = true;
+        Resources.UnloadUnusedAssets();
 		GC.Collect();
 		Application.LoadLevel(5);
 	}

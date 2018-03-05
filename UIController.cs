@@ -263,12 +263,6 @@ public class UIController : MonoBehaviour
                 HiddenJiFen();
                 HiddenUi();
                 JieSuanJiFenObj.SetActive(true);
-
-                if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
-                {
-                    SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
-                    NetworkServerNet.GetInstance().RemoveMasterServerHost();
-                }
             }
 			if(m_IsCongratulate)
 			{
@@ -324,8 +318,13 @@ public class UIController : MonoBehaviour
 			return;		
 		}
 		IsLoadMovie = true;
-
-		StartCoroutine(CheckUnloadUnusedAssets());
+        
+        if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+        {
+            SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
+            NetworkServerNet.GetInstance().RemoveMasterServerHost();
+        }
+        StartCoroutine(CheckUnloadUnusedAssets());
 	}
 
 	IEnumerator CheckUnloadUnusedAssets()
