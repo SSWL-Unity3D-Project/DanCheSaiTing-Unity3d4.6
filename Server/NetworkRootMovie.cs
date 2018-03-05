@@ -12,10 +12,10 @@ public class NetworkRootMovie : MonoBehaviour
     }
     public GameNetType eNetState = GameNetType.NoLink;
     /// <summary>
-    /// 玩家选择单机/联机游戏状态.
+    /// 玩家当前的联机游戏状态.
     /// </summary>
     [HideInInspector]
-    public GameNetType ePlayerSelectNetState = GameNetType.NoLink;
+    public NetworkServerNet.PlayerGameNetType ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.Null;
     /// <summary>
     /// NetworkRpcMsg预制.
     /// </summary>

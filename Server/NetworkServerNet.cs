@@ -3,6 +3,12 @@ using System.Collections;
 
 public class NetworkServerNet : MonoBehaviour
 {
+    public enum PlayerGameNetType
+    {
+        Null,
+        MovieIntoGame,   //循环动画进入游戏.
+        GameBackMovie,   //游戏返回循环动画.
+    }
     string MasterServerIpFile = "./MasterServerIP.info";
     string MasterServerIp = "192.168.0.2";
     private int mPort = 23465;
@@ -347,7 +353,7 @@ public class NetworkServerNet : MonoBehaviour
             }
             TimeLastCreatServer = Time.time;
 
-            if (NetworkRootMovie.GetInstance().ePlayerSelectNetState == NetworkRootMovie.GameNetType.NoLink)
+            if (NetworkRootMovie.GetInstance().ePlayerGameNetState == PlayerGameNetType.Null)
             {
                 StartCoroutine(DelayInitCreateServer((Random.Range(0, 100) % 4) * 3));
             }
@@ -360,7 +366,13 @@ public class NetworkServerNet : MonoBehaviour
         else
         {
             //非循环动画场景直接创建服务器.
-            IsCreateServer = false;
+            if (SSGameCtrl.GetInstance().mSSGameRoot != null)
+            {
+                if (SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState == PlayerGameNetType.Null)
+                {
+                    IsCreateServer = false;
+                }
+            }
         }
     }
 

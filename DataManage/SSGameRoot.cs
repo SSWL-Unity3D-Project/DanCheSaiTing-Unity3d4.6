@@ -5,6 +5,7 @@
 /// </summary>
 public class SSGameRoot : MonoBehaviour
 {
+    public NetworkRootGame mNetworkRootGame;
     public SSGameDataManage mSSGameDataManage;
     /// <summary>
     /// 游戏UI总控.
