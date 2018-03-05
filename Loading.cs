@@ -307,6 +307,7 @@ public class Loading : SSUiRoot
                                     Debug.Log("Start link game...");
                                     mGameLinkPlayer.OnClickStartBt();
                                     SSGameCtrl.GetInstance().eGameMode = GameModeSelect.GameMode.Link;
+                                    NetworkRootMovie.GetInstance().ePlayerSelectNetState = NetworkRootMovie.GameNetType.Link;
                                     if (NetworkServerNet.GetInstance() != null)
                                     {
                                         NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.GameNet);

@@ -105,7 +105,7 @@ public class UIController : MonoBehaviour
 
 	void Start () 
 	{
-        m_Player = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController;
+        //m_Player = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController;
         m_pGameTime = 120.0f;   //gzknu
         m_pMiaoshiwei.spriteName = "2"; //gzknu
 
@@ -570,5 +570,10 @@ public class UIController : MonoBehaviour
     {
         JiaSuCoinAni.gameObject.SetActive(true);
         JiaSuCoinAni.SetTrigger("IsPlay");
+    }
+
+    public void SetActiveUIRoot(bool isActive)
+    {
+        gameObject.SetActive(isActive);
     }
 }

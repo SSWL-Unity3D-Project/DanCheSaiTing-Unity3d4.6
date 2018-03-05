@@ -164,9 +164,8 @@ public class SSGameDataManage : MonoBehaviour
             }
             else
             {
-
+                Network.Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation, 0);
             }
-
         }
 
         /// <summary>
@@ -185,7 +184,7 @@ public class SSGameDataManage : MonoBehaviour
             }
             else
             {
-
+                obj = (GameObject)Network.Instantiate(mNpcPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation, 0);
             }
 
             npcScript = obj.GetComponent<NpcController>();

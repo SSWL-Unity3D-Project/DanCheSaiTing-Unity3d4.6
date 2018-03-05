@@ -427,6 +427,8 @@ public class PlayerController : MonoBehaviour
 
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerControllerList.Add(this);
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController = this;
+        m_UIController.m_Player = this;
+        m_CameraSmooth.target = transform;
     }
 
     void Awake()

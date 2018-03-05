@@ -63,23 +63,23 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
 		//GlobalData.GetInstance().gameLeve = (GameLeve)levelVal;
 	}
 
-	public void SetSpawnClientIndex(NetworkPlayer playerNet, int val)
+	public void SetSpawnPlayerIndex(NetworkPlayer playerNet, int index)
 	{
 		//LinkPlayerCtrl.GetInstance().DisplayLinkPlayerName(val);
 		if (Network.peerType != NetworkPeerType.Disconnected)
         {
-			mNetViewCom.RPC("SendSpawnClientIndex", RPCMode.OthersBuffered, playerNet, val);
+			mNetViewCom.RPC("SendSpawnPlayerIndex", RPCMode.OthersBuffered, playerNet, index);
 		}
 	}
 	
 	[RPC]
-	void SendSpawnClientIndex(NetworkPlayer playerNet, int val)
+	void SendSpawnPlayerIndex(NetworkPlayer playerNet, int index)
 	{
 		//LinkPlayerCtrl.GetInstance().DisplayLinkPlayerName(val);
 		if (playerNet != Network.player)
         {
 			return;
 		}
-		NetworkServerNet.GetInstance().SetIndexSpawnClient(val);
+		NetworkServerNet.GetInstance().SetIndexSpawnPlayer(index);
 	}
 }

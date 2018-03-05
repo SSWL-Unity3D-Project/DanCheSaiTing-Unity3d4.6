@@ -12,6 +12,11 @@ public class NetworkRootMovie : MonoBehaviour
     }
     public GameNetType eNetState = GameNetType.NoLink;
     /// <summary>
+    /// 玩家选择单机/联机游戏状态.
+    /// </summary>
+    [HideInInspector]
+    public GameNetType ePlayerSelectNetState = GameNetType.NoLink;
+    /// <summary>
     /// NetworkRpcMsg预制.
     /// </summary>
     public GameObject NetworkRpcMsgPrefab;

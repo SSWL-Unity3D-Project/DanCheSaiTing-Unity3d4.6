@@ -12,13 +12,13 @@ public class CameraSmooth : MonoBehaviour
 	public float PositionForward = 6.0f;
 	public float PositionUp = 5.0f;
 	public float speed = 3.0f;
-    void Start()
-    {
-        target = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController.transform;
+    //void Start()
+    //{
+    //    target = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController.transform;
         //PositionForward = 5.0f; //gzknu
         //PositionUp = 2.0f;
         //speed = 25.0f;
-    }
+    //}
 
     void FixedUpdate()
 	{
