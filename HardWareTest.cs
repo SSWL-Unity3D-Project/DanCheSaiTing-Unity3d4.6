@@ -212,7 +212,7 @@ public class HardWareTest : MonoBehaviour
 		//p.StandardInput.WriteLine("exit");        //不過要記得加上Exit要不然下一行程式執行的時候會當機    return p.StandardOutput.ReadToEnd();        //從輸出流取得命令執行結果
 	}
 	public float m_HitshakeTimmerSet = 1.0f;
-	private float m_HitshakeTimmer = 0.0f;
+	//private float m_HitshakeTimmer = 0.0f;
 	public static bool m_IsHitshake = false;
 	public void OnHitShake()
 	{
@@ -307,7 +307,7 @@ public class HardWareTest : MonoBehaviour
 	}
 
 	public UILabel DongGanLightLabel;
-	int LightDongGan = 1;
+	//int LightDongGan = 1;
 	public void OnClickDongGanLightBt()
 	{
 		//LightDongGan++;

@@ -143,16 +143,51 @@ public class Loading : SSUiRoot
         {
 			return;
 		}
-		
+
+        if (NetworkRootMovie.GetInstance().ePlayerSelectGameMode == NetworkRootMovie.GameMode.Link)
+        {
+            //选择联机游戏后不允许进入设置界面.
+            return;
+        }
+
+        if (IsLoadingSetPanel)
+        {
+            return;
+        }
+        IsLoadingSetPanel = true;
+
+
         if (NetworkServerNet.GetInstance() != null)
         {
             NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
+            switch (Network.peerType)
+            {
+                case NetworkPeerType.Server:
+                    {
+                        NetworkServerNet.GetInstance().RemoveMasterServerHost();
+                        break;
+                    }
+                case NetworkPeerType.Client:
+                    {
+                        NetworkServerNet.GetInstance().RemoveClientHost();
+                        break;
+                    }
+            }
         }
-		//XkGameCtrl.IsLoadingLevel = true;
-		Resources.UnloadUnusedAssets();
-		GC.Collect();
-		Application.LoadLevel(5); //进入设置界面.
-	}
+        StartCoroutine(DelayLoadingSetPanel());
+    }
+
+    /// <summary>
+    /// 是否正在加载设置界面场景.
+    /// </summary>
+    bool IsLoadingSetPanel = false;
+    IEnumerator DelayLoadingSetPanel()
+    {
+        yield return new WaitForSeconds(1f);
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+        Application.LoadLevel(5); //进入设置界面.
+    }
 
 	void UpdateInsertCoin()
 	{
@@ -275,7 +310,7 @@ public class Loading : SSUiRoot
                     }
                     else
                     {
-                        if (mGameModeSelect.eGameMode == GameModeSelect.GameMode.NoLink)
+                        if (mGameModeSelect.eGameMode == NetworkRootMovie.GameMode.NoLink)
                         {
                             //玩家选择单机游戏.
                             if (m_IsBeginOk && !m_HasBegin)
@@ -285,16 +320,18 @@ public class Loading : SSUiRoot
                                 timmerstar = true;
                                 m_HasBegin = true;
                                 mGameModeSelect.HiddenSelf();
-                                SSGameCtrl.GetInstance().eGameMode = GameModeSelect.GameMode.NoLink;
+                                SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink;
+                                NetworkRootMovie.GetInstance().ePlayerSelectGameMode = NetworkRootMovie.GameMode.NoLink;
                                 NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
                                 NetworkServerNet.GetInstance().RemoveMasterServerHost();
                             }
                         }
 
-                        if (mGameModeSelect.eGameMode == GameModeSelect.GameMode.Link)
+                        if (mGameModeSelect.eGameMode == NetworkRootMovie.GameMode.Link)
                         {
                             if (mGameLinkPlayer == null)
                             {
+                                NetworkRootMovie.GetInstance().ePlayerSelectGameMode = NetworkRootMovie.GameMode.Link;
                                 m_BeginSource.Play();
                                 mGameModeSelect.HiddenSelf();
                                 SpawnGameLinkPlayerUI();
@@ -306,7 +343,7 @@ public class Loading : SSUiRoot
                                     //开始联机游戏.
                                     Debug.Log("Start link game...");
                                     mGameLinkPlayer.OnClickStartBt();
-                                    SSGameCtrl.GetInstance().eGameMode = GameModeSelect.GameMode.Link;
+                                    SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.Link;
                                     NetworkRootMovie.GetInstance().ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.MovieIntoGame;
                                     if (NetworkServerNet.GetInstance() != null)
                                     {
@@ -353,7 +390,7 @@ public class Loading : SSUiRoot
                         m_Loading.SetActive(true);
                         timmerstar = true;
                         m_HasBegin = true;
-                        SSGameCtrl.GetInstance().eGameMode = GameModeSelect.GameMode.NoLink;
+                        SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink;
                     }
                     break;
                 }

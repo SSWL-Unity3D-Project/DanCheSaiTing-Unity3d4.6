@@ -15,53 +15,66 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
 		mNetViewCom = GetComponent<NetworkView>();
 	}
 
-	public void RemoveSelf()
-	{
-		if (gameObject == null)
-        {
-			return;
-		}
-		//_Instance = null;
-		Network.Destroy(gameObject);
-		Debug.Log("NetworkRpcMsgCtrl::RemoveSelf...");
-	}
+    void Awake()
+    {
+        NetworkRootMovie.GetInstance().mNetworkRpcMsgScript = this;
+    }
 
-	public void SendLoadLevel(int levelVal)
-	{
-		//if (levelVal == (int)GameLeve.None || levelVal == (int)GameLeve.SetPanel || levelVal == (int)GameLeve.Waterwheel)
+	public void RemoveSelf()
+    {
+        if (gameObject == null)
+        {
+            return;
+        }
+
+        if (Network.peerType == NetworkPeerType.Client)
+        {
+            Destroy(gameObject);
+        }
+		//if (gameObject == null)
   //      {
 		//	return;
 		//}
-
-		//if(GlobalData.GetInstance().gameLeve == (GameLeve)levelVal)
-		//{
-		//	return;
-		//}
-		MaxLinkServerCount = Network.connections.Length;
-        NetworkServerNet.GetInstance().mRequestMasterServer.ResetIsClickConnect();
-		//GlobalData.GetInstance().gameLeve = (GameLeve)levelVal;
-		//Debug.Log("SendLoadLevel -> levelVal = " + (GameLeve)levelVal);
-
-		if (Network.peerType != NetworkPeerType.Disconnected)
-        {
-			mNetViewCom.RPC("SendLoadLevelMsgToOthers", RPCMode.OthersBuffered, levelVal);
-		}
+		//Network.Destroy(gameObject);
+		Debug.Log("NetworkRpcMsgCtrl::RemoveSelf...");
 	}
 
-	[RPC]
-	void SendLoadLevelMsgToOthers(int levelVal)
-	{
-		//if(GlobalData.GetInstance().gameLeve == (GameLeve)levelVal)
-		//{
-		//	return;
-		//}
-		//Debug.Log("SendLoadLevelMsgToOthers *********** levelVal " + (GameLeve)levelVal);
-		MaxLinkServerCount = Network.connections.Length;
-		NetworkServerNet.GetInstance().mRequestMasterServer.ResetIsClickConnect();
-		//Toubi.GetInstance().MakeGameIntoWaterwheelNet();
+	//public void SendLoadLevel(int levelVal)
+	//{
+	//	//if (levelVal == (int)GameLeve.None || levelVal == (int)GameLeve.SetPanel || levelVal == (int)GameLeve.Waterwheel)
+ // //      {
+	//	//	return;
+	//	//}
 
-		//GlobalData.GetInstance().gameLeve = (GameLeve)levelVal;
-	}
+	//	//if(GlobalData.GetInstance().gameLeve == (GameLeve)levelVal)
+	//	//{
+	//	//	return;
+	//	//}
+	//	MaxLinkServerCount = Network.connections.Length;
+ //       NetworkServerNet.GetInstance().mRequestMasterServer.ResetIsClickConnect();
+	//	//GlobalData.GetInstance().gameLeve = (GameLeve)levelVal;
+	//	//Debug.Log("SendLoadLevel -> levelVal = " + (GameLeve)levelVal);
+
+	//	if (Network.peerType != NetworkPeerType.Disconnected)
+ //       {
+	//		mNetViewCom.RPC("SendLoadLevelMsgToOthers", RPCMode.OthersBuffered, levelVal);
+	//	}
+	//}
+
+	//[RPC]
+	//void SendLoadLevelMsgToOthers(int levelVal)
+	//{
+	//	//if(GlobalData.GetInstance().gameLeve == (GameLeve)levelVal)
+	//	//{
+	//	//	return;
+	//	//}
+	//	//Debug.Log("SendLoadLevelMsgToOthers *********** levelVal " + (GameLeve)levelVal);
+	//	MaxLinkServerCount = Network.connections.Length;
+	//	NetworkServerNet.GetInstance().mRequestMasterServer.ResetIsClickConnect();
+	//	//Toubi.GetInstance().MakeGameIntoWaterwheelNet();
+
+	//	//GlobalData.GetInstance().gameLeve = (GameLeve)levelVal;
+	//}
 
 	public void SetSpawnPlayerIndex(NetworkPlayer playerNet, int index)
 	{

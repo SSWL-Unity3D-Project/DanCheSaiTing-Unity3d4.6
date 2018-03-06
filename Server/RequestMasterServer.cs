@@ -23,7 +23,7 @@ public class RequestMasterServer : MonoBehaviour
         Scene01_Net = 2,
         SetPanel = 3
     }
-    bool IsClickConnect;
+    bool IsClickConnectServer;
     /// <summary>
     /// 循环动画场景中主服务器的注解.
     /// </summary>
@@ -76,15 +76,10 @@ public class RequestMasterServer : MonoBehaviour
     }
 
     float RandConnectTime = Random.Range(3f, 10f);
-    public static float TimeConnectServer = 0f;
+    float TimeConnectServer = 0f;
     void OnGUI()
     {
-        //GameScene levelVal = (GameScene)Application.loadedLevel;
-        //GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
-        GameScene levelVal = GameScene.Movie;
         HostData[] data = MasterServer.PollHostList();
-
-        // Go through all the hosts in the host list
         foreach (var element in data)
         {
 #if SHOW_NET_INFO
@@ -105,89 +100,87 @@ public class RequestMasterServer : MonoBehaviour
             GUILayout.Space(5);
             GUILayout.FlexibleSpace();
 #endif
-
-            //if (element.comment == MasterServerGameNetComment
-            //    && ServerIp == element.ip[0]
-            //    && Toubi.GetInstance() != null
-            //    && !Toubi.GetInstance().IsIntoPlayGame)
-            //{
-            //    Toubi.GetInstance().IsIntoPlayGame = true;
-            //}
-
-            if (Network.peerType == NetworkPeerType.Disconnected)
+            
+            if (Network.peerType == NetworkPeerType.Disconnected && IsNetScene)
             {
-                if (!IsClickConnect)
+                if (!IsClickConnectServer)
                 {
                     bool isConnectServer = false;
-                    if (levelVal == GameScene.Scene01_Net
+                    if (NetworkServerNet.GetInstance().mNetworkRootGame != null
                           && element.comment == MasterServerGameNetComment
                           && element.ip[0] != Network.player.ipAddress
                           && ServerIp == element.ip[0])
                     {
+                        //游戏场景中.
                         if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
                         {
                             isConnectServer = true;
                             TimeConnectServer = Time.realtimeSinceStartup;
-                            RandConnectTime = Random.Range(3f, 10f);
+                            RandConnectTime = (Random.Range(0, 100) % 5) + 3f;
                         }
                     }
-                    //else if (levelVal == GameScene.Movie
-                    //             && element.comment == MasterServerMovieComment
-                    //             && element.ip[0] != Network.player.ipAddress
-                    //             && element.connectedPlayers < element.playerLimit
-                    //             && Toubi.GetInstance() != null
-                    //             && Toubi.GetInstance().CheckIsLoopWait())
-                    //{
 
-                    //    if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
-                    //    {
-                    //        isConnectServer = true;
-                    //        TimeConnectServer = Time.realtimeSinceStartup;
-                    //        RandConnectTime = Random.Range(3f, 10f);
-                    //    }
-                    //}
+                    if (NetworkRootMovie.GetInstance() != null
+                        && NetworkRootMovie.GetInstance().ePlayerSelectGameMode == NetworkRootMovie.GameMode.Link
+                        && element.comment == MasterServerMovieComment
+                        && element.ip[0] != Network.player.ipAddress
+                        && element.connectedPlayers < element.playerLimit)
+                    {
+                        //循环动画场景中.
+                        if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
+                        {
+                            isConnectServer = true;
+                            TimeConnectServer = Time.realtimeSinceStartup;
+                            RandConnectTime = (Random.Range(0, 100) % 5) + 3f;
+                        }
+                    }
 
                     if (isConnectServer)
                     {
-                        // Connect to HostData struct, internally the correct method is used (GUID when using NAT).
-                        Network.RemoveRPCs(Network.player);
-                        Network.DestroyPlayerObjects(Network.player);
+                        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+                        {
+                            Network.RemoveRPCs(Network.player);
+                            Network.DestroyPlayerObjects(Network.player);
+                        }
 
                         MasterServer.dedicatedServer = false;
                         Network.Connect(element);
-                        IsClickConnect = true;
-                        if (levelVal == GameScene.Movie)
+                        IsClickConnectServer = true;
+                        if (NetworkRootMovie.GetInstance() != null)
                         {
+                            //循环动画场景中.
                             ServerIp = element.ip[0];
                             TimeConnect = 0f;
                         }
-                        Debug.Log("Connect element.ip -> " + element.ip[0]
-                                  + ", element.comment " + element.comment
-                                  + ", gameLeve " + levelVal
+                        Debug.Log("Connect ip -> " + element.ip[0]
+                                  + ", comment " + element.comment
                                   + ", time " + Time.realtimeSinceStartup.ToString("f2"));
                     }
                 }
                 else
                 {
-                    if (levelVal == GameScene.Scene01_Net)
+                    if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
                     {
+                        //游戏场景中.
                         if (element.comment == MasterServerGameNetComment && ServerIp == element.ip[0])
                         {
                             TimeConnect += Time.deltaTime;
                             if (TimeConnect >= 2f)
                             {
                                 TimeConnect = 0f;
-                                IsClickConnect = false;
+                                IsClickConnectServer = false;
                             }
                         }
                     }
-                    else if (levelVal == GameScene.Movie)
+
+                    if (NetworkRootMovie.GetInstance() != null)
                     {
+                        //循环动画场景中.
                         TimeConnect += Time.deltaTime;
                         if (TimeConnect >= 2f)
                         {
                             TimeConnect = 0f;
-                            IsClickConnect = false;
+                            IsClickConnectServer = false;
                             Debug.Log("reconnect masterServer...");
                         }
                     }
@@ -201,7 +194,7 @@ public class RequestMasterServer : MonoBehaviour
 
     public void ResetIsClickConnect()
     {
-        IsClickConnect = false;
+        IsClickConnectServer = false;
     }
 
     public void SetMasterServerIp(string ip)
@@ -288,48 +281,43 @@ public class RequestMasterServer : MonoBehaviour
             isCreatMasterServer = false;
         }
 
-        //GameScene levelVal = (GameScene)Application.loadedLevel;
-        //GameScene levelVal = (GameScene)GlobalData.GetInstance().gameLeve;
-        //if (levelVal == GameScene.Scene01 || levelVal == GameScene.SetPanel)
-        //{
-        //    //不需要网络链接的游戏场景.
-        //    isCreatMasterServer = false;
-        //}
-
         switch (Network.peerType)
         {
             case NetworkPeerType.Disconnected:
-                if (isCreatMasterServer)
                 {
-                    //if (NetworkRootMovie.GetInstance() != null)
-                    //{
+                    if (isCreatMasterServer)
+                    {
+                        //if (NetworkRootMovie.GetInstance() != null)
+                        //{
                         //if ((Toubi.GetInstance() != null && !Toubi.GetInstance().CheckIsLoopWait())
                         //    || Toubi.GetInstance() == null)
                         //{
                         //    return;
                         //}
-                    //    ServerIp = "";
-                    //}
-                     NetworkServerNet.GetInstance().InitCreateServer();
+                        //    ServerIp = "";
+                        //}
+                        NetworkServerNet.GetInstance().InitCreateServer();
+                    }
+                    break;
                 }
-                break;
-
             case NetworkPeerType.Server:
-                if (!isCreatMasterServer)
                 {
-                    NetworkServerNet.GetInstance().RemoveMasterServerHost();
-                }
-                else
-                {
-                    //if (levelVal == GameScene.Movie)
-                    //{
+                    if (!isCreatMasterServer)
+                    {
+                        NetworkServerNet.GetInstance().RemoveMasterServerHost();
+                    }
+                    else
+                    {
+                        //if (levelVal == GameScene.Movie)
+                        //{
                         //if (Toubi.GetInstance() != null && !Toubi.GetInstance().CheckIsLoopWait())
                         //{
                         //    NetworkServerNet.GetInstance().ResetMasterServerHost();
                         //}
-                    //}
+                        //}
+                    }
+                    break;
                 }
-                break;
         }
     }
 
@@ -346,13 +334,13 @@ public class RequestMasterServer : MonoBehaviour
         //Debug.Log("OnMasterServerEvent: " + msEvent + ", time " + Time.time);
         if (msEvent == MasterServerEvent.RegistrationSucceeded)
         {
-            Debug.Log("MasterServer registered, GameLevel " + (GameScene)Application.loadedLevel);
-            if (NetworkRootMovie.GetInstance() != null)
-            {
-                //只在循环动画场景执行!
-                //ServerLinkInfo.GetInstance().HiddenServerLinkInfo();
-                NetworkRootMovie.GetInstance().CreateNetworkRpc();
-            }
+            Debug.Log("MasterServer registered, GameLevel " + Application.loadedLevel);
+            //if (NetworkRootMovie.GetInstance() != null)
+            //{
+            //    //只在循环动画场景执行!
+            //    //ServerLinkInfo.GetInstance().HiddenServerLinkInfo();
+            //    NetworkRootMovie.GetInstance().CreateNetworkRpc();
+            //}
         }
     }
 

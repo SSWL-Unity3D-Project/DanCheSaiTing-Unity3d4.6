@@ -319,7 +319,8 @@ public class UIController : MonoBehaviour
 		}
 		IsLoadMovie = true;
         
-        if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+        //if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+        if (Network.peerType == NetworkPeerType.Server)
         {
             SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
             NetworkServerNet.GetInstance().RemoveMasterServerHost();

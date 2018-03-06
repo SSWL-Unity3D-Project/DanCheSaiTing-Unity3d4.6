@@ -10,7 +10,23 @@ public class NetworkRootMovie : MonoBehaviour
         NoLink, //单机
         Link,   //联机
     }
+    /// <summary>
+    /// 游戏设置为单机/联机版本.
+    /// </summary>
     public GameNetType eNetState = GameNetType.NoLink;
+
+    public enum GameMode
+    {
+        Null,
+        Link,    //联机
+        NoLink,  //单机
+    }
+    /// <summary>
+    /// 玩家选择的游戏模式(单机/联机).
+    /// </summary>
+    [HideInInspector]
+    public GameMode ePlayerSelectGameMode = GameMode.Null;
+
     /// <summary>
     /// 玩家当前的联机游戏状态.
     /// </summary>

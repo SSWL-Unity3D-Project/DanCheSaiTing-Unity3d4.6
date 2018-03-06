@@ -14,6 +14,7 @@ public class NetworkServerNet : MonoBehaviour
     private int mPort = 23465;
     bool IsTryToLinkServer = true;
     bool IsCreateServer = true;
+    public NetworkRootGame mNetworkRootGame;
     /// <summary>
     /// 链接到服务器的玩家数量.
     /// </summary>
@@ -120,10 +121,10 @@ public class NetworkServerNet : MonoBehaviour
         //}
 
         yield break;
-        while (true)
-        {
-            Debug.Log("CheckConnectToServer...");
-            break;
+        //while (true)
+        //{
+        //    Debug.Log("CheckConnectToServer...");
+        //    break;
             //Debug.Log("loadedLevel " + Application.loadedLevel + ", IsIntoPlayGame " + Toubi.GetInstance().IsIntoPlayGame);
             //if (Application.loadedLevel == (int)GameLeve.WaterwheelNet)
             //{
@@ -139,15 +140,15 @@ public class NetworkServerNet : MonoBehaviour
             //    //}
             //    yield return new WaitForSeconds(0.5f);
             //}
-        }
+        //}
 
         //if (NetworkRpcMsgCtrl.GetInstance() != null)
         //{
         //    NetworkRpcMsgCtrl.GetInstance().RemoveSelf();
         //}
 
-        int playerIndex = IndexSpawnPlayer;
-        Debug.Log("CheckConnectToServer::playerIndex " + playerIndex);
+        //int playerIndex = IndexSpawnPlayer;
+        //Debug.Log("CheckConnectToServer::playerIndex " + playerIndex);
 
         //创建玩家.
         //GameObject obj = GameNetCtrlXK.GetInstance().PlayerObj[playerIndex];
@@ -183,6 +184,7 @@ public class NetworkServerNet : MonoBehaviour
         {
             //循环动画场景.
             LinkServerCount = 0; //初始化.
+            NetworkRootMovie.GetInstance().CreateNetworkRpc();
         }
 
         if (NetworkEvent.GetInstance() != null)
@@ -312,24 +314,32 @@ public class NetworkServerNet : MonoBehaviour
 
     void OnDisconnectedFromServer(NetworkDisconnection info)
     {
-        if (Network.isServer)
+        Debug.Log("OnDisconnectedFromServer -> info is " + info + ", peerType " + Network.peerType);
+        switch (info)
         {
-            Debug.Log("Local server connection disconnected");
+            case NetworkDisconnection.Disconnected:
+                {
+                    //if (Network.peerType == NetworkPeerType.Client)
+                    //{
+                    //    RemoveMasterServerHost();
+                    //}
+                    break;
+                }
         }
-        else if (info == NetworkDisconnection.LostConnection)
-        {
-            Debug.Log("Lost connection to the server");
-        }
-        else
-        {
-            Debug.Log("Successfully diconnected from the server");
-            RequestMasterServer.TimeConnectServer = Time.realtimeSinceStartup;
+        //if (Network.isServer)
+        //{
+        //    Debug.Log("Local server connection disconnected");
+        //}
+        //else
+        //{
+        //    Debug.Log("Successfully diconnected from the server");
+            //RequestMasterServer.TimeConnectServer = Time.realtimeSinceStartup;
             //if (GlobalData.GetInstance().gameMode == GameMode.OnlineMode
             //    && Toubi.GetInstance() != null && !Toubi.GetInstance().IsIntoPlayGame)
             //{
             //    Toubi.GetInstance().IsIntoPlayGame = true;
             //}
-        }
+        //}
     }
 
     public void InitTryToLinkServer()
@@ -392,77 +402,90 @@ public class NetworkServerNet : MonoBehaviour
         }
     }
 
-    void RemoveAllClientRPC()
-    {
-        if (!Network.isServer)
-        {
-            return;
-        }
+    //void RemoveAllClientRPC()
+    //{
+    //    if (!Network.isServer)
+    //    {
+    //        return;
+    //    }
 
-        int max = Network.connections.Length;
-        if (max > 0)
-        {
-            NetworkPlayer[] netPlayerArray = new NetworkPlayer[max];
-            for (int i = 0; i < max; i++)
-            {
-                Network.CloseConnection(netPlayerArray[i], true);
-            }
-        }
-    }
+    //    int max = Network.connections.Length;
+    //    if (max > 0)
+    //    {
+    //        NetworkPlayer[] netPlayerArray = new NetworkPlayer[max];
+    //        for (int i = 0; i < max; i++)
+    //        {
+    //            Network.CloseConnection(netPlayerArray[i], true);
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// 删除当前主服务器.
     /// </summary>
     public void RemoveMasterServerHost()
     {
-        if (Network.isServer)
+        if (Network.peerType == NetworkPeerType.Server)
         {
-            //RemoveAllClientRPC();
             RemoveAllRPC(Network.player);
+            Network.Disconnect(30);
+            MasterServer.UnregisterHost();
         }
-
-        Network.Disconnect(30);
-        MasterServer.UnregisterHost();
     }
 
-    void CloseMasterServerHost()
+    /// <summary>
+    /// 删除当前客户端.
+    /// </summary>
+    public void RemoveClientHost()
     {
-        MasterServer.dedicatedServer = false;
-    }
-
-    public void ResetMasterServerHostLoop()
-    {
-        if (Network.peerType != NetworkPeerType.Server)
+        if (Network.peerType == NetworkPeerType.Client)
         {
-            return;
-        }
-
-        if (Network.connections.Length > 0)
-        {
-            //Debug.Log("ResetMasterServerHostLoop**********");
-            Invoke("ResetMasterServerHostLoop", 1f);
-            return;
-        }
-        //返回循环动画场景.
-        Application.LoadLevel(0);
-        ResetMasterServerHost();
-    }
-
-    public void ResetMasterServerHost()
-    {
-        mRequestMasterServer.ResetIsClickConnect();
-        if (Network.peerType != NetworkPeerType.Server)
-        {
-            if (Network.peerType != NetworkPeerType.Disconnected)
+            if (NetworkRootMovie.GetInstance().mNetworkRpcMsgScript != null)
             {
-                Network.Disconnect(30);
+                NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.RemoveSelf();
             }
-            return;
+            Network.Disconnect();
         }
-
-        RemoveMasterServerHost();
-        CloseMasterServerHost();
     }
+
+    //void CloseMasterServerHost()
+    //{
+    //    MasterServer.dedicatedServer = false;
+    //}
+
+    //public void ResetMasterServerHostLoop()
+    //{
+    //    if (Network.peerType != NetworkPeerType.Server)
+    //    {
+    //        return;
+    //    }
+
+    //    if (Network.connections.Length > 0)
+    //    {
+    //        //Debug.Log("ResetMasterServerHostLoop**********");
+    //        Invoke("ResetMasterServerHostLoop", 1f);
+    //        return;
+    //    }
+    //    //返回循环动画场景.
+    //    Application.LoadLevel(0);
+    //    ResetMasterServerHost();
+    //}
+
+    //public void ResetMasterServerHost()
+    //{
+    //    mRequestMasterServer.ResetIsClickConnect();
+    //    if (Network.peerType != NetworkPeerType.Server)
+    //    {
+    //        if (Network.peerType != NetworkPeerType.Disconnected)
+    //        {
+    //            Network.Disconnect(30);
+    //        }
+    //        return;
+    //    }
+
+    //    RemoveMasterServerHost();
+    //    CloseMasterServerHost();
+    //}
 
     void TryToCreateServer()
     {
@@ -478,7 +501,7 @@ public class NetworkServerNet : MonoBehaviour
         //}
 
         ScreenLog.Log("start create server, time " + Time.time);
-        Network.InitializeServer(7, mPort, true);
+        Network.InitializeServer(3, mPort, true);
 
         //		Debug.Log("masterServer.ip " + MasterServer.ipAddress + ", port " + MasterServer.port
         //		          + ", updateRate " + MasterServer.updateRate);

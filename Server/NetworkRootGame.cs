@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// 游戏场景中的网络控制脚本.
+/// </summary>
 public class NetworkRootGame : MonoBehaviour
 {
     /// <summary>

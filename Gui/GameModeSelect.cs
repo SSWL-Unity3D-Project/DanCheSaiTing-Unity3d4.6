@@ -2,14 +2,8 @@
 
 public class GameModeSelect : MonoBehaviour
 {
-    public enum GameMode
-    {
-        Null,
-        Link,
-        NoLink,
-    }
     [HideInInspector]
-    public GameMode eGameMode = GameMode.Null;
+    public NetworkRootMovie.GameMode eGameMode = NetworkRootMovie.GameMode.Null;
     /// <summary>
     /// 联机模式UI动画.
     /// </summary>
@@ -31,26 +25,26 @@ public class GameModeSelect : MonoBehaviour
     void Update()
     {
         float steerVal = pcvr.GetInstance().mGetSteer;
-        if (steerVal > 0f && eGameMode != GameMode.NoLink)
+        if (steerVal > 0f && eGameMode != NetworkRootMovie.GameMode.NoLink)
         {
             Debug.Log("player select noLink...");
-            if (eGameMode == GameMode.Null)
+            if (eGameMode == NetworkRootMovie.GameMode.Null)
             {
                 SetActiveStartBt(true);
             }
-            eGameMode = GameMode.NoLink;
+            eGameMode = NetworkRootMovie.GameMode.NoLink;
             NoLinkAni.SetBool("IsPlay", true);
             LinkAni.SetBool("IsPlay", false);
         }
 
-        if (steerVal < 0f && eGameMode != GameMode.Link)
+        if (steerVal < 0f && eGameMode != NetworkRootMovie.GameMode.Link)
         {
             Debug.Log("player select Link...");
-            if (eGameMode == GameMode.Null)
+            if (eGameMode == NetworkRootMovie.GameMode.Null)
             {
                 SetActiveStartBt(true);
             }
-            eGameMode = GameMode.Link;
+            eGameMode = NetworkRootMovie.GameMode.Link;
             NoLinkAni.SetBool("IsPlay", false);
             LinkAni.SetBool("IsPlay", true);
         }

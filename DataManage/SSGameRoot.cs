@@ -14,14 +14,16 @@ public class SSGameRoot : MonoBehaviour
     /// <summary>
     /// 是否激活游戏UIRoot.
     /// </summary>
-    bool IsActiveGameUIRoot = false;
+    //bool IsActiveGameUIRoot = false;
     void Awake()
     {
-        SSGameCtrl.GetInstance().mSSGameRoot = this;
         Debug.Log("SSGameRoot::Awake -> peerType " + Network.peerType + ", eGameMode " + SSGameCtrl.GetInstance().eGameMode);
+        SSGameCtrl.GetInstance().mSSGameRoot = this;
+        NetworkServerNet.GetInstance().mNetworkRootGame = mNetworkRootGame;
+
         switch (SSGameCtrl.GetInstance().eGameMode)
         {
-            case GameModeSelect.GameMode.NoLink:
+            case NetworkRootMovie.GameMode.NoLink:
                 {
                     mSSGameDataManage.mGameData.SpawnPlayer(0);
                     mSSGameDataManage.mGameData.SpawnNpc(1);
@@ -29,18 +31,18 @@ public class SSGameRoot : MonoBehaviour
                     mSSGameDataManage.mGameData.SpawnNpc(3);
                     break;
                 }
-            case GameModeSelect.GameMode.Link:
+            case NetworkRootMovie.GameMode.Link:
                 {
                     mUIController.SetActiveUIRoot(false);
-                    IsActiveGameUIRoot = false;
+                    //IsActiveGameUIRoot = false;
                     break;
                 }
         }
         NetworkEvent.GetInstance().OnServerInitializedEvent += OnServerInitializedEvent;
     }
 
-    void Update()
-    {
+    //void Update()
+    //{
         //if (SSGameCtrl.GetInstance().eGameMode == GameModeSelect.GameMode.Link)
         //{
         //    if (Time.frameCount % 30 == 0)
@@ -55,7 +57,7 @@ public class SSGameRoot : MonoBehaviour
         //        }
         //    }
         //}
-    }
+    //}
     
     /// <summary>
     /// 游戏场景里服务器被初始化.
