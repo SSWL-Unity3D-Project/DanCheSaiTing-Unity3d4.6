@@ -6,8 +6,8 @@ using UnityEngine;
 public class NetworkRpcMsgCtrl : MonoBehaviour
 {
 	NetworkView mNetViewCom;
-	public static int MaxLinkServerCount = 100;
-	public static int NoLinkClientCount = 10;
+	//public static int MaxLinkServerCount = 100;
+	//public static int NoLinkClientCount = 10;
 
 	public void Init()
     {
@@ -27,16 +27,11 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
             return;
         }
 
+		Debug.Log("NetworkRpcMsgCtrl::RemoveSelf...");
         if (Network.peerType == NetworkPeerType.Client)
         {
             Destroy(gameObject);
         }
-		//if (gameObject == null)
-  //      {
-		//	return;
-		//}
-		//Network.Destroy(gameObject);
-		Debug.Log("NetworkRpcMsgCtrl::RemoveSelf...");
 	}
 
 	//public void SendLoadLevel(int levelVal)

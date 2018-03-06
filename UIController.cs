@@ -318,8 +318,13 @@ public class UIController : MonoBehaviour
 			return;		
 		}
 		IsLoadMovie = true;
-        
-        //if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+
+        if (Network.peerType == NetworkPeerType.Client)
+        {
+            SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
+            NetworkServerNet.GetInstance().RemoveClientHost();
+        }
+
         if (Network.peerType == NetworkPeerType.Server)
         {
             SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;

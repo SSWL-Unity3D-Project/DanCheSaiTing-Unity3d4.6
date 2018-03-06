@@ -319,10 +319,10 @@ public class NetworkServerNet : MonoBehaviour
         {
             case NetworkDisconnection.Disconnected:
                 {
-                    //if (Network.peerType == NetworkPeerType.Client)
-                    //{
-                    //    RemoveMasterServerHost();
-                    //}
+                    if (Network.peerType == NetworkPeerType.Client)
+                    {
+                        RemoveClientHost(NetworkDisconnection.Disconnected);
+                    }
                     break;
                 }
         }
@@ -436,7 +436,7 @@ public class NetworkServerNet : MonoBehaviour
     /// <summary>
     /// 删除当前客户端.
     /// </summary>
-    public void RemoveClientHost()
+    public void RemoveClientHost(NetworkDisconnection info = NetworkDisconnection.LostConnection)
     {
         if (Network.peerType == NetworkPeerType.Client)
         {
@@ -444,7 +444,11 @@ public class NetworkServerNet : MonoBehaviour
             {
                 NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.RemoveSelf();
             }
-            Network.Disconnect();
+
+            if (info == NetworkDisconnection.LostConnection)
+            {
+                Network.Disconnect();
+            }
         }
     }
 

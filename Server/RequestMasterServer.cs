@@ -154,7 +154,7 @@ public class RequestMasterServer : MonoBehaviour
                         }
                         Debug.Log("Connect ip -> " + element.ip[0]
                                   + ", comment " + element.comment
-                                  + ", time " + Time.realtimeSinceStartup.ToString("f2"));
+                                  + ", time " + Time.time.ToString("f2"));
                     }
                 }
                 else
@@ -181,7 +181,6 @@ public class RequestMasterServer : MonoBehaviour
                         {
                             TimeConnect = 0f;
                             IsClickConnectServer = false;
-                            Debug.Log("reconnect masterServer...");
                         }
                     }
                 }
