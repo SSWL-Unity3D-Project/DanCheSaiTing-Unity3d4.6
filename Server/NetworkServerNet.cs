@@ -14,6 +14,9 @@ public class NetworkServerNet : MonoBehaviour
     private int mPort = 23465;
     bool IsTryToLinkServer = true;
     bool IsCreateServer = true;
+    /// <summary>
+    /// 游戏场景中网络root脚本.
+    /// </summary>
     public NetworkRootGame mNetworkRootGame;
     /// <summary>
     /// 链接到服务器的玩家数量.
@@ -378,10 +381,10 @@ public class NetworkServerNet : MonoBehaviour
         }
         else
         {
-            //非循环动画场景直接创建服务器.
-            if (SSGameCtrl.GetInstance().mSSGameRoot != null)
+            if (mNetworkRootGame != null)
             {
-                if (SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState == PlayerGameNetType.Null)
+                //非循环动画场景直接创建服务器.
+                if (mNetworkRootGame.ePlayerGameNetState == PlayerGameNetType.Null)
                 {
                     IsCreateServer = false;
                 }

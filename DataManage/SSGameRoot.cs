@@ -5,7 +5,13 @@
 /// </summary>
 public class SSGameRoot : MonoBehaviour
 {
+    /// <summary>
+    /// 游戏中网络root脚本.
+    /// </summary>
     public NetworkRootGame mNetworkRootGame;
+    /// <summary>
+    /// 游戏中数据管理脚本.
+    /// </summary>
     public SSGameDataManage mSSGameDataManage;
     /// <summary>
     /// 游戏UI总控.

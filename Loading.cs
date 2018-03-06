@@ -424,6 +424,14 @@ public class Loading : SSUiRoot
     void OnRpcSendLoadLevelMsgEvent(int level)
     {
         Debug.Log("Loading::OnRpcSendLoadLevelMsgEvent -> level == " + level);
+        StartCoroutine(OnNetCallPlayerIntoGame(level));
+    }
+
+    IEnumerator OnNetCallPlayerIntoGame(int level)
+    {
+        float timeVal = Network.peerType == NetworkPeerType.Server ? 3f : 0f;
+        yield return new WaitForSeconds(timeVal);
+        
         if (m_IsBeginOk && !m_HasBegin)
         {
             //开始联机游戏.
@@ -436,7 +444,16 @@ public class Loading : SSUiRoot
             {
                 NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.GameNet);
             }
-            NetworkServerNet.GetInstance().RemoveMasterServerHost();
+
+            if (Network.peerType == NetworkPeerType.Server)
+            {
+                NetworkServerNet.GetInstance().RemoveMasterServerHost();
+            }
+
+            if (Network.peerType == NetworkPeerType.Client)
+            {
+                NetworkServerNet.GetInstance().RemoveClientHost();
+            }
 
             m_BeginSource.Play();
             m_Loading.SetActive(true);

@@ -321,13 +321,19 @@ public class UIController : MonoBehaviour
 
         if (Network.peerType == NetworkPeerType.Client)
         {
-            SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
+            if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
+            {
+                NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
+            }
             NetworkServerNet.GetInstance().RemoveClientHost();
         }
 
         if (Network.peerType == NetworkPeerType.Server)
         {
-            SSGameCtrl.GetInstance().mSSGameRoot.mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
+            if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
+            {
+                NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
+            }
             NetworkServerNet.GetInstance().RemoveMasterServerHost();
         }
         StartCoroutine(CheckUnloadUnusedAssets());
