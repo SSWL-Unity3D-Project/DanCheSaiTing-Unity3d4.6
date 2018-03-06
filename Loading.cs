@@ -443,16 +443,17 @@ public class Loading : SSUiRoot
             if (NetworkServerNet.GetInstance() != null)
             {
                 NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.GameNet);
-            }
+                if (Network.peerType == NetworkPeerType.Server)
+                {
+                    NetworkServerNet.GetInstance().ePlayerPortState = NetworkServerNet.PlayerPortType.Server;
+                    NetworkServerNet.GetInstance().RemoveMasterServerHost();
+                }
 
-            if (Network.peerType == NetworkPeerType.Server)
-            {
-                NetworkServerNet.GetInstance().RemoveMasterServerHost();
-            }
-
-            if (Network.peerType == NetworkPeerType.Client)
-            {
-                NetworkServerNet.GetInstance().RemoveClientHost();
+                if (Network.peerType == NetworkPeerType.Client)
+                {
+                    NetworkServerNet.GetInstance().ePlayerPortState = NetworkServerNet.PlayerPortType.Client;
+                    NetworkServerNet.GetInstance().RemoveClientHost();
+                }
             }
 
             m_BeginSource.Play();

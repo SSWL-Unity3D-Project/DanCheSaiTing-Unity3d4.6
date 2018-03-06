@@ -3,6 +3,17 @@ using System.Collections;
 
 public class NetworkServerNet : MonoBehaviour
 {
+    public enum PlayerPortType
+    {
+        Null,
+        Client, //客户端.
+        Server, //服务端.
+    }
+    /// <summary>
+    /// 玩家在联机游戏中的状态.
+    /// </summary>
+    public PlayerPortType ePlayerPortState = PlayerPortType.Null;
+
     public enum PlayerGameNetType
     {
         Null,
@@ -57,12 +68,6 @@ public class NetworkServerNet : MonoBehaviour
 
     void Init()
     {
-        //if (GameMovieCtrl.GetInstance() != null
-        //    && GameMovieCtrl.GetInstance().GameLinkSt == GameMovieCtrl.GameLinkEnum.NO_LINK)
-        //{
-        //    return;
-        //}
-        
         if (!pcvr.bIsHardWare)
         {
             MasterServerIp = HandleJson.GetInstance().ReadFromFilePathXml(MasterServerIpFile, "MasterServerIp");
@@ -87,6 +92,14 @@ public class NetworkServerNet : MonoBehaviour
         {
             mRequestMasterServer.Init();
         }
+    }
+
+    /// <summary>
+    /// 重置信息.
+    /// </summary>
+    public void ResetInfo()
+    {
+        ePlayerPortState = PlayerPortType.Null;
     }
 
     void Update()
@@ -384,7 +397,7 @@ public class NetworkServerNet : MonoBehaviour
             if (mNetworkRootGame != null)
             {
                 //非循环动画场景直接创建服务器.
-                if (mNetworkRootGame.ePlayerGameNetState == PlayerGameNetType.Null)
+                if (mNetworkRootGame.ePlayerGameNetState == PlayerGameNetType.Null && ePlayerPortState == PlayerPortType.Server)
                 {
                     IsCreateServer = false;
                 }

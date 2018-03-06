@@ -52,7 +52,8 @@ public class NetworkRootMovie : MonoBehaviour
         _Instance = this;
         if (eNetState == GameNetType.Link)
         {
-            NetworkServerNet.GetInstance();
+            //创建并且重置NetworkServerNet.
+            NetworkServerNet.GetInstance().ResetInfo();
         }
     }
 

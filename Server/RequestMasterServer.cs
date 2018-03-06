@@ -107,9 +107,10 @@ public class RequestMasterServer : MonoBehaviour
                 {
                     bool isConnectServer = false;
                     if (NetworkServerNet.GetInstance().mNetworkRootGame != null
-                          && element.comment == MasterServerGameNetComment
-                          && element.ip[0] != Network.player.ipAddress
-                          && ServerIp == element.ip[0])
+                        && NetworkServerNet.GetInstance().ePlayerPortState == NetworkServerNet.PlayerPortType.Client
+                        && element.comment == MasterServerGameNetComment
+                        && element.ip[0] != Network.player.ipAddress
+                        && ServerIp == element.ip[0])
                     {
                         //游戏场景中.
                         if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
@@ -139,6 +140,7 @@ public class RequestMasterServer : MonoBehaviour
                     {
                         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
                         {
+                            //清理网络垃圾信息.
                             Network.RemoveRPCs(Network.player);
                             Network.DestroyPlayerObjects(Network.player);
                         }
@@ -199,6 +201,7 @@ public class RequestMasterServer : MonoBehaviour
     public void SetMasterServerIp(string ip)
     {
         ServerIp = ip;
+        Debug.Log("SetMasterServerIp -> ServerIp == " + ServerIp);
     }
 
     /// <summary>
