@@ -200,8 +200,11 @@ public class RequestMasterServer : MonoBehaviour
 
     public void SetMasterServerIp(string ip)
     {
-        ServerIp = ip;
-        Debug.Log("SetMasterServerIp -> ServerIp == " + ServerIp);
+        if (ServerIp != ip)
+        {
+            ServerIp = ip;
+            Debug.Log("SetMasterServerIp -> ServerIp == " + ServerIp);
+        }
     }
 
     /// <summary>
