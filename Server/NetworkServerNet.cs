@@ -351,6 +351,9 @@ public class NetworkServerNet : MonoBehaviour
         IsTryToLinkServer = false;
     }
 
+    /// <summary>
+    /// 初始化创建主服务器.
+    /// </summary>
     public void InitCreateServer()
     {
         if (NetworkRootMovie.GetInstance() != null)

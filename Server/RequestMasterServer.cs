@@ -286,15 +286,15 @@ public class RequestMasterServer : MonoBehaviour
                 {
                     if (isCreatMasterServer)
                     {
-                        //if (NetworkRootMovie.GetInstance() != null)
-                        //{
-                        //if ((Toubi.GetInstance() != null && !Toubi.GetInstance().CheckIsLoopWait())
-                        //    || Toubi.GetInstance() == null)
-                        //{
-                        //    return;
-                        //}
-                        //    ServerIp = "";
-                        //}
+                        if (NetworkRootMovie.GetInstance() != null)
+                        {
+                            //循环动画场景.
+                            if (NetworkRootMovie.GetInstance().ePlayerSelectGameMode != NetworkRootMovie.GameMode.Link)
+                            {
+                                //只有当玩家选择了联机游戏时,才允许创建主服务器.
+                                return;
+                            }
+                        }
                         NetworkServerNet.GetInstance().InitCreateServer();
                     }
                     break;
