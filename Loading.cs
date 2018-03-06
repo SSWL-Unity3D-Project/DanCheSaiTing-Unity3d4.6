@@ -430,14 +430,14 @@ public class Loading : SSUiRoot
     IEnumerator OnNetCallPlayerIntoGame(int level)
     {
         float timeVal = Network.peerType == NetworkPeerType.Server ? 3f : 0f;
+        LoadSceneCount = level;
+        mGameLinkPlayer.OnClickStartBt();
         yield return new WaitForSeconds(timeVal);
         
         if (m_IsBeginOk && !m_HasBegin)
         {
             //开始联机游戏.
             Debug.Log("Start link game...");
-            LoadSceneCount = level;
-            mGameLinkPlayer.OnClickStartBt();
             SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.Link;
             NetworkRootMovie.GetInstance().ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.MovieIntoGame;
             if (NetworkServerNet.GetInstance() != null)
