@@ -45,6 +45,8 @@ public class SSGameRoot : MonoBehaviour
                 }
         }
         NetworkEvent.GetInstance().OnServerInitializedEvent += OnServerInitializedEvent;
+        NetworkEvent.GetInstance().OnPlayerConnectedEvent += OnPlayerConnectedEvent;
+        NetworkEvent.GetInstance().OnConnectedToServerEvent += OnConnectedToServerEvent;
     }
 
     //void Update()
@@ -71,7 +73,7 @@ public class SSGameRoot : MonoBehaviour
     void OnServerInitializedEvent()
     {
         Debug.Log("SSGameRoot::OnServerInitializedEvent -> creat server player...");
-        if (NetworkServerNet.GetInstance().LinkServerCount <= 0)
+        if (NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
         {
             //没有其他玩家链接服务器.
             mSSGameDataManage.mGameData.SpawnPlayer(0);
@@ -80,5 +82,38 @@ public class SSGameRoot : MonoBehaviour
             mSSGameDataManage.mGameData.SpawnNpc(3);
             mUIController.SetActiveUIRoot(true);
         }
+    }
+
+    /// <summary>
+    /// 有玩家链接到服务器(服务端消息).
+    /// </summary>
+    void OnPlayerConnectedEvent()
+    {
+        Debug.Log("SSGameRoot::OnPlayerConnectedEvent -> creat server player...");
+        int movieNum = NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie;
+        if (movieNum <= NetworkServerNet.GetInstance().LinkServerPlayerNum_Game)
+        {
+            //其他玩家全部链接到该服务器.
+            mSSGameDataManage.mGameData.SpawnPlayer(0);
+            //movieNum == 1 -- 2,3; movieNum == 2 -- 3; movieNum == 3 -- 不产生npc;
+            for (int i = 0; i < 4; i++)
+            {
+                if (i > movieNum)
+                {
+                    mSSGameDataManage.mGameData.SpawnNpc(i);
+                }
+            }
+            mUIController.SetActiveUIRoot(true);
+        }
+    }
+
+    /// <summary>
+    /// 玩家链接到服务器(客户端消息).
+    /// </summary>
+    void OnConnectedToServerEvent()
+    {
+        int indexVal = NetworkServerNet.GetInstance().IndexSpawnPlayer;
+        Debug.Log("SSGameRoot::OnConnectedToServerEvent -> creat client player, indexVal == " + indexVal);
+        mSSGameDataManage.mGameData.SpawnPlayer(indexVal);
     }
 }

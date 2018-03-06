@@ -29,6 +29,35 @@ public class NetworkEvent : MonoBehaviour
     }
 
     /// <summary>
+    /// 有玩家链接到服务器事件(服务端消息).
+    /// </summary>
+    public delegate void PlayerConnectedEvent();
+    public event PlayerConnectedEvent OnPlayerConnectedEvent;
+    public void OnPlayerConnectedTrigger()
+    {
+        Debug.Log("NetworkEvent::OnPlayerConnectedTrigger...");
+        if (OnPlayerConnectedEvent != null)
+        {
+            OnPlayerConnectedEvent();
+        }
+    }
+
+
+    /// <summary>
+    /// 玩家链接到服务器事件(客户端消息).
+    /// </summary>
+    public delegate void ConnectedToServerEvent();
+    public event ConnectedToServerEvent OnConnectedToServerEvent;
+    public void OnConnectedToServerTrigger()
+    {
+        Debug.Log("NetworkEvent::OnConnectedToServerTrigger...");
+        if (OnConnectedToServerEvent != null)
+        {
+            OnConnectedToServerEvent();
+        }
+    }
+
+    /// <summary>
     /// Rpc发送加载游戏关卡事件.
     /// </summary>
     public delegate void RpcSendLoadLevelMsgEvent(int level);

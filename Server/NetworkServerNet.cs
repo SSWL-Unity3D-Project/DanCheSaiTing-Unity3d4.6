@@ -30,10 +30,15 @@ public class NetworkServerNet : MonoBehaviour
     /// </summary>
     public NetworkRootGame mNetworkRootGame;
     /// <summary>
-    /// 链接到服务器的玩家数量.
+    /// 链接到服务器的玩家数量在循环动画场景中.
     /// </summary>
     [HideInInspector]
-    public int LinkServerCount;
+    public int LinkServerPlayerNum_Movie;
+    /// <summary>
+    /// 链接到服务器的玩家数量在游戏场景中.
+    /// </summary>
+    [HideInInspector]
+    public int LinkServerPlayerNum_Game;
     /// <summary>
     /// 玩家网络数据索引.
     /// </summary>
@@ -127,16 +132,17 @@ public class NetworkServerNet : MonoBehaviour
     public void SetIndexSpawnPlayer(int index)
     {
         IndexSpawnPlayer = index;
+        Debug.Log("SetIndexSpawnPlayer -> index == " + index);
     }
 
-    IEnumerator CheckConnectToServer()
-    {
+    //IEnumerator CheckConnectToServer()
+    //{
         //if (GlobalData.GetInstance().gameLeve != GameLeve.WaterwheelNet)
         //{
         //    yield break;
         //}
 
-        yield break;
+        //yield break;
         //while (true)
         //{
         //    Debug.Log("CheckConnectToServer...");
@@ -172,11 +178,16 @@ public class NetworkServerNet : MonoBehaviour
         //GameObject player = (GameObject)Network.Instantiate(obj, tran.position, tran.rotation, GlobalData.NetWorkGroup);
         //WaterwheelPlayerNetCtrl playerScript = player.GetComponent<WaterwheelPlayerNetCtrl>();
         //playerScript.SetIsHandlePlayer();
-    }
+    //}
 
     void OnConnectedToServer()
     {
         Debug.Log("OnConnectedToServer -> appLevel " + Application.loadedLevel);
+        if (mNetworkRootGame != null)
+        {
+            //游戏场景.
+            NetworkEvent.GetInstance().OnConnectedToServerTrigger();
+        }
 
         //if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet)
         //{
@@ -199,13 +210,14 @@ public class NetworkServerNet : MonoBehaviour
         if (NetworkRootMovie.GetInstance() != null)
         {
             //循环动画场景.
-            LinkServerCount = 0; //初始化.
+            LinkServerPlayerNum_Movie = 0; //初始化.
+            LinkServerPlayerNum_Game = 0;
             NetworkRootMovie.GetInstance().CreateNetworkRpc();
         }
 
-        if (NetworkEvent.GetInstance() != null)
+        if (mNetworkRootGame != null)
         {
-            //循环动画/游戏场景都会进入这里.
+            //游戏场景.
             SetIndexSpawnPlayer(0);
             NetworkEvent.GetInstance().OnServerInitializedTrigger();
         }
@@ -216,13 +228,13 @@ public class NetworkServerNet : MonoBehaviour
         //}
     }
 
-    IEnumerator CheckServerInitialized()
-    {
-        bool isCheck = true;
-        while (isCheck)
-        {
+    //IEnumerator CheckServerInitialized()
+    //{
+    //    bool isCheck = true;
+    //    while (isCheck)
+    //    {
 
-            yield return new WaitForSeconds(0.1f);
+    //        yield return new WaitForSeconds(0.1f);
             //if (Application.loadedLevel != (int)GameLeve.WaterwheelNet || Network.peerType == NetworkPeerType.Disconnected)
             //{
 
@@ -233,8 +245,8 @@ public class NetworkServerNet : MonoBehaviour
                 //}
             //    continue;
             //}
-            isCheck = false;
-        }
+        //    isCheck = false;
+        //}
 
         //if (NetworkRpcMsgCtrl.GetInstance() != null)
         //{
@@ -248,11 +260,11 @@ public class NetworkServerNet : MonoBehaviour
         //playerScript.SetIsHandlePlayer();
 
         //create AiPlayer
-        CreateAiPlayer();
-    }
+    //    CreateAiPlayer();
+    //}
 
-    void CreateAiPlayer()
-    {
+    //void CreateAiPlayer()
+    //{
         //if (LinkServerCount + RankingCtrl.ServerPlayerRankNum >= RankingCtrl.MaxPlayerRankNum)
         //{
         //    return;
@@ -276,26 +288,12 @@ public class NetworkServerNet : MonoBehaviour
         //    aiPosNum++;
         //}
         //LinkServerCount = 0;
-    }
+    //}
 
     void OnPlayerConnected(NetworkPlayer playerNet)
     {
         //CheckShowAllCamera();
-        ScreenLog.Log("NetworkServerNet::OnPlayerConnected -> ip " + playerNet.ipAddress
-                      + ", appGameLevel " + Application.loadedLevel);
-
-        //if (GlobalData.GetInstance().gameLeve == GameLeve.WaterwheelNet
-        //    && Application.loadedLevel == (int)GameLeve.WaterwheelNet)
-        //{
-
-        //    StartCoroutine(CheckOpenAllCamera());
-        //}
-        //else if (GlobalData.GetInstance().gameLeve == GameLeve.Movie)
-        //{
-        //    LinkServerCount = Network.connections.Length;
-        //    NetworkRpcMsgCtrl.GetInstance().SetSpawnClientIndex(playerNet, Network.connections.Length);
-        //}
-
+        ScreenLog.Log("NetworkServerNet::OnPlayerConnected -> ip " + playerNet.ipAddress + ", appGameLevel " + Application.loadedLevel);
         if (NetworkRootMovie.GetInstance() != null)
         {
             //循环动画场景.
@@ -303,24 +301,31 @@ public class NetworkServerNet : MonoBehaviour
             {
                 NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.NetSetSpawnPlayerIndex(playerNet, Network.connections.Length);
             }
-            LinkServerCount = Network.connections.Length;
+            LinkServerPlayerNum_Movie = Network.connections.Length;
+        }
+
+        if (mNetworkRootGame != null)
+        {
+            //游戏场景.
+            LinkServerPlayerNum_Game = Network.connections.Length;
+            NetworkEvent.GetInstance().OnPlayerConnectedTrigger();
         }
     }
 
-    IEnumerator CheckOpenAllCamera()
-    {
-        if (Network.isServer)
-        {
-            Debug.Log("CheckOpenAllCamera ***** over");
-            yield break;
-        }
+    //IEnumerator CheckOpenAllCamera()
+    //{
+    //    if (Network.isServer)
+    //    {
+    //        Debug.Log("CheckOpenAllCamera ***** over");
+    //        yield break;
+    //    }
 
         //while (WaterwheelPlayerNetCtrl.GetInstance() == null)
         //{
         //    yield return new WaitForSeconds(0.5f);
         //}
         //WaterwheelPlayerNetCtrl.GetInstance().CheckServerPortPlayerLoop();
-    }
+    //}
 
     void OnPlayerDisconnected(NetworkPlayer player)
     {

@@ -151,7 +151,7 @@ public class RequestMasterServer : MonoBehaviour
                         if (NetworkRootMovie.GetInstance() != null)
                         {
                             //循环动画场景中.
-                            ServerIp = element.ip[0];
+                            SetMasterServerIp(element.ip[0]);
                             TimeConnect = 0f;
                         }
                         Debug.Log("Connect ip -> " + element.ip[0]
