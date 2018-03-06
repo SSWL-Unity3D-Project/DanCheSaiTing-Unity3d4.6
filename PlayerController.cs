@@ -533,6 +533,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (timmerstar < 5f)
+        {
+            return;
+        }
+
         if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi)
         {
             return;
