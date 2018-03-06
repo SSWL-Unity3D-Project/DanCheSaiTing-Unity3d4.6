@@ -285,7 +285,7 @@ public class NetworkServerNet : MonoBehaviour
             //循环动画场景.
             if (NetworkRootMovie.GetInstance().mNetworkRpcMsgScript != null)
             {
-                NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.SetSpawnPlayerIndex(playerNet, Network.connections.Length);
+                NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.NetSetSpawnPlayerIndex(playerNet, Network.connections.Length);
             }
             LinkServerCount = Network.connections.Length;
         }
@@ -372,7 +372,7 @@ public class NetworkServerNet : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("InitCreateServer -> player into Game!");
+                Debug.Log("InitCreateServer -> player into Game!");
             }
             return;
         }

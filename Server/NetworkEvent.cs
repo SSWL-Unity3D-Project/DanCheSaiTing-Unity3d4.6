@@ -27,5 +27,19 @@ public class NetworkEvent : MonoBehaviour
             OnServerInitializedEvent();
         }
     }
+
+    /// <summary>
+    /// Rpc发送加载游戏关卡事件.
+    /// </summary>
+    public delegate void RpcSendLoadLevelMsgEvent(int level);
+    public event RpcSendLoadLevelMsgEvent OnRpcSendLoadLevelMsgEvent;
+    public void OnRpcSendLoadLevelMsgTrigger(int level)
+    {
+        Debug.Log("NetworkEvent::OnRpcSendLoadLevelMsgTrigger -> level == " + level);
+        if (OnRpcSendLoadLevelMsgEvent != null)
+        {
+            OnRpcSendLoadLevelMsgEvent(level);
+        }
+    }
     #endregion
 }

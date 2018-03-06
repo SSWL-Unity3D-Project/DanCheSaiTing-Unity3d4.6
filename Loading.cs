@@ -99,8 +99,10 @@ public class Loading : SSUiRoot
 
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickSetEnterBtEvent += ClickSetEnterBtEvent;
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
-	}
-	void Update ()
+        NetworkEvent.GetInstance().OnRpcSendLoadLevelMsgEvent += OnRpcSendLoadLevelMsgEvent;
+    }
+    
+    void Update ()
 	{
 		if (!m_IsStartGame) {
 			UpdateTex();
@@ -340,24 +342,8 @@ public class Loading : SSUiRoot
                             {
                                 if (mGameLinkPlayer.StartBtObj.activeInHierarchy)
                                 {
-                                    //开始联机游戏.
-                                    Debug.Log("Start link game...");
-                                    mGameLinkPlayer.OnClickStartBt();
-                                    SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.Link;
-                                    NetworkRootMovie.GetInstance().ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.MovieIntoGame;
-                                    if (NetworkServerNet.GetInstance() != null)
-                                    {
-                                        NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.GameNet);
-                                    }
-                                    NetworkServerNet.GetInstance().RemoveMasterServerHost();
-
-                                    if (m_IsBeginOk && !m_HasBegin)
-                                    {
-                                        m_BeginSource.Play();
-                                        m_Loading.SetActive(true);
-                                        timmerstar = true;
-                                        m_HasBegin = true;
-                                    }
+                                    //发送网络消息-开始联机游戏.
+                                    NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.NetSendLoadLevel(LoadSceneCount);
                                 }
                             }
                         }
@@ -430,5 +416,32 @@ public class Loading : SSUiRoot
         GameObject obj = (GameObject)Instantiate(LinkPlayerPrefab, mUICamera.transform);
         mGameLinkPlayer = obj.GetComponent<GameLinkPlayer>();
         mGameLinkPlayer.Init();
+    }
+
+    /// <summary>
+    /// 收到Rpc加载游戏场景消息.
+    /// </summary>
+    void OnRpcSendLoadLevelMsgEvent(int level)
+    {
+        Debug.Log("Loading::OnRpcSendLoadLevelMsgEvent -> level == " + level);
+        if (m_IsBeginOk && !m_HasBegin)
+        {
+            //开始联机游戏.
+            Debug.Log("Start link game...");
+            LoadSceneCount = level;
+            mGameLinkPlayer.OnClickStartBt();
+            SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.Link;
+            NetworkRootMovie.GetInstance().ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.MovieIntoGame;
+            if (NetworkServerNet.GetInstance() != null)
+            {
+                NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.GameNet);
+            }
+            NetworkServerNet.GetInstance().RemoveMasterServerHost();
+
+            m_BeginSource.Play();
+            m_Loading.SetActive(true);
+            timmerstar = true;
+            m_HasBegin = true;
+        }
     }
 }
