@@ -53,7 +53,7 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
     /// </summary>
     public void NetSetSpawnPlayerIndex(NetworkPlayer playerNet, int index)
 	{
-		if (Network.peerType != NetworkPeerType.Disconnected)
+		if (Network.peerType == NetworkPeerType.Server)
         {
 			mNetViewCom.RPC("RpcSendSpawnPlayerIndex", RPCMode.OthersBuffered, playerNet, index);
 		}

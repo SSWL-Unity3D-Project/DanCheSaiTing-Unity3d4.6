@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public bool IsNetControlPort = false;
+    public NetworkSynchronizeGame mNetSynGame;
     /// <summary>
     /// 潜艇/坦克对水粒子位置的信息.
     /// </summary>
@@ -448,6 +449,7 @@ public class PlayerController : MonoBehaviour
         m_UIController.m_Player = this;
         m_CameraSmooth.target = transform;
         mNetViewCom = GetComponent<NetworkView>();
+        mNetSynGame.Init(mNetViewCom);
     }
 
     /// <summary>
