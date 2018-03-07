@@ -12,6 +12,7 @@ public class NetworkServerNet : MonoBehaviour
     /// <summary>
     /// 玩家在联机游戏中的状态.
     /// </summary>
+    [HideInInspector]
     public PlayerPortType ePlayerPortState = PlayerPortType.Null;
 
     public enum PlayerGameNetType
@@ -207,6 +208,7 @@ public class NetworkServerNet : MonoBehaviour
     void OnServerInitialized()
     {
         Debug.Log("OnServerInitialized -> appLevel " + Application.loadedLevel);
+        IsCreateServer = true;
         if (NetworkRootMovie.GetInstance() != null)
         {
             //循环动画场景.
@@ -517,6 +519,38 @@ public class NetworkServerNet : MonoBehaviour
 
     void TryToCreateServer()
     {
+        if (NetworkRootMovie.GetInstance() != null)
+        {
+            //循环动画场景.
+            if (NetworkRootMovie.GetInstance().ePlayerSelectGameMode != NetworkRootMovie.GameMode.Link)
+            {
+                //只有当玩家选择了联机游戏时,才允许创建主服务器.
+                return;
+            }
+
+            if (NetworkRootMovie.GetInstance().ePlayerGameNetState == PlayerGameNetType.MovieIntoGame)
+            {
+                //如果循环动画正在加载游戏场景时,不允许创建服务器.
+                return;
+            }
+        }
+
+        if (mNetworkRootGame != null)
+        {
+            //游戏场景
+            if (mNetworkRootGame.ePlayerGameNetState == PlayerGameNetType.GameBackMovie)
+            {
+                //如果游戏场景正在加载循环动画时,不允许创建服务器.
+                return;
+            }
+
+            if (ePlayerPortState != PlayerPortType.Server)
+            {
+                //不是Server端的不允许创建服务器.
+                return;
+            }
+        }
+
         if (IsCreateServer)
         {
             return;
@@ -528,7 +562,8 @@ public class NetworkServerNet : MonoBehaviour
         //    return;
         //}
 
-        ScreenLog.Log("start create server, time " + Time.time);
+        ScreenLog.Log("start create server, time " + Time.time.ToString("f2") + ", ePlayerPortState " + ePlayerPortState
+            + ", level " + Application.loadedLevel);
         Network.InitializeServer(3, mPort, true);
 
         //		Debug.Log("masterServer.ip " + MasterServer.ipAddress + ", port " + MasterServer.port

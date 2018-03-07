@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 是否是网络控制端(只有网络控制端才有主动控制权限).
     /// </summary>
-    bool IsNetControlPort = false;
+    public bool IsNetControlPort = false;
     /// <summary>
     /// 潜艇/坦克对水粒子位置的信息.
     /// </summary>
@@ -466,6 +466,10 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
     {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
         InputEventCtrl.GetInstance().mListenPcInputEvent.ClickFireBtEvent += ClickFireBtEvent;
         InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
         m_PlayerAnimator = m_pChuan.GetComponent<Animator>();

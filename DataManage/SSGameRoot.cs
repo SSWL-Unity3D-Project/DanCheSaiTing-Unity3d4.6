@@ -89,10 +89,10 @@ public class SSGameRoot : MonoBehaviour
     /// </summary>
     void OnPlayerConnectedEvent()
     {
-        Debug.Log("SSGameRoot::OnPlayerConnectedEvent -> creat server player...");
         int movieNum = NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie;
         if (movieNum <= NetworkServerNet.GetInstance().LinkServerPlayerNum_Game)
         {
+            Debug.Log("SSGameRoot::OnPlayerConnectedEvent -> creat server player...");
             //其他玩家全部链接到该服务器.
             mSSGameDataManage.mGameData.SpawnPlayer(0);
             //movieNum == 1 -- 2,3; movieNum == 2 -- 3; movieNum == 3 -- 不产生npc;

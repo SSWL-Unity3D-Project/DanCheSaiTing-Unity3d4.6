@@ -113,11 +113,18 @@ public class RequestMasterServer : MonoBehaviour
                         && ServerIp == element.ip[0])
                     {
                         //游戏场景中.
-                        if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
+                        if (NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.GameBackMovie)
                         {
-                            isConnectServer = true;
-                            TimeConnectServer = Time.realtimeSinceStartup;
-                            RandConnectTime = (Random.Range(0, 100) % 5) + 3f;
+                            //如果游戏场景正在加载循环动画时,不允许链接服务器.
+                        }
+                        else
+                        {
+                            if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
+                            {
+                                isConnectServer = true;
+                                TimeConnectServer = Time.realtimeSinceStartup;
+                                RandConnectTime = (Random.Range(0, 100) % 5) + 3f;
+                            }
                         }
                     }
 
@@ -128,11 +135,18 @@ public class RequestMasterServer : MonoBehaviour
                         && element.connectedPlayers < element.playerLimit)
                     {
                         //循环动画场景中.
-                        if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
+                        if (NetworkRootMovie.GetInstance().ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.MovieIntoGame)
                         {
-                            isConnectServer = true;
-                            TimeConnectServer = Time.realtimeSinceStartup;
-                            RandConnectTime = (Random.Range(0, 100) % 5) + 3f;
+                            //如果循环动画正在加载游戏场景时,不允许链接服务器.
+                        }
+                        else
+                        {
+                            if (Time.realtimeSinceStartup - TimeConnectServer > RandConnectTime)
+                            {
+                                isConnectServer = true;
+                                TimeConnectServer = Time.realtimeSinceStartup;
+                                RandConnectTime = (Random.Range(0, 100) % 5) + 3f;
+                            }
                         }
                     }
 
@@ -298,6 +312,12 @@ public class RequestMasterServer : MonoBehaviour
                             if (NetworkRootMovie.GetInstance().ePlayerSelectGameMode != NetworkRootMovie.GameMode.Link)
                             {
                                 //只有当玩家选择了联机游戏时,才允许创建主服务器.
+                                return;
+                            }
+
+                            if (NetworkRootMovie.GetInstance().ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.MovieIntoGame)
+                            {
+                                //如果循环动画正在加载游戏场景时,不允许创建服务器.
                                 return;
                             }
                         }

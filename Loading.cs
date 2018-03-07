@@ -437,7 +437,7 @@ public class Loading : SSUiRoot
         if (m_IsBeginOk && !m_HasBegin)
         {
             //开始联机游戏.
-            Debug.Log("Start link game...");
+            Debug.Log("Start link game, timeVal == " + timeVal + ", peerType " + Network.peerType);
             SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.Link;
             NetworkRootMovie.GetInstance().ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.MovieIntoGame;
             if (NetworkServerNet.GetInstance() != null)

@@ -174,11 +174,14 @@ public class SSGameDataManage : MonoBehaviour
                 //联机模式.
                 obj = (GameObject)Network.Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation, 0);
                 playerScript = obj.GetComponent<PlayerController>();
-                for (int i = 0; i < HiddenObjLinkArray.Length; i++)
+                if (HiddenObjLinkArray != null && HiddenObjLinkArray.Length > 0)
                 {
-                    if (HiddenObjLinkArray[i] != null)
+                    for (int i = 0; i < HiddenObjLinkArray.Length; i++)
                     {
-                        HiddenObjLinkArray[i].SetActive(false);
+                        if (HiddenObjLinkArray[i] != null)
+                        {
+                            HiddenObjLinkArray[i].SetActive(false);
+                        }
                     }
                 }
             }
