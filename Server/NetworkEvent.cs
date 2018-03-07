@@ -42,7 +42,6 @@ public class NetworkEvent : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// 玩家链接到服务器事件(客户端消息).
     /// </summary>

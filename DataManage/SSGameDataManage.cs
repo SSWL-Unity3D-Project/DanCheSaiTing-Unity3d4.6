@@ -151,6 +151,10 @@ public class SSGameDataManage : MonoBehaviour
         /// </summary>
         public Transform[] SpawnPointArray = new Transform[4];
         /// <summary>
+        /// 联机状态需要隐藏的对象.
+        /// </summary>
+        public GameObject[] HiddenObjLinkArray;
+        /// <summary>
         /// 创建主角.
         /// </summary>
         public void SpawnPlayer(int indexVal)
@@ -158,13 +162,22 @@ public class SSGameDataManage : MonoBehaviour
             GameObject obj = null;
             if (Network.peerType == NetworkPeerType.Disconnected)
             {
+                //单机模式.
                 obj = (GameObject)Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
                 NetworkView netView = obj.GetComponent<NetworkView>();
                 netView.enabled = false;
             }
             else
             {
+                //联机模式.
                 Network.Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation, 0);
+                for (int i = 0; i < HiddenObjLinkArray.Length; i++)
+                {
+                    if (HiddenObjLinkArray[i] != null)
+                    {
+                        HiddenObjLinkArray[i].SetActive(false);
+                    }
+                }
             }
         }
 

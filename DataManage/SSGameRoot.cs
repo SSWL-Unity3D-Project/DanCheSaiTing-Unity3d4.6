@@ -115,5 +115,6 @@ public class SSGameRoot : MonoBehaviour
         int indexVal = NetworkServerNet.GetInstance().IndexSpawnPlayer;
         Debug.Log("SSGameRoot::OnConnectedToServerEvent -> creat client player, indexVal == " + indexVal);
         mSSGameDataManage.mGameData.SpawnPlayer(indexVal);
+        mUIController.SetActiveUIRoot(true);
     }
 }
