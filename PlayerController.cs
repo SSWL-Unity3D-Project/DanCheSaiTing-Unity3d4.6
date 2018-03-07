@@ -5,6 +5,10 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 是否是网络控制端(只有网络控制端才有主动控制权限).
+    /// </summary>
+    bool IsNetControlPort = false;
+    /// <summary>
     /// 潜艇/坦克对水粒子位置的信息.
     /// </summary>
     [Serializable]
@@ -674,6 +678,11 @@ public class PlayerController : MonoBehaviour
 
     void Update () 
 	{
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
         if (timmerstar<5.0f)
 		{
 			timmerstar+=Time.deltaTime;
@@ -796,6 +805,11 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate()
     {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
 		if(!m_IsFinished && !m_UIController.m_IsGameOver && timmerstar >=5.0f)
 		{
 			//Debug.Log("rigidbody.velocity.magnitude*3.6f" + rigidbody.velocity.magnitude*3.6f);
@@ -1264,7 +1278,12 @@ public class PlayerController : MonoBehaviour
 	}
 
 	void OnTriggerEnter(Collider other)
-	{
+    {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
         DaoJuCtrl daoJuCom = other.GetComponent<DaoJuCtrl>();
         if (daoJuCom != null)
         {
@@ -1386,8 +1405,13 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnTriggerExit(Collider other)
-	{
-		if(other.tag == "water")
+    {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
+        if (other.tag == "water")
 		{
 			m_IsInWarter = false;
 		}
@@ -1408,8 +1432,13 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 	void OnTriggerStay(Collider other)
-	{
-		if(other.tag == "water")
+    {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
+        if (other.tag == "water")
 		{
 			m_IsInWarter = true;
 		}
@@ -2148,5 +2177,10 @@ public class PlayerController : MonoBehaviour
             }
             m_CameraShake.setCameraShakeImpulseValue();
         }
+    }
+
+    public void SetIsNetControlPort(bool isNetControl)
+    {
+        IsNetControlPort = isNetControl;
     }
 }

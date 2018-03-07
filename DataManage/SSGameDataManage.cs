@@ -159,6 +159,7 @@ public class SSGameDataManage : MonoBehaviour
         /// </summary>
         public void SpawnPlayer(int indexVal)
         {
+            PlayerController playerScript = null;
             GameObject obj = null;
             if (Network.peerType == NetworkPeerType.Disconnected)
             {
@@ -166,11 +167,13 @@ public class SSGameDataManage : MonoBehaviour
                 obj = (GameObject)Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation);
                 NetworkView netView = obj.GetComponent<NetworkView>();
                 netView.enabled = false;
+                playerScript = obj.GetComponent<PlayerController>();
             }
             else
             {
                 //联机模式.
-                Network.Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation, 0);
+                obj = (GameObject)Network.Instantiate(mPlayerPrefab, SpawnPointArray[indexVal].position, SpawnPointArray[indexVal].rotation, 0);
+                playerScript = obj.GetComponent<PlayerController>();
                 for (int i = 0; i < HiddenObjLinkArray.Length; i++)
                 {
                     if (HiddenObjLinkArray[i] != null)
@@ -179,6 +182,7 @@ public class SSGameDataManage : MonoBehaviour
                     }
                 }
             }
+            playerScript.SetIsNetControlPort(true);
         }
 
         /// <summary>
