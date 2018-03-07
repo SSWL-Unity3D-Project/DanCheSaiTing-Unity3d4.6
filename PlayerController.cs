@@ -1437,17 +1437,23 @@ public class PlayerController : MonoBehaviour
 			Destroy(temp,0.5f);
 			Destroy(other.gameObject);
 		}
-		if(other.tag == "zhong" && !m_UIController.m_IsGameOver)
-		{
-			m_IsHitshake = true;
-			//pcvr.GetInstance().OpenFangXiangPanZhenDong();
-			GameObject temp = (GameObject)Instantiate(m_JiashiPartical,other.transform.position,other.transform.rotation);
-			Destroy(other.gameObject);
-			Destroy(temp,0.5f);
-			m_EatJiashiAudio.Play();
-			m_JiashiAudio.Play();
-			m_JiashiGameObject.SetActive(true);
-		}
+
+        if (Network.peerType == NetworkPeerType.Disconnected)
+        {
+            //只在单机状态下加时.
+            if (other.tag == "zhong" && !m_UIController.m_IsGameOver)
+            {
+                m_IsHitshake = true;
+                //pcvr.GetInstance().OpenFangXiangPanZhenDong();
+                GameObject temp = (GameObject)Instantiate(m_JiashiPartical, other.transform.position, other.transform.rotation);
+                Destroy(other.gameObject);
+                Destroy(temp, 0.5f);
+                m_EatJiashiAudio.Play();
+                m_JiashiAudio.Play();
+                m_JiashiGameObject.SetActive(true);
+            }
+        }
+
 		if(other.tag == "pubu" && !m_UIController.m_IsGameOver)
 		{
 			if(!m_HasChanged)
