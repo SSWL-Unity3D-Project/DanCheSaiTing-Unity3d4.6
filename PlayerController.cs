@@ -499,6 +499,8 @@ public class PlayerController : MonoBehaviour
                 JiaoTaBanFenShanTr = PlayerDt[i].JiaoTaBanFenShanTr;
             }
         }
+
+        mNetSynGame.InitData(m_PlayerAnimator);
     }
 
     /// <summary>
@@ -741,7 +743,8 @@ public class PlayerController : MonoBehaviour
 				if (m_PlayerAnimator.gameObject.activeInHierarchy)
 				{
 					m_PlayerAnimator.SetTrigger("IsDiaoluo");
-				}
+                    mNetSynGame.SynNetAnimator("IsDiaoluo", NetworkSynchronizeGame.AnimatorType.Trigger);
+                }
                 TimeRandHuiTou = UnityEngine.Random.Range(3, 15);
                 TimeLastHuiTou = Time.time;
             }
@@ -831,7 +834,8 @@ public class PlayerController : MonoBehaviour
 				if (m_PlayerAnimator.gameObject.activeInHierarchy)
 				{
 					m_PlayerAnimator.SetTrigger("IsZhuang");
-				}
+                    mNetSynGame.SynNetAnimator("IsZhuang", NetworkSynchronizeGame.AnimatorType.Trigger);
+                }
 				m_CameraShake.setCameraShakeImpulseValue();
 				if(m_IsInWarter && !m_IsOnRoad)
 				{
@@ -954,6 +958,8 @@ public class PlayerController : MonoBehaviour
             {
                 m_PlayerAnimator.SetBool("IsRun2", true);
                 m_PlayerAnimator.SetBool("IsRun1", false);
+                mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, true);
+                mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
             }
             m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
         }
@@ -963,6 +969,8 @@ public class PlayerController : MonoBehaviour
             {
                 m_PlayerAnimator.SetBool("IsRun1", true);
                 m_PlayerAnimator.SetBool("IsRun2", false);
+                mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, true);
+                mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
             }
             m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
         }
@@ -972,6 +980,8 @@ public class PlayerController : MonoBehaviour
             {
                 m_PlayerAnimator.SetBool("IsRun1", false);
                 m_PlayerAnimator.SetBool("IsRun2", false);
+                mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
+                mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
             }
         }
 
@@ -986,7 +996,8 @@ public class PlayerController : MonoBehaviour
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetBool("IsTurnleft",true);
-			}
+                mNetSynGame.SynNetAnimator("IsTurnleft", NetworkSynchronizeGame.AnimatorType.Bool, true);
+            }
 			if (SpeedMovePlayer > 15f && !m_IsHitshake) {
 				//pcvr.m_IsOpneRightQinang = true;
 			}
@@ -996,7 +1007,8 @@ public class PlayerController : MonoBehaviour
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetBool("IsTurnleft",false);
-			}
+                mNetSynGame.SynNetAnimator("IsTurnleft", NetworkSynchronizeGame.AnimatorType.Bool, false);
+            }
 			if (!m_IsHitshake) {
 				//pcvr.m_IsOpneRightQinang = false;
 			}
@@ -1007,7 +1019,8 @@ public class PlayerController : MonoBehaviour
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetBool("IsTurnRight",true);
-			}
+                mNetSynGame.SynNetAnimator("IsTurnRight", NetworkSynchronizeGame.AnimatorType.Bool, true);
+            }
 			if (SpeedMovePlayer > 15f && !m_IsHitshake) {
 				//pcvr.m_IsOpneLeftQinang = true;
 			}
@@ -1017,7 +1030,8 @@ public class PlayerController : MonoBehaviour
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetBool("IsTurnRight",false);
-			}
+                mNetSynGame.SynNetAnimator("IsTurnRight", NetworkSynchronizeGame.AnimatorType.Bool, false);
+            }
 			if (!m_IsHitshake) {
 				//pcvr.m_IsOpneLeftQinang = false;
 			}
@@ -1028,14 +1042,16 @@ public class PlayerController : MonoBehaviour
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetBool("IsRoot",true);
-			}
+                mNetSynGame.SynNetAnimator("IsRoot", NetworkSynchronizeGame.AnimatorType.Bool, true);
+            }
 		}
 		else
 		{
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetBool("IsRoot",false);
-			}
+                mNetSynGame.SynNetAnimator("IsRoot", NetworkSynchronizeGame.AnimatorType.Bool, false);
+            }
 		}
 		if(canDrive && !m_IsPubu)
 		{
@@ -1350,7 +1366,8 @@ public class PlayerController : MonoBehaviour
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetBool("IsFinish",true);
-			}
+                mNetSynGame.SynNetAnimator("IsFinish", NetworkSynchronizeGame.AnimatorType.Bool, true);
+            }
 		}
 		if(other.tag == "water")
 		{
@@ -1377,7 +1394,8 @@ public class PlayerController : MonoBehaviour
 				if (m_PlayerAnimator.gameObject.activeInHierarchy)
 				{
 					m_PlayerAnimator.SetTrigger("IsZhuang");
-				}
+                    mNetSynGame.SynNetAnimator("IsZhuang", NetworkSynchronizeGame.AnimatorType.Trigger);
+                }
 				m_CameraShake.setCameraShakeImpulseValue();
 				m_HitStone.Play();
 				Instantiate(m_HitEffectObj,transform.position,transform.rotation);
@@ -1391,7 +1409,8 @@ public class PlayerController : MonoBehaviour
 				if (m_PlayerAnimator.gameObject.activeInHierarchy)
 				{
 					m_PlayerAnimator.SetTrigger("IsZhuang");
-				}
+                    mNetSynGame.SynNetAnimator("IsZhuang", NetworkSynchronizeGame.AnimatorType.Trigger);
+                }
 				m_CameraShake.setCameraShakeImpulseValue();
 				//m_HitStone.Play();
 				//GameObject temp = (GameObject)Instantiate(m_HitEffectObj,transform.position,transform.rotation);
@@ -1421,14 +1440,16 @@ public class PlayerController : MonoBehaviour
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetTrigger("IsQifei");
-			}
+                mNetSynGame.SynNetAnimator("IsQifei", NetworkSynchronizeGame.AnimatorType.Trigger);
+            }
 		}
 		if(other.tag == "pubuanimtor")
 		{
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
 				m_PlayerAnimator.SetTrigger("IsDiaoluo");
-			}
+                mNetSynGame.SynNetAnimator("IsDiaoluo", NetworkSynchronizeGame.AnimatorType.Trigger);
+            }
 		}
 
         NpcController npcScript = other.GetComponent<NpcController>();
@@ -1440,6 +1461,7 @@ public class PlayerController : MonoBehaviour
                 if (m_PlayerAnimator.gameObject.activeInHierarchy)
                 {
                     m_PlayerAnimator.SetTrigger("IsZhuang");
+                    mNetSynGame.SynNetAnimator("IsZhuang", NetworkSynchronizeGame.AnimatorType.Trigger);
                 }
                 m_CameraShake.setCameraShakeImpulseValue();
                 m_HitStone.Play();
@@ -2222,6 +2244,7 @@ public class PlayerController : MonoBehaviour
             if (m_PlayerAnimator.gameObject.activeInHierarchy)
             {
                 m_PlayerAnimator.SetTrigger("IsZhuang");
+                mNetSynGame.SynNetAnimator("IsZhuang", NetworkSynchronizeGame.AnimatorType.Trigger);
             }
             m_CameraShake.setCameraShakeImpulseValue();
         }

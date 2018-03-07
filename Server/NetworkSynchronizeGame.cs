@@ -24,6 +24,16 @@ public class NetworkSynchronizeGame : MonoBehaviour
     /// </summary>
     bool IsSynNetRot = false;
     /// <summary>
+    /// 动画控制组件.
+    /// </summary>
+    Animator mAnimator;
+    public enum AnimatorType
+    {
+        Trigger,
+        Bool,
+    }
+
+    /// <summary>
     /// 只在主控制端初始化.
     /// </summary>
     public void Init(NetworkView netView)
@@ -50,6 +60,14 @@ public class NetworkSynchronizeGame : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 初始化数据.
+    /// </summary>
+    public void InitData(Animator ani)
+    {
+        mAnimator = ani;
+    }
+
     void FixedUpdate()
     {
         if (!IsNetControlPort)
@@ -60,22 +78,19 @@ public class NetworkSynchronizeGame : MonoBehaviour
             return;
         }
 
-        //主控制端同步坐标.
-        if (mNetPos != transform.position)
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            mNetPos = transform.position;
-            if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+            //主控制端同步坐标.
+            if (mNetPos != transform.position)
             {
+                mNetPos = transform.position;
                 mNetworkView.RPC("RpcNetSynPosition", RPCMode.OthersBuffered, mNetPos);
             }
-        }
 
-        //主控制端同步转向.
-        if (mNetRot != transform.forward)
-        {
-            mNetRot = transform.forward;
-            if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+            //主控制端同步转向.
+            if (mNetRot != transform.forward)
             {
+                mNetRot = transform.forward;
                 mNetworkView.RPC("RpcNetSynRotation", RPCMode.OthersBuffered, mNetRot);
             }
         }
@@ -120,6 +135,41 @@ public class NetworkSynchronizeGame : MonoBehaviour
             {
                 transform.forward = Vector3.Lerp(transform.forward, mNetRot, 0.1f);
             }
+        }
+    }
+
+    /// <summary>
+    /// 同步网络动画.
+    /// </summary>
+    public void SynNetAnimator(string aniName, AnimatorType aniType, bool isPlay = false)
+    {
+        if (!IsNetControlPort || !enabled)
+        {
+            return;
+        }
+
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            mNetworkView.RPC("RpcNetSynAnimator", RPCMode.OthersBuffered, aniName, (int)aniType, isPlay == false ? 0 : 1);
+        }
+    }
+
+    [RPC]
+    void RpcNetSynAnimator(string aniName, int aniType, int isPlay)
+    {
+        AnimatorType aniState = (AnimatorType)aniType;
+        switch (aniState)
+        {
+            case AnimatorType.Trigger:
+                {
+                    mAnimator.SetTrigger(aniName);
+                    break;
+                }
+            case AnimatorType.Bool:
+                {
+                    mAnimator.SetBool(aniName, isPlay == 0 ? false : true);
+                    break;
+                }
         }
     }
 }
