@@ -32,7 +32,6 @@ public class NpcController : MonoBehaviour
     public Vector3 m_PlayerHit;
     [HideInInspector]
     public Vector3 m_NpcPos;
-    //public static int NpcIndexVal = 0;
     /// <summary>
     /// 随机更新主角的记录时间.
     /// </summary>

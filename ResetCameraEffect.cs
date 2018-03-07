@@ -7,17 +7,21 @@ public class ResetCameraEffect : MonoBehaviour {
 	{
 		if(other.tag == "player")
         {
-            if (PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu
-                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi
-                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.ShuangYiFeiJi
-                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.QianTing
-                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.Tank
-                || PlayerController.GetInstance().mSpeedDaoJuState == DaoJuCtrl.DaoJuType.JiaSuFengShan)
+            PlayerController playerScript = other.GetComponent<PlayerController>();
+            if (playerScript != null && playerScript.IsNetControlPort)
             {
-            }
-            else
-            {
-                PlayerController.GetInstance().m_ParameterForEfferct = m_ParameterForEffect;
+                if (playerScript.mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu
+                || playerScript.mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi
+                || playerScript.mSpeedDaoJuState == DaoJuCtrl.DaoJuType.ShuangYiFeiJi
+                || playerScript.mSpeedDaoJuState == DaoJuCtrl.DaoJuType.QianTing
+                || playerScript.mSpeedDaoJuState == DaoJuCtrl.DaoJuType.Tank
+                || playerScript.mSpeedDaoJuState == DaoJuCtrl.DaoJuType.JiaSuFengShan)
+                {
+                }
+                else
+                {
+                    playerScript.m_ParameterForEfferct = m_ParameterForEffect;
+                }
             }
 		}
 	}

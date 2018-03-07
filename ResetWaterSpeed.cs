@@ -14,8 +14,12 @@ public class ResetWaterSpeed : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag == "player")
-		{
-			PlayerController.m_LimitSpeed = 0.0f;
+        {
+            PlayerController playerScript = other.GetComponent<PlayerController>();
+            if (playerScript != null && playerScript.IsNetControlPort)
+            {
+                playerScript.m_LimitSpeed = 0.0f;
+            }
 		}
 	}
 }

@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 是否是网络控制端(只有网络控制端才有主动控制权限).
     /// </summary>
+    [HideInInspector]
     public bool IsNetControlPort = false;
     /// <summary>
     /// 潜艇/坦克对水粒子位置的信息.
@@ -242,7 +243,8 @@ public class PlayerController : MonoBehaviour
     /// 积分产生点.
     /// </summary>
     public Transform SpawnJiFenTr;
-	public static float m_pTopSpeed = 100.0f;
+    [HideInInspector]
+    public float m_pTopSpeed = 100.0f;
 	private float throttle = 0.0f;
 	private float jiaoTaBan = 0.0f;
     public bool canDrive = true;
@@ -257,19 +259,22 @@ public class PlayerController : MonoBehaviour
 	public UIController m_UIController;
 	public float m_distance = 0.0f;
 	private Vector3 PosRecord;
-	public static float m_LimitSpeed = 10.0f;
+    [HideInInspector]
+    public float m_LimitSpeed = 10.0f;
 	public float m_StopTimmerSet = 5.0f;
-	public static PlayerController Instance = null;
+	static PlayerController Instance = null;
     private bool m_IsErrorDirection = false;
 	private bool m_IsInWarter = false;
     private bool m_IsOnRoad = false;
     [HideInInspector]
 	public Transform m_pChuan;
 
-	//feiyuepubu
-	public static bool m_IsPubu = false;
+    //feiyuepubu
+    [HideInInspector]
+    public bool m_IsPubu = false;
 	private float m_pubuTimmer = 0.0f;
-	public static float m_PubuPower = 2000.0f;
+    [HideInInspector]
+    public float m_PubuPower = 2000.0f;
 	public float m_HitPower = 2000.0f;
 	public float m_GravitySet = -2000.0f;
 
@@ -295,8 +300,9 @@ public class PlayerController : MonoBehaviour
 	private Vector3 m_BehindHitPos;
 	public float timmerstar = 0.0f;
 
-	//lujingchuli
-	public static Transform[] PathPoint;
+    //lujingchuli
+    [HideInInspector]
+    public Transform[] PathPoint;
 	public Transform Path;
 	public int PathNum = 0;
 
@@ -398,7 +404,6 @@ public class PlayerController : MonoBehaviour
 	public AudioSource m_JiashiAudio;
 	public AudioSource m_EatJiashiAudio;
 	public AudioSource LaBaAudio;
-    //public static int PlayerIndexRand = -1;
 
     /// <summary>
     /// 初始化人物数据(只在控制端初始化).
@@ -1251,7 +1256,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-	public static float PlayerMinSpeedVal = 80f;
+	float PlayerMinSpeedVal = 80f;
 	void CalculateEnginePower(bool canDrive)
     {
         if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi || mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu)
@@ -1702,8 +1707,8 @@ public class PlayerController : MonoBehaviour
 			//pcvr.GetInstance().OpenFangXiangPanZhenDong();
 		}
 	}
-	static float TimeHitRock;
 
+	float TimeHitRock;
 	public void OnNpcHitPlayer(NpcController npcScript = null)
     {
         if (!m_IsFinished && !m_UIController.m_IsGameOver && timmerstar >= 5.0f)

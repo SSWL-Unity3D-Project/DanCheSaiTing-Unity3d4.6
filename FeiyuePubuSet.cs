@@ -16,8 +16,12 @@ public class FeiyuePubuSet : MonoBehaviour
 	{
 		if(other.tag == "player")
 		{
-			PlayerController.m_IsPubu = true;
-			PlayerController.m_PubuPower = m_PubuPower;
+            PlayerController playerScript = other.GetComponent<PlayerController>();
+            if (playerScript != null && playerScript.IsNetControlPort)
+            {
+                playerScript.m_IsPubu = true;
+                playerScript.m_PubuPower = m_PubuPower;
+            }
 		}
 	}
 }

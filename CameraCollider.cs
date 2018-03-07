@@ -11,18 +11,7 @@ public class CameraCollider : MonoBehaviour
 	public float m_SpeedForPath;
 	public int m_IndexForCameraOne;
 	public Transform m_LookAtObj;
-	void Start ()
-	{
-		
-	}
-	void Update ()
-	{
-	
-	}
-	void OnDrawGizmos()
-	{
 
-	}
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag == "player")
