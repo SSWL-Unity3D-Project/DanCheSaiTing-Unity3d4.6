@@ -31,6 +31,8 @@ public class SSGameRoot : MonoBehaviour
         {
             case NetworkRootMovie.GameMode.NoLink:
                 {
+                    //loadedLevel == 1 -> zhuZhuXia, 2 -> boBi, 3 -> chaoRenQiang, 4 -> feiFei
+                    PlayerController.PlayerIndexRand = Application.loadedLevel - 2; //强制修改PlayerIndexRand.
                     mSSGameDataManage.mGameData.SpawnPlayer(0);
                     mSSGameDataManage.mGameData.SpawnNpc(1);
                     mSSGameDataManage.mGameData.SpawnNpc(2);
@@ -76,6 +78,8 @@ public class SSGameRoot : MonoBehaviour
         if (NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
         {
             //没有其他玩家链接服务器.
+            //loadedLevel == 1 -> zhuZhuXia, 2 -> boBi, 3 -> chaoRenQiang, 4 -> feiFei
+            PlayerController.PlayerIndexRand = Application.loadedLevel - 2; //强制修改PlayerIndexRand.
             mSSGameDataManage.mGameData.SpawnPlayer(0);
             mSSGameDataManage.mGameData.SpawnNpc(1);
             mSSGameDataManage.mGameData.SpawnNpc(2);
@@ -92,8 +96,9 @@ public class SSGameRoot : MonoBehaviour
         int movieNum = NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie;
         if (movieNum <= NetworkServerNet.GetInstance().LinkServerPlayerNum_Game)
         {
-            Debug.Log("SSGameRoot::OnPlayerConnectedEvent -> creat server player...");
             //其他玩家全部链接到该服务器.
+            Debug.Log("SSGameRoot::OnPlayerConnectedEvent -> creat server player...");
+            PlayerController.PlayerIndexRand = -1; //强制修改PlayerIndexRand.
             mSSGameDataManage.mGameData.SpawnPlayer(0);
             //movieNum == 1 -- 2,3; movieNum == 2 -- 3; movieNum == 3 -- 不产生npc;
             for (int i = 0; i < 4; i++)
@@ -114,6 +119,7 @@ public class SSGameRoot : MonoBehaviour
     {
         int indexVal = NetworkServerNet.GetInstance().IndexSpawnPlayer;
         Debug.Log("SSGameRoot::OnConnectedToServerEvent -> creat client player, indexVal == " + indexVal);
+        PlayerController.PlayerIndexRand = indexVal - 2; //强制修改PlayerIndexRand.
         mSSGameDataManage.mGameData.SpawnPlayer(indexVal);
         mUIController.SetActiveUIRoot(true);
     }

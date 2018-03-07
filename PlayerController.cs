@@ -400,8 +400,17 @@ public class PlayerController : MonoBehaviour
 	public AudioSource LaBaAudio;
     public static int PlayerIndexRand = -1;
 
+    /// <summary>
+    /// 初始化人物数据(只在控制端初始化).
+    /// </summary>
     void InitPlayerData()
     {
+        if (!IsNetControlPort)
+        {
+            //只在控制端初始化.
+            return;
+        }
+
         SSGameDataManage.PlayerData playerDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerDt;
         m_ColorEffect = playerDt.m_ColorEffect;
         m_UIController = playerDt.m_UIController;
@@ -433,41 +442,96 @@ public class PlayerController : MonoBehaviour
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController = this;
         m_UIController.m_Player = this;
         m_CameraSmooth.target = transform;
+        mNetViewCom = GetComponent<NetworkView>();
     }
 
-    void Awake()
+    /// <summary>
+    /// 网络消息控制器.
+    /// </summary>
+    NetworkView mNetViewCom;
+    /// <summary>
+    /// 设置人物索引.
+    /// </summary>
+    public void SetPlayerIndex(int index)
     {
         InitPlayerData();
-        if (PlayerIndexRand >= PlayerObjArray.Length - 1)
+        InitPlayerMode(index);
+        InitStartInfo();
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            PlayerIndexRand = -1;
+            mNetViewCom.RPC("RpcGetPlayerIndex", RPCMode.OthersBuffered, index);
         }
-        PlayerIndexRand++;
-        NpcController.NpcIndexVal = PlayerIndexRand;
+    }
 
+    [RPC]
+    void RpcGetPlayerIndex(int index)
+    {
+        InitPlayerMode(index);
+    }
+
+    /// <summary>
+    /// 初始化人物模型.
+    /// </summary>
+    /// <param name="index"></param>
+    void InitPlayerMode(int index)
+    {
+        Debug.Log("InitPlayerMode -> index == " + index);
         for (int i = 0; i < PlayerObjArray.Length; i++)
         {
-            PlayerObjArray[i].SetActive(PlayerIndexRand == i ? true : false);
-			if (PlayerDt[i] != null && PlayerIndexRand == i)
+            PlayerObjArray[i].SetActive(index == i ? true : false);
+            if (PlayerDt[i] != null && index == i)
             {
-                m_pChuan = PlayerObjArray[PlayerIndexRand].transform;
-                m_PlayerAnimator = PlayerObjArray[PlayerIndexRand].GetComponent<Animator>();
+                m_pChuan = PlayerObjArray[index].transform;
+                m_PlayerAnimator = PlayerObjArray[index].GetComponent<Animator>();
                 PenQiAniAy = PlayerDt[i].PenQiAniAy;
                 FiXingYiAniAy = PlayerDt[i].FiXingYiAniAy;
                 ShuangYiFeiJiAniAy = PlayerDt[i].ShuangYiFeiJiAniAy;
                 ShuangYiFeiJiTwRot = PlayerDt[i].ShuangYiFeiJiTwRot;
                 FengKuangAni = PlayerDt[i].FengKuangAni;
                 FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
-				SpawnJiFenTr = PlayerDt[i].SpawnJiFenTr;
+                SpawnJiFenTr = PlayerDt[i].SpawnJiFenTr;
                 JiaoTaBanFenShanTr = PlayerDt[i].JiaoTaBanFenShanTr;
             }
         }
     }
 
-	void Start()
+    //void Awake()
+    //{
+    //    InitPlayerData();
+        //if (PlayerIndexRand >= PlayerObjArray.Length - 1)
+        //{
+        //    PlayerIndexRand = -1;
+        //}
+        //PlayerIndexRand++;
+        //NpcController.NpcIndexVal = PlayerIndexRand;
+
+   //     for (int i = 0; i < PlayerObjArray.Length; i++)
+   //     {
+   //         PlayerObjArray[i].SetActive(PlayerIndexRand == i ? true : false);
+			//if (PlayerDt[i] != null && PlayerIndexRand == i)
+   //         {
+   //             m_pChuan = PlayerObjArray[PlayerIndexRand].transform;
+   //             m_PlayerAnimator = PlayerObjArray[PlayerIndexRand].GetComponent<Animator>();
+   //             PenQiAniAy = PlayerDt[i].PenQiAniAy;
+   //             FiXingYiAniAy = PlayerDt[i].FiXingYiAniAy;
+   //             ShuangYiFeiJiAniAy = PlayerDt[i].ShuangYiFeiJiAniAy;
+   //             ShuangYiFeiJiTwRot = PlayerDt[i].ShuangYiFeiJiTwRot;
+   //             FengKuangAni = PlayerDt[i].FengKuangAni;
+   //             FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
+			//	SpawnJiFenTr = PlayerDt[i].SpawnJiFenTr;
+   //             JiaoTaBanFenShanTr = PlayerDt[i].JiaoTaBanFenShanTr;
+   //         }
+   //     }
+    //}
+
+    /// <summary>
+    /// 只在控制端初始化.
+    /// </summary>
+	void InitStartInfo()
     {
         if (!IsNetControlPort)
         {
+            //只在控制端初始化.
             return;
         }
         InputEventCtrl.GetInstance().mListenPcInputEvent.ClickFireBtEvent += ClickFireBtEvent;
@@ -1205,7 +1269,10 @@ public class PlayerController : MonoBehaviour
             if (value != _PlayerMoveSpeed)
             {
                 _PlayerMoveSpeed = value;
-                m_UIController.UpdatePlayerMoveSpeed(_PlayerMoveSpeed);
+                if (m_UIController != null)
+                {
+                    m_UIController.UpdatePlayerMoveSpeed(_PlayerMoveSpeed);
+                }
             }
         }
         get

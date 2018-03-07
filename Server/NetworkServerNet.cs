@@ -588,6 +588,9 @@ public class NetworkServerNet : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 当游戏退出时.
+    /// </summary>
     void OnApplicationQuit()
     {
         Debug.Log("OnApplicationQuit...NetServer");

@@ -186,6 +186,7 @@ public class SSGameDataManage : MonoBehaviour
                 }
             }
             playerScript.SetIsNetControlPort(true);
+            playerScript.SetPlayerIndex(indexVal);
         }
 
         /// <summary>
