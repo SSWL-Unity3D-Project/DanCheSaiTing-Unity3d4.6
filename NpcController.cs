@@ -32,12 +32,48 @@ public class NpcController : MonoBehaviour
     public Vector3 m_PlayerHit;
     [HideInInspector]
     public Vector3 m_NpcPos;
-    public static int NpcIndexVal = 0;
+    //public static int NpcIndexVal = 0;
     /// <summary>
     /// 随机更新主角的记录时间.
     /// </summary>
     float TimeLastRandPlayer = 0f;
     float TimeRandPlayer = 3f;
+
+    /// <summary>
+    /// 网络消息控制器.
+    /// </summary>
+    NetworkView mNetViewCom;
+    /// <summary>
+    /// 设置Npc人物索引.
+    /// </summary>
+    public void SetNpcIndex(int index)
+    {
+        mNetViewCom = GetComponent<NetworkView>();
+        InitNpcMode(index);
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            mNetViewCom.RPC("RpcGetNpcIndex", RPCMode.OthersBuffered, index);
+        }
+    }
+
+    [RPC]
+    void RpcGetNpcIndex(int index)
+    {
+        InitNpcMode(index);
+    }
+
+    /// <summary>
+    /// 初始化Npc人物模型.
+    /// </summary>
+    void InitNpcMode(int index)
+    {
+        Debug.Log("InitNpcMode -> index == " + index);
+        for (int i = 0; i < NpcObjArray.Length; i++)
+        {
+            NpcObjArray[i].SetActive(index == i ? true : false);
+        }
+    }
+
     void Start ()
     {
         m_NpcPath = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mNpcDt.m_NpcPathArray[(int)NpcState - 1];
@@ -48,17 +84,6 @@ public class NpcController : MonoBehaviour
         }
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
         
-        if (NpcIndexVal >= NpcObjArray.Length - 1)
-        {
-            NpcIndexVal = -1;
-        }
-        NpcIndexVal++;
-
-        for (int i = 0; i < NpcObjArray.Length; i++)
-        {
-            NpcObjArray[i].SetActive(NpcIndexVal == i ? true : false);
-        }
-
         m_NpcPathPoint = new Vector3[m_NpcPath.childCount];
 		for(int i = 0;i<m_NpcPath.childCount;i++)
 		{

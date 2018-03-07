@@ -210,6 +210,7 @@ public class SSGameDataManage : MonoBehaviour
 
             npcScript = obj.GetComponent<NpcController>();
             npcScript.SetNpcState(npcState);
+            npcScript.SetNpcIndex(indexVal);
         }
     }
     public GameData mGameData;

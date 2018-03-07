@@ -17,10 +17,6 @@ public class SSGameRoot : MonoBehaviour
     /// 游戏UI总控.
     /// </summary>
     public UIController mUIController;
-    /// <summary>
-    /// 是否激活游戏UIRoot.
-    /// </summary>
-    //bool IsActiveGameUIRoot = false;
     void Awake()
     {
         Debug.Log("SSGameRoot::Awake -> peerType " + Network.peerType + ", eGameMode " + SSGameCtrl.GetInstance().eGameMode);
@@ -31,8 +27,6 @@ public class SSGameRoot : MonoBehaviour
         {
             case NetworkRootMovie.GameMode.NoLink:
                 {
-                    //loadedLevel == 1 -> zhuZhuXia, 2 -> boBi, 3 -> chaoRenQiang, 4 -> feiFei
-                    PlayerController.PlayerIndexRand = Application.loadedLevel - 2; //强制修改PlayerIndexRand.
                     mSSGameDataManage.mGameData.SpawnPlayer(0);
                     mSSGameDataManage.mGameData.SpawnNpc(1);
                     mSSGameDataManage.mGameData.SpawnNpc(2);
@@ -42,7 +36,6 @@ public class SSGameRoot : MonoBehaviour
             case NetworkRootMovie.GameMode.Link:
                 {
                     mUIController.SetActiveUIRoot(false);
-                    //IsActiveGameUIRoot = false;
                     break;
                 }
         }
@@ -50,25 +43,7 @@ public class SSGameRoot : MonoBehaviour
         NetworkEvent.GetInstance().OnPlayerConnectedEvent += OnPlayerConnectedEvent;
         NetworkEvent.GetInstance().OnConnectedToServerEvent += OnConnectedToServerEvent;
     }
-
-    //void Update()
-    //{
-        //if (SSGameCtrl.GetInstance().eGameMode == GameModeSelect.GameMode.Link)
-        //{
-        //    if (Time.frameCount % 30 == 0)
-        //    {
-        //        if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
-        //        {
-        //            if (!IsActiveGameUIRoot)
-        //            {
-        //                mUIController.SetActiveUIRoot(true);
-        //                IsActiveGameUIRoot = true;
-        //            }
-        //        }
-        //    }
-        //}
-    //}
-    
+        
     /// <summary>
     /// 游戏场景里服务器被初始化.
     /// </summary>
@@ -78,8 +53,6 @@ public class SSGameRoot : MonoBehaviour
         if (NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
         {
             //没有其他玩家链接服务器.
-            //loadedLevel == 1 -> zhuZhuXia, 2 -> boBi, 3 -> chaoRenQiang, 4 -> feiFei
-            PlayerController.PlayerIndexRand = Application.loadedLevel - 2; //强制修改PlayerIndexRand.
             mSSGameDataManage.mGameData.SpawnPlayer(0);
             mSSGameDataManage.mGameData.SpawnNpc(1);
             mSSGameDataManage.mGameData.SpawnNpc(2);
@@ -98,7 +71,6 @@ public class SSGameRoot : MonoBehaviour
         {
             //其他玩家全部链接到该服务器.
             Debug.Log("SSGameRoot::OnPlayerConnectedEvent -> creat server player...");
-            PlayerController.PlayerIndexRand = -1; //强制修改PlayerIndexRand.
             mSSGameDataManage.mGameData.SpawnPlayer(0);
             //movieNum == 1 -- 2,3; movieNum == 2 -- 3; movieNum == 3 -- 不产生npc;
             for (int i = 0; i < 4; i++)
@@ -119,7 +91,6 @@ public class SSGameRoot : MonoBehaviour
     {
         int indexVal = NetworkServerNet.GetInstance().IndexSpawnPlayer;
         Debug.Log("SSGameRoot::OnConnectedToServerEvent -> creat client player, indexVal == " + indexVal);
-        PlayerController.PlayerIndexRand = indexVal - 2; //强制修改PlayerIndexRand.
         mSSGameDataManage.mGameData.SpawnPlayer(indexVal);
         mUIController.SetActiveUIRoot(true);
     }

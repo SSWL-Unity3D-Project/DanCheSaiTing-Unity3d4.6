@@ -398,7 +398,7 @@ public class PlayerController : MonoBehaviour
 	public AudioSource m_JiashiAudio;
 	public AudioSource m_EatJiashiAudio;
 	public AudioSource LaBaAudio;
-    public static int PlayerIndexRand = -1;
+    //public static int PlayerIndexRand = -1;
 
     /// <summary>
     /// 初始化人物数据(只在控制端初始化).
@@ -472,7 +472,6 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 初始化人物模型.
     /// </summary>
-    /// <param name="index"></param>
     void InitPlayerMode(int index)
     {
         Debug.Log("InitPlayerMode -> index == " + index);
@@ -494,35 +493,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-    //void Awake()
-    //{
-    //    InitPlayerData();
-        //if (PlayerIndexRand >= PlayerObjArray.Length - 1)
-        //{
-        //    PlayerIndexRand = -1;
-        //}
-        //PlayerIndexRand++;
-        //NpcController.NpcIndexVal = PlayerIndexRand;
-
-   //     for (int i = 0; i < PlayerObjArray.Length; i++)
-   //     {
-   //         PlayerObjArray[i].SetActive(PlayerIndexRand == i ? true : false);
-			//if (PlayerDt[i] != null && PlayerIndexRand == i)
-   //         {
-   //             m_pChuan = PlayerObjArray[PlayerIndexRand].transform;
-   //             m_PlayerAnimator = PlayerObjArray[PlayerIndexRand].GetComponent<Animator>();
-   //             PenQiAniAy = PlayerDt[i].PenQiAniAy;
-   //             FiXingYiAniAy = PlayerDt[i].FiXingYiAniAy;
-   //             ShuangYiFeiJiAniAy = PlayerDt[i].ShuangYiFeiJiAniAy;
-   //             ShuangYiFeiJiTwRot = PlayerDt[i].ShuangYiFeiJiTwRot;
-   //             FengKuangAni = PlayerDt[i].FengKuangAni;
-   //             FengKuangTwRot = PlayerDt[i].FengKuangTwRot;
-			//	SpawnJiFenTr = PlayerDt[i].SpawnJiFenTr;
-   //             JiaoTaBanFenShanTr = PlayerDt[i].JiaoTaBanFenShanTr;
-   //         }
-   //     }
-    //}
 
     /// <summary>
     /// 只在控制端初始化.
