@@ -64,7 +64,6 @@ public class XKMasterServerCtrl
         p.Start();
         //要执行的dos命令  p.StandardInput.WriteLine("");
         //p.StandardInput.WriteLine("exit");
-
         //p.Close();
     }
 }

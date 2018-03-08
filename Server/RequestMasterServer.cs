@@ -331,16 +331,6 @@ public class RequestMasterServer : MonoBehaviour
                     {
                         NetworkServerNet.GetInstance().RemoveMasterServerHost();
                     }
-                    else
-                    {
-                        //if (levelVal == GameScene.Movie)
-                        //{
-                        //if (Toubi.GetInstance() != null && !Toubi.GetInstance().CheckIsLoopWait())
-                        //{
-                        //    NetworkServerNet.GetInstance().ResetMasterServerHost();
-                        //}
-                        //}
-                    }
                     break;
                 }
         }
@@ -349,9 +339,6 @@ public class RequestMasterServer : MonoBehaviour
     void OnFailedToConnectToMasterServer(NetworkConnectionError info)
     {
         Debug.Log("Could not connect to master server: " + info);
-        //if (Application.loadedLevel == (int)GameLeve.Movie) {
-        //	ServerLinkInfo.GetInstance().SetServerLinkInfo("Cannot Link MasterServer");
-        //}
     }
 
     void OnMasterServerEvent(MasterServerEvent msEvent)
@@ -360,12 +347,6 @@ public class RequestMasterServer : MonoBehaviour
         if (msEvent == MasterServerEvent.RegistrationSucceeded)
         {
             Debug.Log("MasterServer registered, GameLevel " + Application.loadedLevel);
-            //if (NetworkRootMovie.GetInstance() != null)
-            //{
-            //    //只在循环动画场景执行!
-            //    //ServerLinkInfo.GetInstance().HiddenServerLinkInfo();
-            //    NetworkRootMovie.GetInstance().CreateNetworkRpc();
-            //}
         }
     }
 
