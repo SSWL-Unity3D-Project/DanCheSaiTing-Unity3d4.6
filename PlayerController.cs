@@ -503,6 +503,28 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (PenQiAniAy != null && PenQiAniAy.Length > 0)
+        {
+            for (int i = 0; i < PenQiAniAy.Length; i++)
+            {
+                if (PenQiAniAy[i] != null)
+                {
+                    PenQiAniAy[i].transform.localScale = Vector3.zero;
+                }
+            }
+        }
+
+        if (FiXingYiAniAy != null && FiXingYiAniAy.Length > 0)
+        {
+            for (int i = 0; i < FiXingYiAniAy.Length; i++)
+            {
+                if (FiXingYiAniAy[i] != null)
+                {
+                    FiXingYiAniAy[i].transform.localScale = Vector3.zero;
+                }
+            }
+        }
+
         mNetSynGame.InitData(m_PlayerAnimator);
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
     }
