@@ -7,6 +7,23 @@ using System.Collections;
 public class AmmoMoveCtrl : MonoBehaviour
 {
     /// <summary>
+    /// 是否是网络控制端(只有网络控制端才有主动控制权限).
+    /// </summary>
+    [HideInInspector]
+    public bool IsNetControlPort = false;
+    /// <summary>
+    /// 网络信息同步组件.
+    /// </summary>
+    public NetworkSynchronizeGame mNetSynGame;
+    /// <summary>
+    /// 销毁子弹时需要隐藏的对象.
+    /// </summary>
+    public GameObject[] HiddenObjArray;
+    /// <summary>
+    /// 网络消息控制器.
+    /// </summary>
+    NetworkView mNetViewCom;
+    /// <summary>
     /// 子弹数据信息.
     /// </summary>
     public class AmmoDt
@@ -72,6 +89,11 @@ public class AmmoMoveCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
         switch (AmmoState)
         {
             case AmmoType.GenZongDan:
@@ -113,7 +135,34 @@ public class AmmoMoveCtrl : MonoBehaviour
         {
             Instantiate(LiZiPrefab, transform.position, transform.rotation);
         }
-        Destroy(gameObject);
+
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            mNetViewCom.RPC("RpcSpawnAmmoExplosionLiZi", RPCMode.Others);
+            StartCoroutine(DelayRemoveNetAmmo());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// 延迟删除网络子弹.
+    /// </summary>
+    IEnumerator DelayRemoveNetAmmo()
+    {
+        yield return new WaitForSeconds(1f);
+        Network.Destroy(mNetViewCom.viewID);
+    }
+
+    [RPC]
+    void RpcSpawnAmmoExplosionLiZi()
+    {
+        if (LiZiPrefab != null)
+        {
+            Instantiate(LiZiPrefab, transform.position, transform.rotation);
+        }
     }
 
     public void InitMoveAmmo(AmmoDt ammoInfo)
@@ -303,6 +352,23 @@ public class AmmoMoveCtrl : MonoBehaviour
         if (isDestroyAmmo)
         {
             OnDestroyThis();
+        }
+    }
+    
+    public void SetIsNetControlPort(bool isNetControl)
+    {
+        IsNetControlPort = isNetControl;
+        if (IsNetControlPort)
+        {
+            mNetViewCom = GetComponent<NetworkView>();
+            mNetSynGame.Init(mNetViewCom);
+            if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+            {
+            }
+            else
+            {
+                mNetViewCom.enabled = false;
+            }
         }
     }
 }

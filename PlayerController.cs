@@ -2019,8 +2019,17 @@ public class PlayerController : MonoBehaviour
     {
         bool isFollowNpc = false;
         Transform aimNpcTr = null;
-        GameObject ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation);
+        GameObject ammo = null;
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            ammo = (GameObject)Network.Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation, 0);
+        }
+        else
+        {
+            ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation);
+        }
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
+        ammoMoveCom.SetIsNetControlPort(true);
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
         if (aimNpc != null)
@@ -2092,8 +2101,17 @@ public class PlayerController : MonoBehaviour
 
     public void SpawnDiLeiAmmo()
     {
-        GameObject ammo = (GameObject)Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].position, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].rotation);
+        GameObject ammo = null;
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            ammo = (GameObject)Network.Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].position, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].rotation, 0);
+        }
+        else
+        {
+            ammo = (GameObject)Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].position, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].rotation);
+        }
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
+        ammoMoveCom.SetIsNetControlPort(true);
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         ammoDt.HightVal = UnityEngine.Random.Range(2.5f, 5f);
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
