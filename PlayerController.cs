@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public bool IsNetControlPort = false;
+    /// <summary>
+    /// 网络信息同步组件.
+    /// </summary>
     public NetworkSynchronizeGame mNetSynGame;
     /// <summary>
     /// 潜艇/坦克对水粒子位置的信息.

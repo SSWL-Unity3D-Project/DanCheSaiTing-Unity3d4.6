@@ -2,8 +2,17 @@
 using System.Collections;
 using System;
 
-public class NpcController : MonoBehaviour 
+public class NpcController : MonoBehaviour
 {
+    /// <summary>
+    /// 是否是网络控制端(只有网络控制端才有主动控制权限).
+    /// </summary>
+    [HideInInspector]
+    public bool IsNetControlPort = false;
+    /// <summary>
+    /// 网络信息同步组件.
+    /// </summary>
+    public NetworkSynchronizeGame mNetSynGame;
     /// <summary>
     /// 用于npc随机.
     /// </summary>
@@ -22,7 +31,6 @@ public class NpcController : MonoBehaviour
 	private bool m_IsJiansu = false;
 	public float m_TopSpeedSet = 50.0f;
 	public float m_EndSpeedSet = 20.0f;
-	//public bool m_IsFirstNpc = false;
 	private float m_SpeedIndex = 1.0f;
     [HideInInspector]
     public bool m_IsHit = false;
@@ -52,6 +60,12 @@ public class NpcController : MonoBehaviour
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
             mNetViewCom.RPC("RpcGetNpcIndex", RPCMode.OthersBuffered, index);
+        }
+
+        if (IsNetControlPort)
+        {
+            //只允许npc主控制端调用该方法.
+            mNetSynGame.Init(mNetViewCom);
         }
     }
 
@@ -91,21 +105,15 @@ public class NpcController : MonoBehaviour
 			mask = 1<<( LayerMask.NameToLayer("shexianjiance"));
 		}
 	}
-//	void Update () 
-//	{
 
-//		transform.forward = Vector3.Normalize(m_NpcPathPoint[m_NpcPathNum+1] - m_NpcPathPoint[m_NpcPathNum]);
-//		if(Physics.Raycast(transform.position+Vector3.up*25.0f,-Vector3.up,out hit,100.0f,mask.value))
-//		{
-//			transform.position = hit.point + Vector3.up*0.5f;
-//		}
-//		transform.localEulerAngles = new Vector3(-18.0f,transform.localEulerAngles.y,transform.localEulerAngles.z);
-//		transform.forward = Vector3.Lerp(transform.forward,Vector3.Normalize(m_NpcPathPoint[m_NpcPathNum+1] - m_NpcPathPoint[m_NpcPathNum]),90.0f*Time.deltaTime);
-//		transform.position += transform.forward*m_NpcSpeed*Time.deltaTime;
-//	}
 	void FixedUpdate()
 	{
-		if(m_NpcPathNum == m_NpcPath.childCount-1)
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
+        if (m_NpcPathNum == m_NpcPath.childCount-1)
 		{
 			return;
 		}
@@ -201,15 +209,7 @@ public class NpcController : MonoBehaviour
 			}
 		}			
 	}
-//	void LateUpdate()
-//	{	
-//		transform.forward = Vector3.Normalize(m_NpcPathPoint[m_NpcPathNum+1] - m_NpcPathPoint[m_NpcPathNum]);
-//		if(Physics.Raycast(transform.position+Vector3.up*25.0f,-Vector3.up,out hit,100.0f,mask.value))
-//		{
-//			transform.position = hit.point + Vector3.up*1.0f;
-//		}
-//		transform.localEulerAngles = new Vector3(-10.0f,transform.localEulerAngles.y,transform.localEulerAngles.z);
-//	}
+    
 	private bool m_IsPubu = false;
 	private bool m_IsEnd = false;
     public enum NpcEnum
@@ -222,6 +222,11 @@ public class NpcController : MonoBehaviour
     public NpcEnum NpcState = NpcEnum.Null;
 	void OnTriggerEnter(Collider other)
     {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
         if (other.tag == "pathpoint")
 		{
 			m_NpcIndex = Convert.ToInt32(other.name);
@@ -292,5 +297,10 @@ public class NpcController : MonoBehaviour
     {
         NpcState = npcState;
         name = npcState.ToString();
+    }
+    
+    public void SetIsNetControlPort(bool isNetControl)
+    {
+        IsNetControlPort = isNetControl;
     }
 }

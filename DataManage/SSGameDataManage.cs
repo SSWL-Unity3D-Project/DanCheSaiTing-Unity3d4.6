@@ -209,6 +209,7 @@ public class SSGameDataManage : MonoBehaviour
             }
 
             npcScript = obj.GetComponent<NpcController>();
+            npcScript.SetIsNetControlPort(true);
             npcScript.SetNpcState(npcState);
             npcScript.SetNpcIndex(indexVal);
         }
