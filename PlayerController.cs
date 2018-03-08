@@ -266,7 +266,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public float m_LimitSpeed = 10.0f;
 	public float m_StopTimmerSet = 5.0f;
-	static PlayerController Instance = null;
+	static PlayerController _Instance = null;
     private bool m_IsErrorDirection = false;
 	private bool m_IsInWarter = false;
     private bool m_IsOnRoad = false;
@@ -504,6 +504,7 @@ public class PlayerController : MonoBehaviour
         }
 
         mNetSynGame.InitData(m_PlayerAnimator);
+        SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
     }
 
     /// <summary>
@@ -548,7 +549,7 @@ public class PlayerController : MonoBehaviour
 		transform.eulerAngles = new Vector3(PathPoint[0].eulerAngles.x,PathPoint[0].eulerAngles.y,PathPoint[0].eulerAngles.z);
 		m_WaterDirection = m_OldWaterDirection = PathPoint[1].position - PathPoint[0].position;
 //		m_SpeedRecord = rigidbody.velocity.magnitude;
-		Instance = this;
+		_Instance = this;
 		//InputEventCtrl.GetInstance().ClickShaCheBtEvent += ClickShaCheBtEvent;
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickLaBaBtEvent += ClickLaBaBtEvent;
 		Invoke("DelayCallClickShaCheBtEvent", 0.5f);
@@ -691,7 +692,7 @@ public class PlayerController : MonoBehaviour
 
 	public static PlayerController GetInstance()
 	{
-		return Instance;
+		return _Instance;
 	}
 
     bool IsClickShaCheBt;
@@ -1747,7 +1748,24 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-	float TimeFeiBan;
+
+    /// <summary>
+    /// 当玩家被子弹攻击时.
+    /// </summary>
+    public void OnAmmoHitPlayer()
+    {
+        PlayerController playerScript = _Instance;
+        if (playerScript != null
+            && !playerScript.m_IsFinished
+            && !playerScript.m_UIController.m_IsGameOver
+            && playerScript.timmerstar >= 5.0f)
+        {
+            Debug.Log("OnAmmoHitPlayer...");
+            rigidbody.AddForce(-transform.forward * 80000.0f, ForceMode.Force);
+        }
+    }
+
+    float TimeFeiBan;
 	void ResetIsIntoFeiBan()
 	{
 		IsIntoFeiBan = false;

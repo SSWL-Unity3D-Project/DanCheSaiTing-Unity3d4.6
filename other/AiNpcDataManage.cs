@@ -21,7 +21,7 @@ public class AiNpcDataManage : MonoBehaviour
         float disVal = 0f;
         for (int i = 0; i < AiNpcTrList.Count; i++)
         {
-            if (AiNpcTrList.Count > i && AiNpcTrList[i] != null)
+            if (AiNpcTrList.Count > i && AiNpcTrList[i] != null && tr != AiNpcTrList[i])
             {
                 disVal = Vector3.Distance(tr.position, AiNpcTrList[i].position);
                 if (disVal < disValMax && disVal > 3f && Vector3.Dot(AiNpcTrList[i].forward, AiNpcTrList[i].position - tr.position) > 0f)

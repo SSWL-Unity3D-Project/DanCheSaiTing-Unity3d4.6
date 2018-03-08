@@ -85,6 +85,13 @@ public class AmmoMoveCtrl : MonoBehaviour
     /// 抛物线运动子弹的第一个子集.
     /// </summary>
     Transform AmmoCoreTr;
+    void Awake()
+    {
+        if (transform.childCount > 0)
+        {
+            AmmoCoreTr = transform.GetChild(0);
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -120,8 +127,31 @@ public class AmmoMoveCtrl : MonoBehaviour
                     CheckAmmoOverlapSphereHit(AmmoCoreTr);
                     break;
                 }
+            case AmmoType.DiLei:
+                {
+                    if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+                    {
+                        if (AmmoCoreTr != null)
+                        {
+                            mNetViewCom.RPC("RpcNetSynAmmoCorePosition", RPCMode.Others, AmmoCoreTr.position);
+                        }
+                    }
+                    break;
+                }
         }
 	}
+    
+    /// <summary>
+    /// 同步子弹实际物体的坐标.
+    /// </summary>
+    [RPC]
+    void RpcNetSynAmmoCorePosition(Vector3 pos)
+    {
+        if (AmmoCoreTr != null)
+        {
+            AmmoCoreTr.position = pos;
+        }
+    }
 
     void OnDestroyThis()
     {
@@ -138,6 +168,7 @@ public class AmmoMoveCtrl : MonoBehaviour
 
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
+            HandleHiddenAmmo();
             mNetViewCom.RPC("RpcSpawnAmmoExplosionLiZi", RPCMode.Others);
             StartCoroutine(DelayRemoveNetAmmo());
         }
@@ -147,13 +178,24 @@ public class AmmoMoveCtrl : MonoBehaviour
         }
     }
 
+    void HandleHiddenAmmo()
+    {
+        if (HiddenObjArray != null && HiddenObjArray.Length > 0)
+        {
+            for (int i = 0; i < HiddenObjArray.Length; i++)
+            {
+                HiddenObjArray[i].SetActive(false);
+            }
+        }
+    }
+
     /// <summary>
     /// 延迟删除网络子弹.
     /// </summary>
     IEnumerator DelayRemoveNetAmmo()
     {
         yield return new WaitForSeconds(1f);
-        Network.Destroy(mNetViewCom.viewID);
+        Network.Destroy(gameObject);
     }
 
     [RPC]
@@ -163,6 +205,8 @@ public class AmmoMoveCtrl : MonoBehaviour
         {
             Instantiate(LiZiPrefab, transform.position, transform.rotation);
         }
+        HandleHiddenAmmo();
+        CheckAmmoOverlapSphereHit();
     }
 
     public void InitMoveAmmo(AmmoDt ammoInfo)
@@ -294,6 +338,12 @@ public class AmmoMoveCtrl : MonoBehaviour
                         {
                             npcCom.OnDaoDanHit(transform.position);
                         }
+                        
+                        PlayerController playerCom = mAmmoInfo.AimTr.GetComponent<PlayerController>();
+                        if (playerCom != null)
+                        {
+                            playerCom.OnAmmoHitPlayer();
+                        }
                     }
                     else
                     {
@@ -340,6 +390,12 @@ public class AmmoMoveCtrl : MonoBehaviour
             {
                 npcSp.OnDestroyThis();
                 isDestroyAmmo = true;
+            }
+
+            PlayerController playerScript = hits[i].GetComponent<PlayerController>();
+            if (playerScript != null)
+            {
+                playerScript.OnAmmoHitPlayer();
             }
         }
         

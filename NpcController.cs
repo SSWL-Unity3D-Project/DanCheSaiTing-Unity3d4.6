@@ -91,10 +91,6 @@ public class NpcController : MonoBehaviour
     {
         m_NpcPath = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mNpcDt.m_NpcPathArray[(int)NpcState - 1];
         m_player = GetPlayerController();
-        if (SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData == null)
-        {
-            SSGameCtrl.GetInstance().mPlayerDataManage.CreatAiNpcData();
-        }
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
         
         m_NpcPathPoint = new Vector3[m_NpcPath.childCount];

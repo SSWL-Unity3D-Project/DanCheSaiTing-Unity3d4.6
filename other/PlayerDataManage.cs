@@ -35,6 +35,7 @@ public class PlayerDataManage
         CoinNumNeed = System.Convert.ToInt32(ReadGameInfo.GetInstance().ReadStarCoinNumSet());
         CoinNumFeiXing = 1;
         GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
+        CreatAiNpcData();
     }
 
     /// <summary>
