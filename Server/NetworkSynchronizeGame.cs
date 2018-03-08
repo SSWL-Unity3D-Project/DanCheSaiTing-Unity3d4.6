@@ -84,14 +84,14 @@ public class NetworkSynchronizeGame : MonoBehaviour
             if (mNetPos != transform.position)
             {
                 mNetPos = transform.position;
-                mNetworkView.RPC("RpcNetSynPosition", RPCMode.OthersBuffered, mNetPos);
+                mNetworkView.RPC("RpcNetSynPosition", RPCMode.Others, mNetPos);
             }
 
             //主控制端同步转向.
             if (mNetRot != transform.forward)
             {
                 mNetRot = transform.forward;
-                mNetworkView.RPC("RpcNetSynRotation", RPCMode.OthersBuffered, mNetRot);
+                mNetworkView.RPC("RpcNetSynRotation", RPCMode.Others, mNetRot);
             }
         }
     }
@@ -150,7 +150,7 @@ public class NetworkSynchronizeGame : MonoBehaviour
 
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            mNetworkView.RPC("RpcNetSynAnimator", RPCMode.OthersBuffered, aniName, (int)aniType, isPlay == false ? 0 : 1);
+            mNetworkView.RPC("RpcNetSynAnimator", RPCMode.Others, aniName, (int)aniType, isPlay == false ? 0 : 1);
         }
     }
 

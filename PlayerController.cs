@@ -469,7 +469,7 @@ public class PlayerController : MonoBehaviour
         InitStartInfo();
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            mNetViewCom.RPC("RpcGetPlayerIndex", RPCMode.OthersBuffered, index);
+            mNetViewCom.RPC("RpcGetPlayerIndex", RPCMode.Others, index);
         }
     }
 
@@ -1355,6 +1355,11 @@ public class PlayerController : MonoBehaviour
         DaoJuCtrl daoJuCom = other.GetComponent<DaoJuCtrl>();
         if (daoJuCom != null)
         {
+            if (IsNetControlPort)
+            {
+                //玩家主控制端碰上障碍物道具时,通知其他客户端销毁该物体.
+                NetSendAmmoHitZhangAiWuInfo(daoJuCom);
+            }
             daoJuCom.OnDestroyThis(true);
             return;
         }
@@ -2292,5 +2297,36 @@ public class PlayerController : MonoBehaviour
     public void SetIsNetControlPort(bool isNetControl)
     {
         IsNetControlPort = isNetControl;
+    }
+    
+    /// <summary>
+    /// 通过网络消息发送将要销毁的障碍物
+    /// </summary>
+    public void NetSendAmmoHitZhangAiWuInfo(DaoJuCtrl daoJuCom)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (daoJuCom != null && mNetViewCom != null)
+            {
+                mNetViewCom.RPC("RpcOnAmmoHitZhangAiWu", RPCMode.Others, daoJuCom.IndexZhangAiWu);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 发送子弹击中障碍物道具的数据索引信息.
+    /// </summary>
+    [RPC]
+    void RpcOnAmmoHitZhangAiWu(int index)
+    {
+        GameObject obj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(index);
+        if (obj != null)
+        {
+            DaoJuCtrl daoJuCom = obj.GetComponent<DaoJuCtrl>();
+            if (daoJuCom != null)
+            {
+                daoJuCom.OnDestroyThis();
+            }
+        }
     }
 }

@@ -69,18 +69,22 @@ public class DaoJuCtrl : MonoBehaviour
     /// 道具的子集.
     /// </summary>
     public GameObject DaoJuChild;
+    /// <summary>
+    /// 障碍物道具在数据列表中的索引.
+    /// </summary>
+    [HideInInspector]
+    public int IndexZhangAiWu = 0;
     void Start()
     {
         if (DaoJuState == DaoJuType.ZhangAiWu)
         {
-            if (SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData == null)
-            {
-                SSGameCtrl.GetInstance().mPlayerDataManage.CreatDaoJuZhangAiWuData();
-            }
-
             if (SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData != null)
             {
-                SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.AddZhangAiWuTr(transform);
+                int rv = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.AddZhangAiWuTr(transform);
+                if (rv != -1)
+                {
+                    IndexZhangAiWu = rv;
+                }
             }
         }
     }
@@ -208,16 +212,7 @@ public class DaoJuCtrl : MonoBehaviour
                     {
                         PlayerController.GetInstance().OnPlayerHitDaoJuZhangAiWu();
                     }
-                    SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.RemoveZhangAiWuTr(transform);
-                    //GameObject childObj = null;
-                    //DestroyThisTimed destroyCom = null;
-                    //for (int i = 0; i < transform.childCount; i++)
-                    //{
-                    //    childObj = transform.GetChild(i).gameObject;
-                    //    destroyCom = childObj.AddComponent<DestroyThisTimed>();
-                    //    destroyCom.InitInfo(LiZiPrefab, BaoXiangPrefab, i * TimeDestroyZhangAiWu);
-                    //}
-                    //transform.DetachChildren(); //将子集从自身解除.
+                    //SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.RemoveZhangAiWuTr(transform);
                     break;
                 }
             case DaoJuType.CiTie:

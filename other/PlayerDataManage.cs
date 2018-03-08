@@ -20,14 +20,44 @@ public class PlayerDataManage
     /// 游戏运营模式.
     /// </summary>
     public string GameMode = "";
+    DaoJuZhangAiWuData _mDaoJuZhangAiWuData;
     /// <summary>
     /// 道具障碍物数据管理.
     /// </summary>
-    public DaoJuZhangAiWuData mDaoJuZhangAiWuData;
+    public DaoJuZhangAiWuData mDaoJuZhangAiWuData
+    {
+        get
+        {
+            if (_mDaoJuZhangAiWuData == null)
+            {
+                _mDaoJuZhangAiWuData = CreatDaoJuZhangAiWuData();
+            }
+            return _mDaoJuZhangAiWuData;
+        }
+        set
+        {
+            _mDaoJuZhangAiWuData = value;
+        }
+    }
+    AiNpcDataManage _mAiNpcData;
     /// <summary>
     /// AiNpc数据管理.
     /// </summary>
-    public AiNpcDataManage mAiNpcData;
+    public AiNpcDataManage mAiNpcData
+    {
+        get
+        {
+            if (_mAiNpcData == null)
+            {
+                _mAiNpcData = CreatAiNpcData();
+            }
+            return _mAiNpcData;
+        }
+        set
+        {
+            _mAiNpcData = value;
+        }
+    }
 
     public PlayerDataManage()
     {
@@ -35,30 +65,31 @@ public class PlayerDataManage
         CoinNumNeed = System.Convert.ToInt32(ReadGameInfo.GetInstance().ReadStarCoinNumSet());
         CoinNumFeiXing = 1;
         GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
-        CreatAiNpcData();
     }
 
     /// <summary>
     /// 创建道具障碍物数据.
     /// </summary>
-    public void CreatDaoJuZhangAiWuData()
+    DaoJuZhangAiWuData CreatDaoJuZhangAiWuData()
     {
-        if (mDaoJuZhangAiWuData == null)
+        if (_mDaoJuZhangAiWuData == null)
         {
             GameObject obj = new GameObject("_DaoJuZhangAiWuData");
-            mDaoJuZhangAiWuData = obj.AddComponent<DaoJuZhangAiWuData>();
+            _mDaoJuZhangAiWuData = obj.AddComponent<DaoJuZhangAiWuData>();
         }
+        return _mDaoJuZhangAiWuData;
     }
-    
+
     /// <summary>
     /// 创建AiNpc数据.
     /// </summary>
-    public void CreatAiNpcData()
+    AiNpcDataManage CreatAiNpcData()
     {
-        if (mAiNpcData == null)
+        if (_mAiNpcData == null)
         {
             GameObject obj = new GameObject("_AiNpcData");
-            mAiNpcData = obj.AddComponent<AiNpcDataManage>();
+            _mAiNpcData = obj.AddComponent<AiNpcDataManage>();
         }
+        return _mAiNpcData;
     }
 }

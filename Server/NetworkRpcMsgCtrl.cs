@@ -55,7 +55,7 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
 	{
 		if (Network.peerType == NetworkPeerType.Server)
         {
-			mNetViewCom.RPC("RpcSendSpawnPlayerIndex", RPCMode.OthersBuffered, playerNet, index);
+			mNetViewCom.RPC("RpcSendSpawnPlayerIndex", RPCMode.Others, playerNet, index);
 		}
 	}
 	

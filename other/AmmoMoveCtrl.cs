@@ -311,7 +311,11 @@ public class AmmoMoveCtrl : MonoBehaviour
                         DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
                         if (daoJuCom != null && daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
                         {
-                            //障碍物爆炸. 
+                            //障碍物爆炸.
+                            if (PlayerController.GetInstance() != null)
+                            {
+                                PlayerController.GetInstance().NetSendAmmoHitZhangAiWuInfo(daoJuCom);
+                            }
                             daoJuCom.OnDestroyThis();
                         }
                     }
@@ -329,7 +333,11 @@ public class AmmoMoveCtrl : MonoBehaviour
                         DaoJuCtrl daoJuCom = mAmmoInfo.AimTr.GetComponent<DaoJuCtrl>();
                         if (daoJuCom != null && daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
                         {
-                            //障碍物爆炸. 
+                            //障碍物爆炸.
+                            if (PlayerController.GetInstance() != null)
+                            {
+                                PlayerController.GetInstance().NetSendAmmoHitZhangAiWuInfo(daoJuCom);
+                            }
                             daoJuCom.OnDestroyThis();
                         }
 
@@ -374,6 +382,10 @@ public class AmmoMoveCtrl : MonoBehaviour
             DaoJuCtrl daoJuCom = hits[i].GetComponent<DaoJuCtrl>();
 			if (daoJuCom != null && daoJuCom.DaoJuState == DaoJuCtrl.DaoJuType.ZhangAiWu)
             {
+                if (PlayerController.GetInstance() != null)
+                {
+                    PlayerController.GetInstance().NetSendAmmoHitZhangAiWuInfo(daoJuCom);
+                }
                 daoJuCom.OnDestroyThis();
                 isDestroyAmmo = true;
             }
