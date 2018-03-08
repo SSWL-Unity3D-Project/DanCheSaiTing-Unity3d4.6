@@ -168,9 +168,13 @@ public class AmmoMoveCtrl : MonoBehaviour
 
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            HandleHiddenAmmo();
-            mNetViewCom.RPC("RpcSpawnAmmoExplosionLiZi", RPCMode.Others);
-            StartCoroutine(DelayRemoveNetAmmo());
+            if (IsNetControlPort)
+            {
+                //只允许主控制端调用.
+                HandleHiddenAmmo();
+                mNetViewCom.RPC("RpcSpawnAmmoExplosionLiZi", RPCMode.Others);
+                StartCoroutine(DelayRemoveNetAmmo());
+            }
         }
         else
         {
@@ -415,6 +419,12 @@ public class AmmoMoveCtrl : MonoBehaviour
         {
             //地雷和坦克炮弹强制删除.
             isDestroyAmmo = true;
+        }
+
+        if (!IsNetControlPort)
+        {
+            //非主控制端时,由主控制端来删除网络子弹.
+            isDestroyAmmo = false;
         }
 
         if (isDestroyAmmo)
