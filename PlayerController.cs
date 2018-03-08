@@ -935,20 +935,18 @@ public class PlayerController : MonoBehaviour
     public float DianLiangHuiFuVal = 10f;
 	void GetInput()
 	{
-		//throttle = 1f;
-        if (m_UIController.mPlayerDaoJuManageUI.DianLiangVal > 0f)
-        {
-            throttle = pcvr.GetInstance().mGetPower;
-        }
-        else
-        {
-            throttle = 0f;
-        }
         jiaoTaBan = pcvr.GetInstance().mGetJiaoTaBan;
         mSteer = pcvr.GetInstance().mGetSteer;
         if (!IsClickShaCheBt)
         {
-            throttle = pcvr.GetInstance().mGetPower;
+            if (m_UIController.mPlayerDaoJuManageUI.DianLiangVal > 0f)
+            {
+                throttle = pcvr.GetInstance().mGetPower;
+            }
+            else
+            {
+                throttle = 0f;
+            }
         }
         else
         {
