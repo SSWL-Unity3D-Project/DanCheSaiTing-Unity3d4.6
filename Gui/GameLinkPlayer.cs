@@ -32,7 +32,7 @@ public class GameLinkPlayer : MonoBehaviour
                     && NetworkServerNet.GetInstance().mRequestMasterServer.ServerIp == Network.player.ipAddress
                     && Network.peerType == NetworkPeerType.Server)
                 {
-                    TimeLastStartBt += Time.deltaTime;
+                    TimeLastStartBt += (Time.deltaTime * 30);
                     if (TimeLastStartBt >= 3f)
                     {
                         //循环动画场景主服务器有且只有1个动画服务端时,才允许显示开始按键.
