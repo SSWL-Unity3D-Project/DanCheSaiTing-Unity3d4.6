@@ -12,6 +12,10 @@ public class GameLinkPlayer : MonoBehaviour
     public UITexture[] PlayerUITextureArray = new UITexture[8];
     public Texture[] PlayerTexureArray = new Texture[8];
     bool IsClickStartBt = false;
+    /// <summary>
+    /// 记录开始按键时间.
+    /// </summary>
+    float TimeLastStartBt = 0f;
     public void Init()
     {
         SetAcitveStartBt(false);
@@ -25,9 +29,19 @@ public class GameLinkPlayer : MonoBehaviour
             if (!StartBtObj.activeSelf && !IsClickStartBt)
             {
                 if (NetworkServerNet.GetInstance().mRequestMasterServer.GetMovieMasterServerNum() == 1
-                    && NetworkServerNet.GetInstance().mRequestMasterServer.ServerIp == Network.player.ipAddress)
+                    && NetworkServerNet.GetInstance().mRequestMasterServer.ServerIp == Network.player.ipAddress
+                    && Network.peerType == NetworkPeerType.Server)
                 {
-                    SetAcitveStartBt(true);
+                    TimeLastStartBt += Time.deltaTime;
+                    if (TimeLastStartBt >= 3f)
+                    {
+                        //循环动画场景主服务器有且只有1个动画服务端时,才允许显示开始按键.
+                        SetAcitveStartBt(true);
+                    }
+                }
+                else
+                {
+                    TimeLastStartBt = 0f;
                 }
             }
         }
