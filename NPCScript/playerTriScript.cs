@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class playerTriScript : MonoBehaviour {
-
+public class playerTriScript : MonoBehaviour
+{
 	void OnTriggerEnter(Collider other)
-	{
-		if (other.tag == "spawnNPCTri")
+    {
+        TriggerYanHua yanHua = other.GetComponent<TriggerYanHua>();
+        if (yanHua != null)
+        {
+            yanHua.InitSpawnYanHua();
+        }
+
+        if (other.tag == "spawnNPCTri")
 		{
 			other.transform.collider.enabled = false;
 			other.transform.GetComponent<spawnTriggerScript>().BeginSpawn();
