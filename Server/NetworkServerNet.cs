@@ -270,7 +270,7 @@ public class NetworkServerNet : MonoBehaviour
 
     void RemoveAllRPC(NetworkPlayer playerNet)
     {
-        if (Network.isServer)
+        if (Network.peerType == NetworkPeerType.Server)
         {
             Network.RemoveRPCs(playerNet);
             Network.DestroyPlayerObjects(playerNet);
