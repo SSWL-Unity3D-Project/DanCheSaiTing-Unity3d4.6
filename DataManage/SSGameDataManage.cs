@@ -160,9 +160,17 @@ public class SSGameDataManage : MonoBehaviour
         [Range(1, 10)]
         public int TimeNetEndVal = 5;
         /// <summary>
+        /// 游戏时长信息.
+        /// </summary>
+        public float m_pGameTime = 300.0f;
+        /// <summary>
         /// 游戏当前关卡的路径长度信息.
         /// </summary>
         public float DistancePath = 6400;
+        /// <summary>
+        /// 联机游戏中玩家的控制脚本.
+        /// </summary>
+        public List<PlayerController> mNetPlayerComList = new List<PlayerController>();
         /// <summary>
         /// 创建主角.
         /// </summary>

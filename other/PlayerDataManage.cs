@@ -41,7 +41,7 @@ public class PlayerDataManage
     }
     AiNpcDataManage _mAiNpcData;
     /// <summary>
-    /// AiNpc数据管理.
+    /// AiNpc/主角数据列表管理.
     /// </summary>
     public AiNpcDataManage mAiNpcData
     {

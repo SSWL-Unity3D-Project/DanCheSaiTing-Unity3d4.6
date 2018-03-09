@@ -5,6 +5,11 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 联机游戏中是否显示游戏结束UI界面.
+    /// </summary>
+    [HideInInspector]
+    public bool IsNetShowGameEndUI = false;
+    /// <summary>
     /// 是否是网络控制端(只有网络控制端才有主动控制权限).
     /// </summary>
     [HideInInspector]
@@ -527,6 +532,7 @@ public class PlayerController : MonoBehaviour
 
         mNetSynGame.InitData(m_PlayerAnimator);
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
+        SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.mNetPlayerComList.Add(this);
     }
 
     /// <summary>
@@ -1406,7 +1412,7 @@ public class PlayerController : MonoBehaviour
         {
             m_IsJiasu = false;
         }
-        if (other.tag == "finish")
+        if (other.tag == "finish" && m_UIController.m_pGameTime > 0f && m_UIController.TimeNetEndVal > 0f)
         {
             if (!m_IsFinished)
             {
@@ -1422,7 +1428,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            TouBiInfoCtrl.IsCloseQiNang = true;
+            //TouBiInfoCtrl.IsCloseQiNang = true;
             m_IsFinished = true;
             if (m_PlayerAnimator.gameObject.activeInHierarchy)
             {
@@ -2430,10 +2436,10 @@ public class PlayerController : MonoBehaviour
     [RPC]
     void RpcOnPlayerMoveToFinishPoint()
     {
-        if (m_UIController != null)
+        if (_Instance.m_UIController != null)
         {
             Debug.Log("RpcOnPlayerMoveToFinishPoint...");
-            m_UIController.SetActiveIsOpenTimeNetEndUI();
+            _Instance.m_UIController.SetActiveIsOpenTimeNetEndUI();
         }
     }
     
@@ -2544,5 +2550,65 @@ public class PlayerController : MonoBehaviour
                     break;
                 }
         }
+    }
+
+    /// <summary>
+    /// 是否发送过激活IsNetShowGameEndUI的消息.
+    /// </summary>
+    [HideInInspector]
+    public bool IsSendActiveNetShowGameEndUI = false;
+    /// <summary>
+    /// 发送激活IsNetShowGameEndUI的消息.
+    /// </summary>
+    public void SendActiveIsNetShowGameEndUI()
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    if (!m_IsFinished)
+                    {
+                        IsSendActiveNetShowGameEndUI = true;
+                        mNetViewCom.RPC("RpcActiveIsNetShowGameEndUI", RPCMode.All);
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收激活IsNetShowGameEndUI的消息.
+    /// </summary>
+    [RPC]
+    void RpcActiveIsNetShowGameEndUI()
+    {
+        Debug.Log("RpcActiveIsNetShowGameEndUI...");
+        IsNetShowGameEndUI = true;
+    }
+
+    /// <summary>
+    /// 所有玩家都没到终点时显示游戏结束UI界面.
+    /// </summary>
+    public bool GetIsNetShowGameEndUI()
+    {
+        bool isNetShowEndUI = true;
+        if (SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.mNetPlayerComList != null)
+        {
+            PlayerController[] playerComArray = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.mNetPlayerComList.ToArray();
+            for (int i = 0; i < playerComArray.Length; i++)
+            {
+                if (playerComArray[i] != null && !playerComArray[i].IsNetShowGameEndUI)
+                {
+                    isNetShowEndUI = false;
+                }
+            }
+        }
+        return isNetShowEndUI;
     }
 }

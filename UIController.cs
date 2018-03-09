@@ -52,7 +52,10 @@ public class UIController : SSUiRoot
     /// 积分图集列表.
     /// </summary>
     public UISprite[] JiFenSpriteArray;
-	public float m_pGameTime = 300.0f;
+    /// <summary>
+    /// 游戏时长信息.
+    /// </summary>
+    public float m_pGameTime = 300.0f;
 	public UISprite m_pMiaoBaiwei;
 	public UISprite m_pMiaoshiwei;
 	public UISprite m_pMiaogewei;
@@ -115,11 +118,16 @@ public class UIController : SSUiRoot
 	public AudioSource m_BeginDaojishiAudio;
 	private bool m_HasPlay = false;
 
-	void Start () 
-	{
-        //m_Player = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerController;
-        m_pGameTime = 120.0f;   //gzknu
-        m_pMiaoshiwei.spriteName = "2"; //gzknu
+	void Start()
+    {
+        if (SSGameCtrl.GetInstance().mSSGameRoot != null)
+        {
+            m_pGameTime = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.m_pGameTime;
+            Distance = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.DistancePath;
+            TimeNetEndVal = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.TimeNetEndVal;
+        }
+        //m_pGameTime = 120.0f;   //gzknu
+        //m_pMiaoshiwei.spriteName = "2"; //gzknu
 
         chile = 0;
 		m_pScale.enabled = false;
@@ -129,11 +137,9 @@ public class UIController : SSUiRoot
         UpdateDianLiangUI(1f);
         UpdatePlayerMoveSpeed(0);
         ChongDianObj.SetActive(false);
-        if (SSGameCtrl.GetInstance().mSSGameRoot != null)
-        {
-            Distance = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.DistancePath;
-            TimeNetEndVal = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.TimeNetEndVal;
-        }
+
+        m_pGameTime += 1f;
+        UpdateGameTime();
     }
 
 	bool IsCloseYouMenTiShi;
@@ -226,15 +232,16 @@ public class UIController : SSUiRoot
 				m_YoumenTishi.enabled = true;
 				UpdateYoumenTishi();
 			}
+            
+            if (IsOpenTimeNetEndUI && TimeNetEndVal > 0f)
+            {
+                NetUpdateEndGameTime();
+            }
 
-			if(m_pGameTime >= 0.0f && !m_Player.m_IsFinished)
+            if (m_pGameTime >= 0.0f && !m_Player.m_IsFinished)
 			{
 				UpdateJinduTiao();
-                if (IsOpenTimeNetEndUI)
-                {
-                    NetUpdateEndGameTime();
-                }
-                else
+                if (!IsOpenTimeNetEndUI)
                 {
                     UpdateGameTime();
                 }
@@ -244,7 +251,7 @@ public class UIController : SSUiRoot
 				if(m_pGameTime <= 0.0f)
 				{
 					m_IsGameOver = true;
-					TouBiInfoCtrl.IsCloseQiNang = true;
+					//TouBiInfoCtrl.IsCloseQiNang = true;
 				}
 				m_pScale.enabled = false;
 			}
@@ -254,17 +261,45 @@ public class UIController : SSUiRoot
                 bool isShowOverUI = false; //是否显示游戏结束界面.
                 if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
                 {
-                    //联机.
+                    //联机模式游戏.
                     if (NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0 && Network.peerType == NetworkPeerType.Server)
                     {
                         //没有玩家选择链接服务器.
                         isShowOverUI = true;
                     }
-
-                    if (!m_Player.m_IsFinished && m_pGameTime <= 0f && !IsOpenTimeNetEndUI)
+                    else
                     {
-                        //倒计时结束并且没有玩家到达终点时,显示结束界面.
-                        isShowOverUI = true;
+                        if (IsOpenTimeNetEndUI)
+                        {
+                            //打开联机游戏最终倒计时界面.
+                            if (TimeNetEndVal <= 0f)
+                            {
+                                //联机最终倒计时结束,显示游戏结束界面.
+                                isShowOverUI = true;
+                            }
+                        }
+                        else
+                        {
+                            if (m_Player.m_IsFinished)
+                            {
+                                //玩家已经到达终点.
+                            }
+                            else
+                            {
+                                if (!m_Player.IsSendActiveNetShowGameEndUI)
+                                {
+                                    m_Player.SendActiveIsNetShowGameEndUI();
+                                }
+                                else
+                                {
+                                    if (m_Player.GetIsNetShowGameEndUI())
+                                    {
+                                        //所有玩家都没到终点时显示游戏结束UI界面.
+                                        isShowOverUI = true;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 else
@@ -313,6 +348,18 @@ public class UIController : SSUiRoot
                         m_OverJiemian.SetActive(true);
                     }
 
+                    if (!m_IsCongratulate)
+                    {
+                        //游戏结束后无需NetworkSynchronizeGame进行npc或主角的信息同步.
+                        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+                        {
+                            if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
+                            {
+                                NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
+                            }
+                        }
+                    }
+
                     m_IsCongratulate = true;
                     m_JindutiaoObj.SetActive(false);
                     m_daojishiObj.SetActive(false);
@@ -320,13 +367,6 @@ public class UIController : SSUiRoot
                     HiddenJiFen();
                     HiddenUi();
                     JieSuanJiFenObj.SetActive(true);
-                }
-                else
-                {
-                    //根据玩家状态判断联机游戏是否显示结束界面.
-                    if (m_Player.m_IsFinished)
-                    {
-                    }
                 }
             }
 
@@ -388,19 +428,11 @@ public class UIController : SSUiRoot
 
         if (Network.peerType == NetworkPeerType.Client)
         {
-            if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
-            {
-                NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
-            }
             NetworkServerNet.GetInstance().RemoveClientHost();
         }
 
         if (Network.peerType == NetworkPeerType.Server)
         {
-            if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
-            {
-                NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState = NetworkServerNet.PlayerGameNetType.GameBackMovie;
-            }
             NetworkServerNet.GetInstance().RemoveMasterServerHost();
         }
         StartCoroutine(CheckUnloadUnusedAssets());
@@ -464,7 +496,8 @@ public class UIController : SSUiRoot
     /// <summary>
     /// 联机游戏最终倒计时(多人联机时启用).
     /// </summary>
-    float TimeNetEndVal = 0;
+    [HideInInspector]
+    public float TimeNetEndVal = 0;
     /// <summary>
     /// 是否打开了联机游戏最终倒计时.
     /// </summary>
@@ -496,8 +529,26 @@ public class UIController : SSUiRoot
     /// </summary>
     void NetUpdateEndGameTime()
     {
+        if (TimeNetEndVal <= 0f)
+        {
+            return;
+        }
+
         float timeVal = TimeNetEndVal;
         timeVal -= Time.deltaTime;
+        if (timeVal <= 0f)
+        {
+            timeVal = 0f;
+            m_pScale.enabled = false;
+
+            if (!m_Player.m_IsFinished)
+            {
+                //联机最终倒计时结束,玩家未到达终点.
+                m_IsGameOver = true;
+            }
+        }
+        TimeNetEndVal = timeVal;
+
         int TimeMiaoBaiwei = (int)(timeVal / 100);
         int TimeMiaoshiwei = (int)((timeVal - TimeMiaoBaiwei * 100) / 10);
         int TimeMiaogewei = (int)(timeVal - TimeMiaoBaiwei * 100 - TimeMiaoshiwei * 10);

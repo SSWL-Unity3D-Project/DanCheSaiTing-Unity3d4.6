@@ -13,12 +13,12 @@ public class TouBiInfoCtrl : MonoBehaviour
     
 	private string GameMode = "";
 	public static bool IsCloseDongGan;
-	public static bool IsCloseQiNang;
+	//public static bool IsCloseQiNang;
 
 	// Use this for initialization
 	void Start()
 	{
-		IsCloseQiNang = false;
+		//IsCloseQiNang = false;
 		IsCloseDongGan = false;
         GameMode = SSGameCtrl.GetInstance().mPlayerDataManage.GameMode;
 		if(GameMode == "oper")
