@@ -1848,6 +1848,18 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void ClosePlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState, bool isTimeOver = true)
     {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0 && Network.peerType == NetworkPeerType.Server)
+            {
+                //没有玩家选择链接服务器进行联机游戏.
+            }
+            else
+            {
+                SendClosePlayerDaoJuAni(daoJuState);
+            }
+        }
+
         mSpeedDaoJuState = DaoJuCtrl.DaoJuType.Null;
         m_pTopSpeed = PlayerMvSpeedMin;
         m_ParameterForEfferct = m_StartForEfferct;
@@ -1962,6 +1974,18 @@ public class PlayerController : MonoBehaviour
         if (mSpeedDaoJuState != DaoJuCtrl.DaoJuType.Null)
         {
             ClosePlayerDaoJuAni(mSpeedDaoJuState, false);
+        }
+
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0 && Network.peerType == NetworkPeerType.Server)
+            {
+                //没有玩家选择链接服务器进行联机游戏.
+            }
+            else
+            {
+                SendOnPlayerHitDaoJuBianXing(daoJuState);
+            }
         }
 
         mSpeedDaoJuState = daoJuState;
@@ -2392,12 +2416,16 @@ public class PlayerController : MonoBehaviour
     {
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            mNetViewCom.RPC("RpcOnPlayerMoveToFinishPoint", RPCMode.All);
+            if (IsNetControlPort)
+            {
+                m_UIController.SetActiveIsOpenTimeNetEndUI();
+                mNetViewCom.RPC("RpcOnPlayerMoveToFinishPoint", RPCMode.Others);
+            }
         }
     }
 
     /// <summary>
-    /// 通知所有客户端有玩家到达终点了.
+    /// 通知其他客户端有玩家到达终点了.
     /// </summary>
     [RPC]
     void RpcOnPlayerMoveToFinishPoint()
@@ -2406,6 +2434,115 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("RpcOnPlayerMoveToFinishPoint...");
             m_UIController.SetActiveIsOpenTimeNetEndUI();
+        }
+    }
+    
+    /// <summary>
+    /// 发送玩家碰上道具变形消息.
+    /// </summary>
+    void SendOnPlayerHitDaoJuBianXing(DaoJuCtrl.DaoJuType daoJuState)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                mNetViewCom.RPC("RpcOnPlayerHitDaoJuBianXing", RPCMode.Others, (int)daoJuState);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 通知其他客户端玩家变形信息.
+    /// </summary>
+    [RPC]
+    void RpcOnPlayerHitDaoJuBianXing(int daoJuState)
+    {
+        DaoJuCtrl.DaoJuType daoJuType = (DaoJuCtrl.DaoJuType)daoJuState;
+        //Debug.Log("RpcOnPlayerHitDaoJuBianXing -> daoJuType " + daoJuType);
+        switch (daoJuType)
+        {
+            case DaoJuCtrl.DaoJuType.PenQiJiaSu:
+                {
+                    SetAcitveChuanTouShuiHuaTX(true);
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.one;
+                        PenQiAniAy[i].SetBool("IsPlay", true);
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.FeiXingYi:
+                {
+                    m_pChuan.localPosition += new Vector3(0f, PlayerHightFeiXing, 0f);
+                    for (int i = 0; i < FiXingYiAniAy.Length; i++)
+                    {
+                        FiXingYiAniAy[i].transform.localScale = Vector3.one;
+                        FiXingYiAniAy[i].SetBool("IsPlay", true);
+                    }
+
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.one;
+                        PenQiAniAy[i].SetBool("IsPlay", true);
+                    }
+                    break;
+                }
+        }
+    }
+
+    /// <summary>
+    /// 发送关闭玩家变形消息.
+    /// </summary>
+    void SendClosePlayerDaoJuAni(DaoJuCtrl.DaoJuType daoJuState)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                mNetViewCom.RPC("RpcClosePlayerDaoJuAni", RPCMode.Others, (int)daoJuState);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 通知其他客户端关闭玩家变形消息.
+    /// </summary>
+    [RPC]
+    void RpcClosePlayerDaoJuAni(int daoJuState)
+    {
+        DaoJuCtrl.DaoJuType daoJuType = (DaoJuCtrl.DaoJuType)daoJuState;
+        //Debug.Log("RpcClosePlayerDaoJuAni -> daoJuType " + daoJuType);
+        switch (daoJuType)
+        {
+            case DaoJuCtrl.DaoJuType.PenQiJiaSu:
+                {
+                    SetAcitveChuanTouShuiHuaTX(false);
+                    Instantiate(PenQiPrefab, DaoJuDiaoLuoTr[0].position, DaoJuDiaoLuoTr[0].rotation);
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.zero;
+                        PenQiAniAy[i].SetBool("IsPlay", false);
+                    }
+                    break;
+                }
+            case DaoJuCtrl.DaoJuType.FeiXingYi:
+                {
+                    m_pChuan.localPosition -= new Vector3(0f, PlayerHightFeiXing, 0f);
+                    Instantiate(FeiXingYiPrefab, DaoJuDiaoLuoTr[1].position, DaoJuDiaoLuoTr[1].rotation);
+                    for (int i = 0; i < FiXingYiAniAy.Length; i++)
+                    {
+                        FiXingYiAniAy[i].transform.localScale = Vector3.zero;
+                        FiXingYiAniAy[i].SetBool("IsPlay", false);
+                    }
+
+                    Instantiate(PenQiPrefab, DaoJuDiaoLuoTr[0].position, DaoJuDiaoLuoTr[0].rotation);
+                    for (int i = 0; i < PenQiAniAy.Length; i++)
+                    {
+                        PenQiAniAy[i].transform.localScale = Vector3.zero;
+                        PenQiAniAy[i].SetBool("IsPlay", false);
+                    }
+                    break;
+                }
         }
     }
 }

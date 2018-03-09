@@ -260,6 +260,12 @@ public class UIController : SSUiRoot
                         //没有玩家选择链接服务器.
                         isShowOverUI = true;
                     }
+
+                    if (!m_Player.m_IsFinished && m_pGameTime <= 0f && !IsOpenTimeNetEndUI)
+                    {
+                        //倒计时结束并且没有玩家到达终点时,显示结束界面.
+                        isShowOverUI = true;
+                    }
                 }
                 else
                 {
