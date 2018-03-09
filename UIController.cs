@@ -2,8 +2,12 @@
 using System.Collections;
 using System;
 
-public class UIController : MonoBehaviour
+public class UIController : SSUiRoot
 {
+    /// <summary>
+    /// 画布摄像机.
+    /// </summary>
+    public UICamera mUICamera;
     /// <summary>
     /// 播放请投币动画控制组件当玩家想耗币加速时.
     /// </summary>
@@ -56,7 +60,12 @@ public class UIController : MonoBehaviour
 	public UIAtlas m_pNormalAtlas;
 	public UIAtlas m_pWarnAtlas;
 	public TweenScale m_pScale;
-	private bool m_pHasChange = false;
+    /// <summary>
+    /// 联机游戏最终倒计时UI预制.
+    /// </summary>
+    public GameObject mNetEndDaoJiShiPrefab;
+    NetEndDaoJiShi mNetEndDaoJiShiCom;
+    private bool m_pHasChange = false;
 	public PlayerController m_Player;
 	public GameObject m_CongratulateJiemian;
 	public GameObject m_FinishiJiemian;
@@ -73,7 +82,10 @@ public class UIController : MonoBehaviour
 	public CameraShake m_CameraShake;
 	private bool m_HasShake = false;
 	public bool m_IsGameOver = false;
-	private int m_Score = 0;
+    /// <summary>
+    /// 玩家当前局所用时间.
+    /// </summary>
+    private int m_Score = 0;
 	private int m_totalTime = 0;
 	private int m_JiluRecord = 0;
 	
@@ -117,6 +129,11 @@ public class UIController : MonoBehaviour
         UpdateDianLiangUI(1f);
         UpdatePlayerMoveSpeed(0);
         ChongDianObj.SetActive(false);
+        if (SSGameCtrl.GetInstance().mSSGameRoot != null)
+        {
+            Distance = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.DistancePath;
+            TimeNetEndVal = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.TimeNetEndVal;
+        }
     }
 
 	bool IsCloseYouMenTiShi;
@@ -132,8 +149,6 @@ public class UIController : MonoBehaviour
 	{
 		if(PlayerController.GetInstance().timmerstar < 5.0f)
 		{
-            //Debug.Log("11111111111111111111111111111111111111111111");
-
             //gzkun void CloseAllQiNang()
             if (!SetPanel.IsOpenSetPanel)
             {                
@@ -142,7 +157,6 @@ public class UIController : MonoBehaviour
                 //pcvr.m_IsOpneLeftQinang = false;
                 //pcvr.m_IsOpneRightQinang = false;
             }
-
             UpdateBeginDaojishi();
 		}
 		else
@@ -213,61 +227,108 @@ public class UIController : MonoBehaviour
 				UpdateYoumenTishi();
 			}
 
-			if(m_pGameTime>=0.0f && !m_Player.m_IsFinished)
+			if(m_pGameTime >= 0.0f && !m_Player.m_IsFinished)
 			{
 				UpdateJinduTiao();
-				UpdateGameTime();
+                if (IsOpenTimeNetEndUI)
+                {
+                    NetUpdateEndGameTime();
+                }
+                else
+                {
+                    UpdateGameTime();
+                }
 			}
 			else
 			{
-				if(m_pGameTime<=0.0f)
+				if(m_pGameTime <= 0.0f)
 				{
 					m_IsGameOver = true;
 					TouBiInfoCtrl.IsCloseQiNang = true;
 				}
 				m_pScale.enabled = false;
 			}
-			if(m_Player.m_timmerFinished>2.0f && !m_IsCongratulate)
+
+			if(m_Player.m_timmerFinished > 2.0f && !m_IsCongratulate)
 			{
-				if(m_Player.m_IsFinished)
-				{
-					m_Score =  (int)(m_totalTime + chile * addChiLe - m_pGameTime);
-					m_JiluRecord = ReadGameInfo.GetInstance().ReadGameRecord();
-					if(m_JiluRecord == 0 || m_Score<m_JiluRecord)
-					{
-						if(!m_NewRecordAudio.isPlaying)
-							m_NewRecordAudio.Play();
-						m_CongratulateJiemian.SetActive(true);
-						ReadGameInfo.GetInstance().WriteGameRecord(m_Score);
-					}
-					else
-					{
-						if(!m_FinishiAudio.isPlaying)
-							m_FinishiAudio.Play();
-						m_FinishiJiemian.SetActive(true);
-					}
-					m_JiluObj.SetActive(true);
-					UpdateMyScore();
-					UpdateRecord();
-				}
-				else
-				{
-					if(!m_GameOverAudio.isPlaying)
-						m_GameOverAudio.Play();
-					m_OverJiemian.SetActive(true);
-				}
-				m_IsCongratulate = true;
-				m_JindutiaoObj.SetActive(false);
-				m_daojishiObj.SetActive(false);
-				m_biaodituObj.SetActive(false);
-                HiddenJiFen();
-                HiddenUi();
-                JieSuanJiFenObj.SetActive(true);
+                bool isShowOverUI = false; //是否显示游戏结束界面.
+                if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+                {
+                    //联机.
+                    if (NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0 && Network.peerType == NetworkPeerType.Server)
+                    {
+                        //没有玩家选择链接服务器.
+                        isShowOverUI = true;
+                    }
+                }
+                else
+                {
+                    //单机.
+                    isShowOverUI = true;
+                }
+
+                if (isShowOverUI)
+                {
+                    if (m_Player.m_IsFinished)
+                    {
+                        //到达终点.
+                        m_Score = (int)(m_totalTime + chile * addChiLe - m_pGameTime);
+                        m_JiluRecord = ReadGameInfo.GetInstance().ReadGameRecord();
+                        if (m_JiluRecord == 0 || m_Score < m_JiluRecord)
+                        {
+                            //玩家创纪录(玩家当前用时小于记录时间).
+                            if (!m_NewRecordAudio.isPlaying)
+                            {
+                                m_NewRecordAudio.Play();
+                            }
+                            m_CongratulateJiemian.SetActive(true);
+                            ReadGameInfo.GetInstance().WriteGameRecord(m_Score);
+                        }
+                        else
+                        {
+                            //到达终点.
+                            if (!m_FinishiAudio.isPlaying)
+                            {
+                                m_FinishiAudio.Play();
+                            }
+                            m_FinishiJiemian.SetActive(true);
+                        }
+                        m_JiluObj.SetActive(true);
+                        UpdateMyScore();
+                        UpdateRecord();
+                    }
+                    else
+                    {
+                        //玩家没有到达终点.
+                        if (!m_GameOverAudio.isPlaying)
+                        {
+                            m_GameOverAudio.Play();
+                        }
+                        m_OverJiemian.SetActive(true);
+                    }
+
+                    m_IsCongratulate = true;
+                    m_JindutiaoObj.SetActive(false);
+                    m_daojishiObj.SetActive(false);
+                    m_biaodituObj.SetActive(false);
+                    HiddenJiFen();
+                    HiddenUi();
+                    JieSuanJiFenObj.SetActive(true);
+                }
+                else
+                {
+                    //根据玩家状态判断联机游戏是否显示结束界面.
+                    if (m_Player.m_IsFinished)
+                    {
+                    }
+                }
             }
+
 			if(m_IsCongratulate)
 			{
 				m_CongratulateTimmer+=Time.deltaTime;
 			}
+
 			if(m_CongratulateTimmer > 1.0f)
 			{
 				if(m_Player.m_IsFinished)
@@ -279,7 +340,6 @@ public class UIController : MonoBehaviour
 							m_HasPlay = true;
 							m_NewRecordHitAudio.Play();
 						}
-							
 						m_CongratulateZitiObj.SetActive(true);
 					}
 					else
@@ -292,15 +352,16 @@ public class UIController : MonoBehaviour
 					m_OverZitiObj.SetActive(true);
 				}
 			}
+
 			if(m_Player.m_IsFinished && m_CongratulateTimmer>1.2f && !m_HasShake)
 			{
 				m_HasShake = true;
 				m_CameraShake.setCameraShakeImpulseValue();
 			}
-			if(m_CongratulateTimmer>5.0f)
+
+			if(m_CongratulateTimmer > 5f && !IsLoadMovie)
 			{
 				//MyCOMDevice.GetInstance().ForceRestartComPort();
-				//XkGameCtrl.IsLoadingLevel = true;
 				LoadMovieLevel();
 			}
 
@@ -348,7 +409,8 @@ public class UIController : MonoBehaviour
 
 		do {
 			yield return new WaitForSeconds(0.5f);
-			if (Time.realtimeSinceStartup - timeLast > 5f) {
+			if (Time.realtimeSinceStartup - timeLast > 5f)
+            {
 				isLoop = false;
 				//XkGameCtrl.IsLoadingLevel = true;
 				//Debug.Log("CheckUnloadUnusedAssets -> loading movie level, asyncVal.isDone "+asyncVal.isDone);
@@ -356,10 +418,12 @@ public class UIController : MonoBehaviour
 				yield break;
 			}
 
-			if (!asyncVal.isDone) {
+			if (!asyncVal.isDone)
+            {
 				yield return new WaitForSeconds(0.5f);
 			}
-			else {
+			else
+            {
 				isLoop = false;
 				//XkGameCtrl.IsLoadingLevel = true;
 				Application.LoadLevel(0);
@@ -368,6 +432,9 @@ public class UIController : MonoBehaviour
 		} while (isLoop);
 	}
 
+    /// <summary>
+    /// 更新正常倒计时.
+    /// </summary>
 	void UpdateGameTime()
 	{
 		m_pGameTime -= Time.deltaTime;
@@ -386,10 +453,72 @@ public class UIController : MonoBehaviour
 		m_pMiaoBaiwei.spriteName = TimeMiaoBaiwei.ToString();
 		m_pMiaoshiwei.spriteName = TimeMiaoshiwei.ToString();
 		m_pMiaogewei.spriteName = TimeMiaogewei.ToString();
-	}
+    }
+
+    /// <summary>
+    /// 联机游戏最终倒计时(多人联机时启用).
+    /// </summary>
+    float TimeNetEndVal = 0;
+    /// <summary>
+    /// 是否打开了联机游戏最终倒计时.
+    /// </summary>
+    bool IsOpenTimeNetEndUI = false;
+    public void SetActiveIsOpenTimeNetEndUI()
+    {
+        if (!IsOpenTimeNetEndUI)
+        {
+            IsOpenTimeNetEndUI = true;
+            SpawnNetEndDaoJiShiUI();
+        }
+    }
+
+    /// <summary>
+    /// 产生网络联机游戏最终倒计时界面.
+    /// </summary>
+    void SpawnNetEndDaoJiShiUI()
+    {
+        if (mNetEndDaoJiShiPrefab != null)
+        {
+            Debug.Log("SpawnNetEndDaoJiShiUI...");
+            GameObject obj = (GameObject)Instantiate(mNetEndDaoJiShiPrefab, mUICamera.transform);
+            mNetEndDaoJiShiCom = obj.GetComponent<NetEndDaoJiShi>();
+        }
+    }
+
+    /// <summary>
+    /// 联机状态下更新最后倒计时.
+    /// </summary>
+    void NetUpdateEndGameTime()
+    {
+        float timeVal = TimeNetEndVal;
+        timeVal -= Time.deltaTime;
+        int TimeMiaoBaiwei = (int)(timeVal / 100);
+        int TimeMiaoshiwei = (int)((timeVal - TimeMiaoBaiwei * 100) / 10);
+        int TimeMiaogewei = (int)(timeVal - TimeMiaoBaiwei * 100 - TimeMiaoshiwei * 10);
+        if (!m_pHasChange)
+        {
+            //改变倒计时的图片.
+            m_pScale.enabled = true;
+            m_pMiaoBaiwei.atlas = m_pWarnAtlas;
+            m_pMiaoshiwei.atlas = m_pWarnAtlas;
+            m_pMiaogewei.atlas = m_pWarnAtlas;
+            m_pMiaobiaozhi.atlas = m_pWarnAtlas;
+            m_pHasChange = true;
+        }
+        m_pMiaoBaiwei.spriteName = TimeMiaoBaiwei.ToString();
+        m_pMiaoshiwei.spriteName = TimeMiaoshiwei.ToString();
+        m_pMiaogewei.spriteName = TimeMiaogewei.ToString();
+
+        //更新最终倒计时.
+        if (mNetEndDaoJiShiCom != null)
+        {
+            mNetEndDaoJiShiCom.m_pNetMiaoshiwei.spriteName = TimeMiaoshiwei.ToString();
+            mNetEndDaoJiShiCom.m_pNetMiaogewei.spriteName = TimeMiaogewei.ToString();
+        }
+    }
 
 
-	void UpdateMyScore()
+    void UpdateMyScore()
 	{
 		int fen = m_Score/60;
 		if(fen > 0)
@@ -487,7 +616,7 @@ public class UIController : MonoBehaviour
 		m_JiashiTexture.transform.localScale = new Vector3 (1.0f,1.0f,1.0f);
 		if (!m_IsGameOver) {
 			m_pGameTime += addChiLe;
-			chile ++;
+			chile++;
 		}
 		//Debug.Log ("chileeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee " +chile);
 		m_Scale.ResetToBeginning ();

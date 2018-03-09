@@ -71,7 +71,10 @@ public class NetworkServerNet : MonoBehaviour
         }
         return _Instance;
     }
-
+    
+    /// <summary>
+    /// 初始化.
+    /// </summary>
     void Init()
     {
         if (!pcvr.bIsHardWare)
@@ -159,7 +162,7 @@ public class NetworkServerNet : MonoBehaviour
         {
             //循环动画场景.
             LinkServerPlayerNum_Movie = 0; //初始化.
-            LinkServerPlayerNum_Game = 0;
+            LinkServerPlayerNum_Game = 0; //重置.
             NetworkRootMovie.GetInstance().CreateNetworkRpc();
         }
 
@@ -212,15 +215,6 @@ public class NetworkServerNet : MonoBehaviour
                     break;
                 }
         }
-    }
-
-    public void InitTryToLinkServer()
-    {
-        if (!IsTryToLinkServer)
-        {
-            return;
-        }
-        IsTryToLinkServer = false;
     }
 
     /// <summary>

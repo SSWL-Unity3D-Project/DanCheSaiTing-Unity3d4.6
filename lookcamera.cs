@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class lookcamera : MonoBehaviour 
 {
@@ -7,17 +6,18 @@ public class lookcamera : MonoBehaviour
 	void Start () 
 	{
         Mycamera = PlayerController.GetInstance().m_CameraShake.transform;
-        //Mycamera = GameObject.Find ("Main Camera").transform;
 	}
 
 	void Update () 
 	{
-		if (Vector3.Distance(transform.position, Mycamera.position) < 300f)
+        float dis = Vector3.Distance(transform.position, Mycamera.position);
+        if (dis < 300f && dis > 3f)
 		{
-			transform.LookAt (Mycamera.position);
+            Vector3 forwardVal = Vector3.Normalize(Mycamera.position - transform.position);
+            if (Vector3.Dot(forwardVal, transform.forward) <= Mathf.Cos(Mathf.PI / 40f))
+            {
+                transform.LookAt(Mycamera);
+            }
 		}
-		//transform.eulerAngles = new Vector3( transform.eulerAngles.x, transform.eulerAngles.z, transform.eulerAngles.y);
-		//transform.localEulerAngles = new Vector3( transform.localEulerAngles.x, transform.localEulerAngles.z, transform.localEulerAngles.y);
-		//transform.forward = Mycamera.position - transform.position;
 	}
 }

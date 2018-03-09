@@ -80,18 +80,25 @@ public class NetworkSynchronizeGame : MonoBehaviour
 
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            //主控制端同步坐标.
-            if (mNetPos != transform.position)
+            if (NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.GameBackMovie)
             {
-                mNetPos = transform.position;
-                mNetworkView.RPC("RpcNetSynPosition", RPCMode.Others, mNetPos);
+                //游戏准备返回循环动画场景,无需继续同步信息!
             }
-
-            //主控制端同步转向.
-            if (mNetRot != transform.forward)
+            else
             {
-                mNetRot = transform.forward;
-                mNetworkView.RPC("RpcNetSynRotation", RPCMode.Others, mNetRot);
+                //主控制端同步坐标.
+                if (mNetPos != transform.position)
+                {
+                    mNetPos = transform.position;
+                    mNetworkView.RPC("RpcNetSynPosition", RPCMode.Others, mNetPos);
+                }
+
+                //主控制端同步转向.
+                if (mNetRot != transform.forward)
+                {
+                    mNetRot = transform.forward;
+                    mNetworkView.RPC("RpcNetSynRotation", RPCMode.Others, mNetRot);
+                }
             }
         }
     }
@@ -150,7 +157,14 @@ public class NetworkSynchronizeGame : MonoBehaviour
 
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            mNetworkView.RPC("RpcNetSynAnimator", RPCMode.Others, aniName, (int)aniType, isPlay == false ? 0 : 1);
+            if (NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.GameBackMovie)
+            {
+                //游戏准备返回循环动画场景,无需继续同步信息!
+            }
+            else
+            {
+                mNetworkView.RPC("RpcNetSynAnimator", RPCMode.Others, aniName, (int)aniType, isPlay == false ? 0 : 1);
+            }
         }
     }
 

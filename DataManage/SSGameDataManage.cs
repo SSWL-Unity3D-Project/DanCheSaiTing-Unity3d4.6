@@ -155,6 +155,15 @@ public class SSGameDataManage : MonoBehaviour
         /// </summary>
         public GameObject[] HiddenObjLinkArray;
         /// <summary>
+        /// 联机游戏最终倒计时(多人联机时启用).
+        /// </summary>
+        [Range(1, 10)]
+        public int TimeNetEndVal = 5;
+        /// <summary>
+        /// 游戏当前关卡的路径长度信息.
+        /// </summary>
+        public float DistancePath = 6400;
+        /// <summary>
         /// 创建主角.
         /// </summary>
         public void SpawnPlayer(int indexVal)
