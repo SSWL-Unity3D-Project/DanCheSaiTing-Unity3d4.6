@@ -47,6 +47,18 @@ public class NpcController : MonoBehaviour
     float TimeRandPlayer = 3f;
 
     /// <summary>
+    /// 排名数据.
+    /// </summary>
+    RankManage.RankData mRankDt = null;
+    /// <summary>
+    /// npc跑的圈数.
+    /// </summary>
+    int QuanShuCount = 0;
+    float TimeQuanShuVal = 0f;
+    float TimeFinishVal = 0f;
+    float RandTimeFinish = 0f;
+
+    /// <summary>
     /// 网络消息控制器.
     /// </summary>
     NetworkView mNetViewCom;
@@ -85,6 +97,7 @@ public class NpcController : MonoBehaviour
         {
             NpcObjArray[i].SetActive(index == i ? true : false);
         }
+        mRankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.AddRankDt((RankManage.RankEnum)index, false);
     }
 
     void Start ()
@@ -109,12 +122,19 @@ public class NpcController : MonoBehaviour
             return;
         }
 
-        if (m_NpcPathNum == m_NpcPath.childCount-1)
-		{
-			return;
-		}
+        if (QuanShuCount >= PlayerController.GetInstance().QuanShuMax && Time.time - TimeFinishVal >= RandTimeFinish)
+        {
+            return;
+        }
 
-		if(PlayerController.GetInstance().timmerstar > 5.0f)
+
+        int pathNum = (m_NpcPathNum + 1) % m_NpcPath.childCount;
+        //if (m_NpcPathNum == m_NpcPath.childCount - 1)
+        //{
+        //    return;
+        //}
+
+        if (PlayerController.GetInstance().timmerstar > 5.0f)
 		{
             if (Time.time - TimeLastRandPlayer > TimeRandPlayer)
             {
@@ -167,8 +187,8 @@ public class NpcController : MonoBehaviour
 				{
 					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed,m_EndSpeedSet,10.0f*Time.deltaTime);
 				}
-				transform.position = Vector3.MoveTowards(transform.position,m_NpcPathPoint[m_NpcPathNum+1],m_NpcSpeed*Time.deltaTime);
-				transform.forward = Vector3.Lerp( transform.forward,Vector3.Normalize(m_NpcPathPoint[m_NpcPathNum+1] - transform.position),9.0f*Time.deltaTime);
+				transform.position = Vector3.MoveTowards(transform.position,m_NpcPathPoint[pathNum],m_NpcSpeed*Time.deltaTime);
+				transform.forward = Vector3.Lerp( transform.forward,Vector3.Normalize(m_NpcPathPoint[pathNum] - transform.position),9.0f*Time.deltaTime);
 				transform.localEulerAngles = new Vector3(-10.0f,transform.localEulerAngles.y,transform.localEulerAngles.z);
 				if(!m_IsPubu && Physics.Raycast(transform.position+Vector3.up*25.0f,-Vector3.up,out hit,100.0f,mask.value))
 				{
@@ -188,7 +208,7 @@ public class NpcController : MonoBehaviour
 				{
 					rigidbody.isKinematic = false;
 					rigidbody.AddForce(Vector3.Normalize(m_NpcPos - m_PlayerHit)*80.0f,ForceMode.Force);
-					transform.forward = Vector3.Lerp( transform.forward,Vector3.Normalize(m_NpcPathPoint[m_NpcPathNum+1] - transform.position),15.0f*Time.deltaTime);
+					transform.forward = Vector3.Lerp( transform.forward,Vector3.Normalize(m_NpcPathPoint[pathNum] - transform.position),15.0f*Time.deltaTime);
 					transform.localEulerAngles = new Vector3(-10.0f,transform.localEulerAngles.y,transform.localEulerAngles.z);
 				}
 			}
@@ -196,8 +216,8 @@ public class NpcController : MonoBehaviour
 		else
 		{
 			m_NpcSpeed = 2.3f;
-			transform.position = Vector3.MoveTowards(transform.position,m_NpcPathPoint[m_NpcPathNum+1],m_NpcSpeed*Time.deltaTime);
-			transform.forward = Vector3.Lerp( transform.forward,Vector3.Normalize(m_NpcPathPoint[m_NpcPathNum+1] - transform.position),30.0f*Time.deltaTime);
+			transform.position = Vector3.MoveTowards(transform.position,m_NpcPathPoint[pathNum],m_NpcSpeed*Time.deltaTime);
+			transform.forward = Vector3.Lerp( transform.forward,Vector3.Normalize(m_NpcPathPoint[pathNum] - transform.position),30.0f*Time.deltaTime);
 			transform.localEulerAngles = new Vector3(-10.0f,transform.localEulerAngles.y,transform.localEulerAngles.z);
 			if(!m_IsPubu && Physics.Raycast(transform.position+Vector3.up*25.0f,-Vector3.up,out hit,100.0f,mask.value))
 			{
@@ -223,30 +243,52 @@ public class NpcController : MonoBehaviour
             return;
         }
 
+        if (other.tag == "finish")
+        {
+            if (Time.time - TimeQuanShuVal >= 20f)
+            {
+                TimeQuanShuVal = Time.time;
+                QuanShuCount++;
+                if (PlayerController.GetInstance().QuanShuMax <= QuanShuCount)
+                {
+                    TimeFinishVal = Time.time;
+                    RandTimeFinish = UnityEngine.Random.Range(0.5f, 2.5f);
+                    mRankDt.UpdateRankDtTimeFinish(Time.time);
+                }
+            }
+        }
+
         if (other.tag == "pathpoint")
 		{
 			m_NpcIndex = Convert.ToInt32(other.name);
-		}
+            mRankDt.UpdateRankDtPathPoint(m_NpcIndex, Time.time);
+        }
+
 		if(other.tag == "npc1" && NpcState == NpcEnum.Npc01)
 		{
 			m_NpcPathNum = Convert.ToInt32(other.name)-1;
 		}
+
 		if(other.tag == "npc2" && NpcState == NpcEnum.Npc02)
 		{
 			m_NpcPathNum = Convert.ToInt32(other.name)-1;
         }
+
         if (other.tag == "npc3" && NpcState == NpcEnum.Npc03)
         {
             m_NpcPathNum = Convert.ToInt32(other.name) - 1;
         }
+
         if (other.tag == "pubuNpc")
 		{
 			m_IsPubu = true;
 		}
+
 		if(other.tag == "outpubuNpc")
 		{
 			m_IsPubu = false;
 		}
+
 		if(other.tag == "dapubunpc")
 		{
 			m_IsEnd = true;

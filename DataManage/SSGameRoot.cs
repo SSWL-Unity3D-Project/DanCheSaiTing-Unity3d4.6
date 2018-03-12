@@ -25,6 +25,7 @@ public class SSGameRoot : MonoBehaviour
 
         switch (SSGameCtrl.GetInstance().eGameMode)
         {
+            case NetworkRootMovie.GameMode.Null:
             case NetworkRootMovie.GameMode.NoLink:
                 {
                     mSSGameDataManage.mGameData.SpawnPlayer(0);

@@ -168,9 +168,23 @@ public class SSGameDataManage : MonoBehaviour
         /// </summary>
         public float DistancePath = 6400;
         /// <summary>
+        /// 最大圈数.
+        /// </summary>
+        [Range(1, 10)]
+        public int QuanShuMax = 1;
+        /// <summary>
+        /// 终点Render.
+        /// </summary>
+        public MeshRenderer[] FinishRender;
+        /// <summary>
         /// 联机游戏中玩家的控制脚本.
         /// </summary>
+        [HideInInspector]
         public List<PlayerController> mNetPlayerComList = new List<PlayerController>();
+        /// <summary>
+        /// 排名数据管理.
+        /// </summary>
+        public RankManage RankDtManage = new RankManage();
         /// <summary>
         /// 创建主角.
         /// </summary>
@@ -231,5 +245,8 @@ public class SSGameDataManage : MonoBehaviour
             npcScript.SetNpcIndex(indexVal);
         }
     }
+    /// <summary>
+    /// 游戏数据.
+    /// </summary>
     public GameData mGameData;
 }

@@ -9,7 +9,7 @@ public class RankListUICtrl : MonoBehaviour
     /// 头像列表.
     /// TouXiangImgArray[x] -> 0 猪猪侠, 1 波比, 2 超人强, 3 菲菲.
     /// </summary>
-    public Texture[] TouXiangImgArray;
+    //public Texture[] TouXiangImgArray;
     /// <summary>
     /// 排名列表头像.
     /// </summary>
@@ -35,10 +35,10 @@ public class RankListUICtrl : MonoBehaviour
     {
         int indexVal = 0;
         RankManage.RankData rankDt = null;
-        for (int i = 0; i < RankTouXiangArray.Length; i++)
+        for (int i = 0; i < 4; i++)
 		{
 			mRankDtUIArray[i].gameObject.SetActive(true);
-            //rankDt = PlayerController.GetInstance().RankDtManage.RankDtList[i];
+            rankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.RankDtList[i];
             if (rankDt.IsPlayerData)
             {
                 mJiFenTr.parent = mJiFenTrArray[i];
@@ -51,8 +51,8 @@ public class RankListUICtrl : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("ShowRankListUI -> index " + i + ", RankType " + rankDt.RankType);
 #endif
-            RankTouXiangArray[i].mainTexture = TouXiangImgArray[indexVal];
-            mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
+            //RankTouXiangArray[i].mainTexture = TouXiangImgArray[indexVal];
+            //mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
         }
         gameObject.SetActive(true);
     }

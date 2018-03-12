@@ -84,7 +84,25 @@ public class UIController : SSUiRoot
 	private bool m_IsCongratulate = false;
 	public CameraShake m_CameraShake;
 	private bool m_HasShake = false;
-	public bool m_IsGameOver = false;
+    bool _IsGameOver = false;
+	public bool m_IsGameOver
+    {
+        set
+        {
+            _IsGameOver = value;
+            if (_IsGameOver)
+            {
+                if (m_Player != null)
+                {
+                    m_Player.SortPlayerRankList();
+                }
+            }
+        }
+        get
+        {
+            return _IsGameOver;
+        }
+    }
     /// <summary>
     /// 玩家当前局所用时间.
     /// </summary>
@@ -248,7 +266,7 @@ public class UIController : SSUiRoot
 			}
 			else
 			{
-				if(m_pGameTime <= 0.0f)
+				if(m_pGameTime <= 0.0f && !m_IsGameOver)
 				{
 					m_IsGameOver = true;
 					//TouBiInfoCtrl.IsCloseQiNang = true;
@@ -541,7 +559,7 @@ public class UIController : SSUiRoot
             timeVal = 0f;
             m_pScale.enabled = false;
 
-            if (!m_Player.m_IsFinished)
+            if (!m_Player.m_IsFinished && !m_IsGameOver)
             {
                 //联机最终倒计时结束,玩家未到达终点.
                 m_IsGameOver = true;

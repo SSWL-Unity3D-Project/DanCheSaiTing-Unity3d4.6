@@ -5,6 +5,12 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 终点Render.
+    /// </summary>
+    [HideInInspector]
+    public MeshRenderer[] FinishRender;
+    bool IsShowZhongDian = false;
+    /// <summary>
     /// 联机游戏中是否显示游戏结束UI界面.
     /// </summary>
     [HideInInspector]
@@ -415,6 +421,19 @@ public class PlayerController : MonoBehaviour
     public AudioSource LaBaAudio;
 
     /// <summary>
+    /// 排名数据.
+    /// </summary>
+    RankManage.RankData mRankDt = null;
+    /// <summary>
+    /// 最大圈数.
+    /// </summary>
+    [Range(1, 10)]
+    [HideInInspector]
+    public int QuanShuMax = 1;
+    int QuanShuCount = 0;
+    float TimeQuanShuVal = 0f;
+
+    /// <summary>
     /// 初始化人物数据(只在控制端初始化).
     /// </summary>
     void InitPlayerData()
@@ -530,9 +549,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        FinishRender = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.FinishRender;
+        QuanShuMax = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.QuanShuMax;
         mNetSynGame.InitData(m_PlayerAnimator);
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.mNetPlayerComList.Add(this);
+        mRankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.AddRankDt((RankManage.RankEnum)index, false);
     }
 
     /// <summary>
@@ -767,9 +789,23 @@ public class PlayerController : MonoBehaviour
         if (timmerstar < 5.0f)
         {
             timmerstar += Time.deltaTime;
+            if (timmerstar >= 5f)
+            {
+                SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SetTimeStartVal(Time.time);
+            }
         }
         else
         {
+            if (QuanShuCount >= QuanShuMax - 1 && Time.time - TimeQuanShuVal > 5f && !IsShowZhongDian)
+            {
+                //显示终点.
+                for (int i = 0; i < FinishRender.Length; i++)
+                {
+                    FinishRender[i].enabled = true;
+                }
+                IsShowZhongDian = true;
+            }
+
             if (IsPlayHuiTouAni)
             {
                 IsPlayHuiTouAni = false;
@@ -1412,6 +1448,7 @@ public class PlayerController : MonoBehaviour
         {
             m_IsJiasu = false;
         }
+
         if (other.tag == "finish" && m_UIController.m_pGameTime > 0f && m_UIController.TimeNetEndVal > 0f)
         {
             if (!m_IsFinished)
@@ -1424,18 +1461,33 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        SendOnPlayerMoveToFinishPoint();
+                        if (QuanShuMax - 1 == QuanShuCount)
+                        {
+                            //到达终点.
+                            SendOnPlayerMoveToFinishPoint();
+                        }
                     }
                 }
             }
-            //TouBiInfoCtrl.IsCloseQiNang = true;
-            m_IsFinished = true;
-            if (m_PlayerAnimator.gameObject.activeInHierarchy)
+
+            if (Time.time - TimeQuanShuVal >= 20f)
             {
-                m_PlayerAnimator.SetBool("IsFinish", true);
-                mNetSynGame.SynNetAnimator("IsFinish", NetworkSynchronizeGame.AnimatorType.Bool, true);
+                TimeQuanShuVal = Time.time;
+                QuanShuCount++;
+                if (QuanShuMax <= QuanShuCount)
+                {
+                    mRankDt.UpdateRankDtTimeFinish(Time.time);
+                    m_IsFinished = true;
+                    if (m_PlayerAnimator.gameObject.activeInHierarchy)
+                    {
+                        m_PlayerAnimator.SetBool("IsFinish", true);
+                        mNetSynGame.SynNetAnimator("IsFinish", NetworkSynchronizeGame.AnimatorType.Bool, true);
+                    }
+                    SortPlayerRankList();
+                }
             }
         }
+
         if (other.tag == "water")
         {
             m_IsInWarter = true;
@@ -1452,6 +1504,7 @@ public class PlayerController : MonoBehaviour
         {
             PathNum = Convert.ToInt32(other.name) - 1;
             //Debug.Log("PathNum PathNum PathNum" + PathNum);
+            mRankDt.UpdateRankDtPathPoint(Convert.ToInt32(other.name), Time.time);
         }
         if (other.tag == "zhangai")
         {
@@ -2610,5 +2663,20 @@ public class PlayerController : MonoBehaviour
             }
         }
         return isNetShowEndUI;
+    }
+    
+    bool IsRankListSort = false;
+    /// <summary>
+    /// 对排名数据进行排序.
+    /// </summary>
+    public void SortPlayerRankList()
+    {
+        if (IsRankListSort)
+        {
+            return;
+        }
+        IsRankListSort = true;
+        Debug.Log("SortPlayerRankList...");
+        SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SortRankDtList();
     }
 }
