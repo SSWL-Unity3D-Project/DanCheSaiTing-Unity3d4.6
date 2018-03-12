@@ -6,6 +6,10 @@
 public class RankManage
 {
     /// <summary>
+    /// 服务端比赛开始时间.
+    /// </summary>
+    float TimeServerStartVal = 0f;
+    /// <summary>
     /// 比赛开始时间.
     /// </summary>
     float TimeStartVal = 0f;
@@ -76,7 +80,6 @@ public class RankManage
                 return;
             }
             IsMoveToFinishPoint = true;
-            TimeFinishPoint = timeVal;
 #if UNITY_EDITOR
             UnityEngine.Debug.Log("UpdateRankDtTimeFinish -> TimeFinishPoint " + TimeFinishPoint + ", RankType " + RankType);
 #endif
@@ -140,6 +143,11 @@ public class RankManage
         }
 
         int retval = 0;
+        //修正服务端和客户端的时间,使所有端口的时间轴和服务器保持一致.
+        float dTime = TimeStartVal - TimeServerStartVal;
+        x.TimeFinishPoint -= dTime;
+        x.TimePathNodeCur -= dTime;
+
         if (x.IsMoveToFinishPoint && y.IsMoveToFinishPoint)
         {
             //x和y都到达终点.
@@ -192,6 +200,16 @@ public class RankManage
 
     public void SetTimeStartVal(float timeVal)
     {
+        UnityEngine.Debug.Log("SetTimeStartVal -> time " + timeVal.ToString("f2"));
         TimeStartVal = timeVal;
+    }
+
+    /// <summary>
+    /// 设置服务端的比赛开始时间.
+    /// </summary>
+    public void SetTimeServerStartVal(float timeVal)
+    {
+        UnityEngine.Debug.Log("SetTimeServerStartVal -> time " + timeVal.ToString("f2"));
+        TimeServerStartVal = timeVal;
     }
 }

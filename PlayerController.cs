@@ -791,7 +791,9 @@ public class PlayerController : MonoBehaviour
             timmerstar += Time.deltaTime;
             if (timmerstar >= 5f)
             {
-                SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SetTimeStartVal(Time.time);
+                float timeVal = Time.time;
+                SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SetTimeStartVal(timeVal);
+                SendPlayerPlayerRankTimeServerStartVal(timeVal);
             }
         }
         else
@@ -1477,6 +1479,7 @@ public class PlayerController : MonoBehaviour
                 if (QuanShuMax <= QuanShuCount)
                 {
                     mRankDt.UpdateRankDtTimeFinish(Time.time);
+                    SendPlayerUpdateRankDtTimeFinish(Time.time);
                     m_IsFinished = true;
                     if (m_PlayerAnimator.gameObject.activeInHierarchy)
                     {
@@ -1505,6 +1508,7 @@ public class PlayerController : MonoBehaviour
             PathNum = Convert.ToInt32(other.name) - 1;
             //Debug.Log("PathNum PathNum PathNum" + PathNum);
             mRankDt.UpdateRankDtPathPoint(Convert.ToInt32(other.name), Time.time);
+            SendPlayerUpdateRankDtPathPoint(Convert.ToInt32(other.name), Time.time);
         }
         if (other.tag == "zhangai")
         {
@@ -2678,5 +2682,94 @@ public class PlayerController : MonoBehaviour
         IsRankListSort = true;
         Debug.Log("SortPlayerRankList...");
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SortRankDtList();
+    }
+
+    /// <summary>
+    /// 发送Player更新排名路径的消息.
+    /// </summary>
+    void SendPlayerUpdateRankDtPathPoint(int index, float time)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcPlayerUpdateRankDtPathPoint", RPCMode.Others, index, time);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Player更新排名路径的消息.
+    /// </summary>
+    [RPC]
+    void RpcPlayerUpdateRankDtPathPoint(int index, float time)
+    {
+        Debug.Log("RpcPlayerUpdateRankDtPathPoint...");
+        mRankDt.UpdateRankDtPathPoint(index, time);
+    }
+
+    /// <summary>
+    /// 发送Player更新到达终点的消息.
+    /// </summary>
+    void SendPlayerUpdateRankDtTimeFinish(float time)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcPlayerUpdateRankDtTimeFinish", RPCMode.Others, time);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Player更新到达终点的消息.
+    /// </summary>
+    [RPC]
+    void RpcPlayerUpdateRankDtTimeFinish(float time)
+    {
+        Debug.Log("RpcPlayerUpdateRankDtTimeFinish...");
+        mRankDt.UpdateRankDtTimeFinish(time);
+    }
+
+    /// <summary>
+    /// 发送服务端Player比赛开始时间的消息.
+    /// </summary>
+    void SendPlayerPlayerRankTimeServerStartVal(float time)
+    {
+        if (Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                mNetViewCom.RPC("RpcPlayerRankTimeServerStartVal", RPCMode.All, time);
+            }
+        }
+        else if (Network.peerType == NetworkPeerType.Disconnected)
+        {
+            SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SetTimeServerStartVal(time);
+        }
+    }
+
+    /// <summary>
+    /// 接收服务端Player比赛开始时间的消息.
+    /// </summary>
+    [RPC]
+    void RpcPlayerRankTimeServerStartVal(float time)
+    {
+        SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SetTimeServerStartVal(time);
     }
 }

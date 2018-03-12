@@ -254,6 +254,7 @@ public class NpcController : MonoBehaviour
                     TimeFinishVal = Time.time;
                     RandTimeFinish = UnityEngine.Random.Range(0.5f, 2.5f);
                     mRankDt.UpdateRankDtTimeFinish(Time.time);
+                    SendNpcUpdateRankDtTimeFinish(Time.time);
                 }
             }
         }
@@ -262,6 +263,7 @@ public class NpcController : MonoBehaviour
 		{
 			m_NpcIndex = Convert.ToInt32(other.name);
             mRankDt.UpdateRankDtPathPoint(m_NpcIndex, Time.time);
+            SendNpcUpdateRankDtPathPoint(m_NpcIndex, Time.time);
         }
 
 		if(other.tag == "npc1" && NpcState == NpcEnum.Npc01)
@@ -340,5 +342,67 @@ public class NpcController : MonoBehaviour
     public void SetIsNetControlPort(bool isNetControl)
     {
         IsNetControlPort = isNetControl;
+    }
+
+    /// <summary>
+    /// 发送Npc更新排名路径的消息.
+    /// </summary>
+    void SendNpcUpdateRankDtPathPoint(int index, float time)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcNpcUpdateRankDtPathPoint", RPCMode.Others, index, time);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Npc更新排名路径的消息.
+    /// </summary>
+    [RPC]
+    void RpcNpcUpdateRankDtPathPoint(int index, float time)
+    {
+        Debug.Log("RpcNpcUpdateRankDtPathPoint...");
+        mRankDt.UpdateRankDtPathPoint(index, time);
+    }
+
+    /// <summary>
+    /// 发送Npc更新到达终点的消息.
+    /// </summary>
+    void SendNpcUpdateRankDtTimeFinish(float time)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcNpcUpdateRankDtTimeFinish", RPCMode.Others, time);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Npc更新到达终点的消息.
+    /// </summary>
+    [RPC]
+    void RpcNpcUpdateRankDtTimeFinish(int index, float time)
+    {
+        Debug.Log("RpcNpcUpdateRankDtTimeFinish...");
+        mRankDt.UpdateRankDtTimeFinish(time);
     }
 }
