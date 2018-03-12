@@ -2711,7 +2711,7 @@ public class PlayerController : MonoBehaviour
     [RPC]
     void RpcPlayerUpdateRankDtPathPoint(int index, float time)
     {
-        Debug.Log("RpcPlayerUpdateRankDtPathPoint...");
+        //Debug.Log("RpcPlayerUpdateRankDtPathPoint...");
         mRankDt.UpdateRankDtPathPoint(index, time);
     }
 
@@ -2742,7 +2742,7 @@ public class PlayerController : MonoBehaviour
     [RPC]
     void RpcPlayerUpdateRankDtTimeFinish(float time)
     {
-        Debug.Log("RpcPlayerUpdateRankDtTimeFinish...");
+        //Debug.Log("RpcPlayerUpdateRankDtTimeFinish...");
         mRankDt.UpdateRankDtTimeFinish(time);
     }
 

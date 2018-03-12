@@ -371,7 +371,7 @@ public class NpcController : MonoBehaviour
     [RPC]
     void RpcNpcUpdateRankDtPathPoint(int index, float time)
     {
-        Debug.Log("RpcNpcUpdateRankDtPathPoint...");
+        //Debug.Log("RpcNpcUpdateRankDtPathPoint...");
         mRankDt.UpdateRankDtPathPoint(index, time);
     }
 
@@ -402,7 +402,7 @@ public class NpcController : MonoBehaviour
     [RPC]
     void RpcNpcUpdateRankDtTimeFinish(int index, float time)
     {
-        Debug.Log("RpcNpcUpdateRankDtTimeFinish...");
+        //Debug.Log("RpcNpcUpdateRankDtTimeFinish...");
         mRankDt.UpdateRankDtTimeFinish(time);
     }
 }

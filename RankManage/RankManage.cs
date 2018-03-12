@@ -80,6 +80,7 @@ public class RankManage
                 return;
             }
             IsMoveToFinishPoint = true;
+            TimeFinishPoint = timeVal;
 #if UNITY_EDITOR
             UnityEngine.Debug.Log("UpdateRankDtTimeFinish -> TimeFinishPoint " + TimeFinishPoint + ", RankType " + RankType);
 #endif
