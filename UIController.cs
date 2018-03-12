@@ -9,6 +9,16 @@ public class UIController : SSUiRoot
     /// </summary>
     public UICamera mUICamera;
     /// <summary>
+    /// 发射导弹提示UI预制.
+    /// </summary>
+    public GameObject FaSheDaoDanPrefab;
+    GameObject FaSheDaoDanObj;
+    /// <summary>
+    /// 使用超级加速UI预制.
+    /// </summary>
+    public GameObject ChaoJiJiaSuPrefab;
+    GameObject ChaoJiJiaSuObj;
+    /// <summary>
     /// 播放请投币动画控制组件当玩家想耗币加速时.
     /// </summary>
     public Animator JiaSuCoinAni;
@@ -796,5 +806,61 @@ public class UIController : SSUiRoot
     public void SetActiveUIRoot(bool isActive)
     {
         gameObject.SetActive(isActive);
+    }
+
+    /// <summary>
+    /// 产生发射导弹提示UI.
+    /// </summary>
+    public void SpawnFaSheDaoDanUI()
+    {
+        if (ChaoJiJiaSuObj != null)
+        {
+            //有超级加速提示时,不提示发射导弹.
+            return;
+        }
+
+        if (FaSheDaoDanObj != null)
+        {
+            return;
+        }
+
+        if (mPlayerDaoJuManageUI.DaoDanNum > 0 || mPlayerDaoJuManageUI.DiLeiNum > 0)
+        {
+            FaSheDaoDanObj = (GameObject)Instantiate(FaSheDaoDanPrefab, mUICamera.transform);
+        }
+    }
+
+    /// <summary>
+    /// 删除发射导弹提示UI.
+    /// </summary>
+    public void RemoveFaSheDaoDanUI()
+    {
+        if (FaSheDaoDanObj != null)
+        {
+            Destroy(FaSheDaoDanObj);
+        }
+    }
+    /// <summary>
+    /// 产生使用超级加速UI.
+    /// </summary>
+    public void SpawnChaoJiJiaSuUI()
+    {
+        if (ChaoJiJiaSuObj != null)
+        {
+            return;
+        }
+        RemoveFaSheDaoDanUI();
+        ChaoJiJiaSuObj = (GameObject)Instantiate(ChaoJiJiaSuPrefab, mUICamera.transform);
+    }
+
+    /// <summary>
+    /// 删除使用超级加速UI.
+    /// </summary>
+    public void RemoveChaoJiJiaSuUI()
+    {
+        if (ChaoJiJiaSuObj != null)
+        {
+            Destroy(ChaoJiJiaSuObj);
+        }
     }
 }

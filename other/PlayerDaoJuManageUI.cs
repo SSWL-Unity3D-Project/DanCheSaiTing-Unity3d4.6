@@ -41,13 +41,28 @@ public class PlayerDaoJuManageUI : MonoBehaviour
     {
         set
         {
-            if (value > 9)
+            if (value + _DiLeiNum > AmmoMax)
             {
-                value = 9;
+                //子弹已经加满.
+                return;
+            }
+
+            if (value > AmmoMax)
+            {
+                value = AmmoMax;
             }
 
             _DaoDanNum = value;
-            UpdateDaoDanInfo(_DaoDanNum);
+            //UpdateDaoDanInfo(_DaoDanNum);
+            UpdateAmmoUI();
+
+            if (_DaoDanNum <= 0 && _DiLeiNum <= 0)
+            {
+                if (PlayerController.GetInstance() != null && PlayerController.GetInstance().m_UIController != null)
+                {
+                    PlayerController.GetInstance().m_UIController.RemoveFaSheDaoDanUI();
+                }
+            }
         }
         get
         {
@@ -63,13 +78,28 @@ public class PlayerDaoJuManageUI : MonoBehaviour
     {
         set
         {
-            if (value > 9)
+            if (value + _DaoDanNum > AmmoMax)
             {
-                value = 9;
+                //子弹已经加满.
+                return;
+            }
+
+            if (value > AmmoMax)
+            {
+                value = AmmoMax;
             }
 
             _DiLeiNum = value;
-            UpdateDiLeiInfo(_DiLeiNum);
+            //UpdateDiLeiInfo(_DiLeiNum);
+            UpdateAmmoUI();
+
+            if (_DaoDanNum <= 0 && _DiLeiNum <= 0)
+            {
+                if (PlayerController.GetInstance() != null && PlayerController.GetInstance().m_UIController != null)
+                {
+                    PlayerController.GetInstance().m_UIController.RemoveFaSheDaoDanUI();
+                }
+            }
         }
         get
         {
@@ -77,6 +107,14 @@ public class PlayerDaoJuManageUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 玩家获取子弹的UI提示.
+    /// </summary>
+    public GameObject[] AmmoUIArray;
+    /// <summary>
+    /// 子弹最大数量.
+    /// </summary>
+    int AmmoMax = 0;
     /// <summary>
     /// 导弹数量.
     /// </summary>
@@ -90,6 +128,30 @@ public class PlayerDaoJuManageUI : MonoBehaviour
         DianLiangVal = 1f;
         DaoDanNum = 0;
         DiLeiNum = 0;
+
+        AmmoMax = AmmoUIArray.Length;
+        for (int i = 0; i < AmmoMax; i++)
+        {
+            if (AmmoUIArray[i] != null)
+            {
+                AmmoUIArray[i].SetActive(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 更新玩家子弹UI.
+    /// </summary>
+    void UpdateAmmoUI()
+    {
+        int ammoNum = DaoDanNum + DiLeiNum;
+        for (int i = 0; i < AmmoMax; i++)
+        {
+            if (AmmoUIArray[i] != null)
+            {
+                AmmoUIArray[i].SetActive(i < ammoNum ? true : false);
+            }
+        }
     }
 
     /// <summary>

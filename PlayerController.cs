@@ -656,6 +656,7 @@ public class PlayerController : MonoBehaviour
         SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum -= SSGameCtrl.GetInstance().mPlayerDataManage.CoinNumFeiXing;
         m_UIController.mTouBiInfo.UpdateInsertCoin();
         OpenPlayerDaoJuAni(DaoJuCtrl.DaoJuType.FeiXingYi);
+        m_UIController.RemoveChaoJiJiaSuUI();
     }
 
     public static int GameGradeVal = 2;
@@ -666,7 +667,7 @@ public class PlayerController : MonoBehaviour
         GameGradeVal = PlayerPrefs.GetInt("Grade");
         switch (GameGradeVal)
         {
-            case 1: //¼òµ¥
+            case 1: //简单
                 {
                     string[] ObjNameToHide = {
                     "Obstacle/Stone_1/_newCreation_Tris537_201",
@@ -700,7 +701,8 @@ public class PlayerController : MonoBehaviour
                     }
                 }
                 break;
-            case 2: //Õý³£
+
+            case 2: //中等
                 {
                     string[] ObjNameToHide = {
                     "Obstacle/Stone_1/_newCreation_Tris537_201",
@@ -723,10 +725,9 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                 }
-
                 break;
-            case 3: //À§ÄÑ
-                //Ô­°æ
+
+            case 3: //难
                 break;
 
             default:
@@ -775,9 +776,17 @@ public class PlayerController : MonoBehaviour
         LaBaAudio.Play();
     }
 
+    /// <summary>
+    /// 回头动画参数.
+    /// </summary>
     bool IsPlayHuiTouAni = false;
     float TimeLastHuiTou = 0f;
     float TimeRandHuiTou = 0f;
+
+    /// <summary>
+    /// 发射导弹UI产生时间记录.
+    /// </summary>
+    float TimeLastFaShaDaoDanUI = -100f;
 
     void Update()
     {
@@ -798,6 +807,26 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (Time.frameCount % 30 * 30 == 0)
+            {
+                //30秒触发一次.
+                m_UIController.SpawnChaoJiJiaSuUI();
+            }
+
+            if (Time.frameCount % 3 == 0)
+            {
+                GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+                if (aimNpc != null)
+                {
+                    if (Time.time - TimeLastFaShaDaoDanUI > 10f)
+                    {
+                        //10秒内不允许再提示发射导弹.
+                        TimeLastFaShaDaoDanUI = Time.time;
+                        m_UIController.SpawnFaSheDaoDanUI();
+                    }
+                }
+            }
+
             if (QuanShuCount >= QuanShuMax - 1 && Time.time - TimeQuanShuVal > 5f && !IsShowZhongDian)
             {
                 //显示终点.
