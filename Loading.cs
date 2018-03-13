@@ -7,6 +7,11 @@ public class Loading : SSUiRoot
 	private string CoinNumSet = "1";
 	private string InsertCoinNum = "";
     /// <summary>
+    /// 选择游戏场景UI预制文件.
+    /// </summary>
+    public GameObject LevelSelectUIPrefab;
+    LevelSelectUI mLevelSelectUI;
+    /// <summary>
     /// 选择联机游戏的玩家UI预制文件.
     /// </summary>
     public GameObject LinkPlayerPrefab;
@@ -295,6 +300,7 @@ public class Loading : SSUiRoot
                 {
                     if (mGameModeSelect == null)
                     {
+                        //创建游戏模式选择UI界面.
                         SpawnGameModeUI();
                         m_BeginSource.Play();
                         m_IsStartGame = true;
@@ -357,8 +363,10 @@ public class Loading : SSUiRoot
                         return;
                     }
 
-                    if (m_IsBeginOk && !m_HasBegin)
+                    if (mLevelSelectUI == null)
                     {
+                        //产生选择游戏场景UI.
+                        SpawnLevelSelectUI();
                         m_BeginSource.Play();
                         m_IsStartGame = true;
                         if (GameMode == "oper")
@@ -366,17 +374,24 @@ public class Loading : SSUiRoot
                             m_InserNum -= Convert.ToInt32(CoinNumSet);
                             UpdateInsertCoin();
                             ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
-
                             if (pcvr.bIsHardWare)
                             {
                                 pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(Convert.ToInt32(CoinNumSet), pcvrTXManage.PlayerCoinEnum.player01);
                             }
                         }
                         m_Tishi.SetActive(false);
-                        m_Loading.SetActive(true);
-                        timmerstar = true;
-                        m_HasBegin = true;
-                        SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink;
+                    }
+                    else
+                    {
+                        if (m_IsBeginOk && !m_HasBegin)
+                        {
+                            mLevelSelectUI.HiddenSelf();
+                            m_BeginSource.Play();
+                            m_Loading.SetActive(true);
+                            timmerstar = true;
+                            m_HasBegin = true;
+                            SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink;
+                        }
                     }
                     break;
                 }
@@ -391,7 +406,14 @@ public class Loading : SSUiRoot
 			timmerforstar += Time.deltaTime;
 			if(timmerforstar > 1.5f)
 			{
-                StartCoroutine (loadScene((LoadSceneCount % (Application.levelCount - 2)) + 1));
+                if (mLevelSelectUI != null)
+                {
+                    LoadSceneCount = mLevelSelectUI.mSelectLevel - 1;
+                }
+
+                int levelVal = (LoadSceneCount % (Application.levelCount - 2)) + 1;
+                Debug.Log("OnLoadingClicked -> levelVal == " + levelVal);
+                StartCoroutine (loadScene(levelVal));
 				timmerstar = false;
                 LoadSceneCount++;
             }
@@ -460,6 +482,19 @@ public class Loading : SSUiRoot
             m_Loading.SetActive(true);
             timmerstar = true;
             m_HasBegin = true;
+        }
+    }
+
+    /// <summary>
+    /// 产生选择游戏场景UI.
+    /// </summary>
+    void SpawnLevelSelectUI()
+    {
+        if (mLevelSelectUI == null)
+        {
+            GameObject obj = (GameObject)Instantiate(LevelSelectUIPrefab, mUICamera.transform);
+            mLevelSelectUI = obj.GetComponent<LevelSelectUI>();
+            mLevelSelectUI.Init();
         }
     }
 }
