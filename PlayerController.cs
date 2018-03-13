@@ -787,6 +787,10 @@ public class PlayerController : MonoBehaviour
     /// 发射导弹UI产生时间记录.
     /// </summary>
     float TimeLastFaShaDaoDanUI = -100f;
+    /// <summary>
+    /// 超级加速UI产生时间记录.
+    /// </summary>
+    float TimeLastChaoJiJiaSuUI = -15f;
 
     void Update()
     {
@@ -807,18 +811,22 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Time.frameCount % 30 * 30 == 0)
-            {
-                //30秒触发一次.
-                m_UIController.SpawnChaoJiJiaSuUI();
-            }
-
             if (Time.frameCount % 3 == 0)
             {
-                GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
-                if (aimNpc != null)
+                if (Time.time - TimeLastChaoJiJiaSuUI > 30f)
                 {
-                    if (Time.time - TimeLastFaShaDaoDanUI > 10f)
+                    //30秒触发一次.
+                    TimeLastChaoJiJiaSuUI = Time.time;
+                    m_UIController.SpawnChaoJiJiaSuUI();
+                }
+            }
+
+            if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0 || m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
+            {
+                if (Time.time - TimeLastFaShaDaoDanUI > 10f)
+                {
+                    GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+                    if (aimNpc != null)
                     {
                         //10秒内不允许再提示发射导弹.
                         TimeLastFaShaDaoDanUI = Time.time;

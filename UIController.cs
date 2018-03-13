@@ -826,6 +826,7 @@ public class UIController : SSUiRoot
 
         if (mPlayerDaoJuManageUI.DaoDanNum > 0 || mPlayerDaoJuManageUI.DiLeiNum > 0)
         {
+            Debug.Log("SpawnFaSheDaoDanUI -> time " + Time.time);
             FaSheDaoDanObj = (GameObject)Instantiate(FaSheDaoDanPrefab, mUICamera.transform);
         }
     }
@@ -849,6 +850,7 @@ public class UIController : SSUiRoot
         {
             return;
         }
+        Debug.Log("SpawnChaoJiJiaSuUI -> time " + Time.time);
         RemoveFaSheDaoDanUI();
         ChaoJiJiaSuObj = (GameObject)Instantiate(ChaoJiJiaSuPrefab, mUICamera.transform);
     }
