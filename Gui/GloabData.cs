@@ -1,53 +1,55 @@
-﻿
-public enum GameMode
-{
-    None,
-    SoloMode,
-    OnlineMode
-}
-
-public enum GameLeve : int
-{
-    None = -1,
-    Movie = 0,
-    Waterwheel = 1,
-    WaterwheelNet = 2,
-    SetPanel = 3
-}
+﻿using System.Collections.Generic;
 
 public class GlobalData
 {
-	public static GameTextType GameTextVal = GameTextType.Chinese;
+    public enum GameTextType
+    {
+        Chinese,
+        English,
+    }
+    public GameTextType GameTextVal = GameTextType.Chinese;
 	public int CoinCur;
-    public GameMode gameMode;
-    public GameLeve gameLeve;
+    /// <summary>
+    /// 已完成的关卡.
+    /// </summary>
+    public List<int> YiWanChengLvList;
     private static  GlobalData Instance;
 	public static GlobalData GetInstance()
 	{
-		if (Instance == null) {
-			bool isChineseGame = false;
-			if (!isChineseGame) {
-				GameTextVal = GameTextType.English;
-			}
-			else {
-				GameTextVal = GameTextType.Chinese;
-			}
+		if (Instance == null)
+        {
 			Instance = new GlobalData();
-		}
+            bool isChineseGame = false;
+            if (!isChineseGame)
+            {
+                Instance.GameTextVal = GameTextType.English;
+            }
+            else
+            {
+                Instance.GameTextVal = GameTextType.Chinese;
+            }
+        }
 		return Instance;
 	}
 
-	public static GameTextType GetGameTextMode()
-	{
-		if (Instance == null) {
-			GetInstance();
-		}
-		return GameTextVal;
-	}
-}
+    /// <summary>
+    /// 添加已完成场景.
+    /// </summary>
+    public void AddYiWanChengLevel(int level)
+    {
+        if (!YiWanChengLvList.Contains(level))
+        {
+            UnityEngine.Debug.Log("AddYiWanChengLevel -> level == " + level);
+            YiWanChengLvList.Add(level);
+        }
+    }
 
-public enum GameTextType
-{
-	Chinese,
-	English,
+    /// <summary>
+    /// 清除已完成场景.
+    /// </summary>
+    public void ClearYiWanChengLevel()
+    {
+        UnityEngine.Debug.Log("ClearYiWanChengLevel...");
+        YiWanChengLvList.Clear();
+    }
 }

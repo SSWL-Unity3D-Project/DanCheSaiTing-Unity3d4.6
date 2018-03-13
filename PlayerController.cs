@@ -1524,6 +1524,7 @@ public class PlayerController : MonoBehaviour
                         mNetSynGame.SynNetAnimator("IsFinish", NetworkSynchronizeGame.AnimatorType.Bool, true);
                     }
                     SortPlayerRankList();
+                    GlobalData.GetInstance().AddYiWanChengLevel(Application.loadedLevel);
                 }
             }
         }

@@ -14,6 +14,10 @@ public class LevelSelectUI : MonoBehaviour
     /// 场景图集.
     /// </summary>
     public UITexture[] LevelArray;
+    /// <summary>
+    /// 已完成图集.
+    /// </summary>
+    public GameObject[] YiWanChengUI = new GameObject[4];
     int _mSelectLevel = 1;
     /// <summary>
     /// 选择的游戏关卡[1, 4].
@@ -40,6 +44,20 @@ public class LevelSelectUI : MonoBehaviour
     public void Init()
     {
         SetActiveStartBt(true);
+        for (int i = 0; i < 4; i++)
+        {
+            if (YiWanChengUI[i] != null)
+            {
+                if (GlobalData.GetInstance().YiWanChengLvList.Contains(i + 1))
+                {
+                    YiWanChengUI[i].SetActive(true);
+                }
+                else
+                {
+                    YiWanChengUI[i].SetActive(false);
+                }
+            }
+        }
     }
 
     void Update()

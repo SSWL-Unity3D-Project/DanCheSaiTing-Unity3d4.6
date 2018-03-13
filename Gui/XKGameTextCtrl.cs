@@ -16,12 +16,12 @@ public class XKGameTextCtrl : MonoBehaviour {
 	public MeshRenderer MeshRenderCom;
 	public Material Material_Ch;
 	public Material Material_En;
-	GameTextType GameTextVal = GlobalData.GameTextVal;
+	GlobalData.GameTextType GameTextVal;
 	// Use this for initialization
 	void Start()
 	{
-		GameTextVal = GlobalData.GetGameTextMode();
-		//GameTextVal = GameTextType.English; //test.
+		GameTextVal = GlobalData.GetInstance().GameTextVal;
+		//GameTextVal = GlobalData.GameTextType.English; //test.
 		//Debug.Log("GameTextVal "+GameTextVal);
 		CheckGameUITexture();
 		CheckUISpAniCom();
@@ -35,7 +35,7 @@ public class XKGameTextCtrl : MonoBehaviour {
 			//改变UITexture的图片.
 			UITexture uiTextureCom = GetComponent<UITexture>();
 			switch (GameTextVal) {
-			case GameTextType.Chinese:
+			case GlobalData.GameTextType.Chinese:
 				if (uiTextureCom != null) {
 					uiTextureCom.mainTexture = TextureCH;
 					if (IsFixTexture) {
@@ -45,7 +45,7 @@ public class XKGameTextCtrl : MonoBehaviour {
 				}
 				break;
 				
-			case GameTextType.English:
+			case GlobalData.GameTextType.English:
 				if (uiTextureCom != null) {
 					uiTextureCom.mainTexture = TextureEN;
 					if (IsFixTexture) {
@@ -65,11 +65,11 @@ public class XKGameTextCtrl : MonoBehaviour {
 		}
 		
 		switch (GameTextVal) {
-		case GameTextType.Chinese:
+		case GlobalData.GameTextType.Chinese:
 			UISpAniCom.namePrefix = ChSpAni;
 			break;
 			
-		case GameTextType.English:
+		case GlobalData.GameTextType.English:
 			UISpAniCom.namePrefix = EnSpAni;
 			break;
 		}
@@ -82,11 +82,11 @@ public class XKGameTextCtrl : MonoBehaviour {
 		}
 
 		switch (GameTextVal) {
-		case GameTextType.Chinese:
+		case GlobalData.GameTextType.Chinese:
 			UISpCom.spriteName = ChSpName;
 			break;
 			
-		case GameTextType.English:
+		case GlobalData.GameTextType.English:
 			UISpCom.spriteName = EnSpName;
 			break;
 		}
@@ -99,11 +99,11 @@ public class XKGameTextCtrl : MonoBehaviour {
 		}
 		
 		switch (GameTextVal) {
-		case GameTextType.Chinese:
+		case GlobalData.GameTextType.Chinese:
 			MeshRenderCom.material = Material_Ch;
 			break;
 			
-		case GameTextType.English:
+		case GlobalData.GameTextType.English:
 			MeshRenderCom.material = Material_En;
 			break;
 		}

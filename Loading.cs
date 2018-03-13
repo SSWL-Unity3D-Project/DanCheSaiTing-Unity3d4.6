@@ -59,8 +59,10 @@ public class Loading : SSUiRoot
 	private float timmerforstar = 0.0f;
 	public static bool m_HasBegin = false;
 	public bool IsLuPingTest;
+    float TimeLastYiWanChengVal = 0f;
     void Awake()
     {
+        TimeLastYiWanChengVal = Time.time;
         if (NetworkServerNet.GetInstance() != null)
         {
             NetworkServerNet.GetInstance().mRequestMasterServer.SetMasterServerComment(RequestMasterServer.MasterServerComment.Movie);
@@ -109,6 +111,14 @@ public class Loading : SSUiRoot
     
     void Update ()
 	{
+        if (Time.time - TimeLastYiWanChengVal >= 15f)
+        {
+            if (mLevelSelectUI == null)
+            {
+                GlobalData.GetInstance().ClearYiWanChengLevel();
+            }
+        }
+
 		if (!m_IsStartGame) {
 			UpdateTex();
 		}
