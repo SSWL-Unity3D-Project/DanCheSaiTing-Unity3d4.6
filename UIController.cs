@@ -754,12 +754,25 @@ public class UIController : SSUiRoot
     }
 
     /// <summary>
+    /// 电量数据.
+    /// </summary>
+    [Serializable]
+    public class DianLiangData
+    {
+        [Range(0f, 1f)]
+        public float minAmount = 0f;
+        [Range(0f, 1f)]
+        public float maxAmount = 1f;
+    }
+    public DianLiangData mDianLiangData;
+    /// <summary>
     /// 更新玩家电量UI.
     /// </summary>
-    /// <param name="dianLiang"></param>
     public void UpdateDianLiangUI(float dianLiang)
     {
-        DianLiangUISprite.fillAmount = dianLiang;
+        float disVal = mDianLiangData.maxAmount - mDianLiangData.minAmount;
+        float val = mDianLiangData.minAmount + disVal * dianLiang;
+        DianLiangUISprite.fillAmount = val;
     }
 
     float TimeLastSpeed = -1f;
