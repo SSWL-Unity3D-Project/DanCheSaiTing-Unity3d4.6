@@ -196,14 +196,14 @@ public class UIController : SSUiRoot
 		else
 		{
             //充电动画控制.
-            //if (pcvr.mGetJiaoTaBan > 0f && !ChongDianObj.activeInHierarchy)
-            //{
-            //    ChongDianObj.SetActive(true);
-            //}
-            //else if (pcvr.mGetJiaoTaBan <= 0f && ChongDianObj.activeInHierarchy)
-            //{
-            //    ChongDianObj.SetActive(false);
-            //}
+            if (pcvr.GetInstance().mGetJiaoTaBan > 0f && !ChongDianObj.activeInHierarchy)
+            {
+                ChongDianObj.SetActive(true);
+            }
+            else if (pcvr.GetInstance().mGetJiaoTaBan <= 0f && ChongDianObj.activeInHierarchy)
+            {
+                ChongDianObj.SetActive(false);
+            }
 
             //电量低动画控制.
             if (PlayerController.GetInstance().m_UIController.mPlayerDaoJuManageUI.DianLiangVal <= 0.15f && !DianLiangJiangGaoObj.activeInHierarchy)
