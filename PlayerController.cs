@@ -200,10 +200,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float PlayerMvSpeedMin = 50f;
     /// <summary>
-    /// 电池电量减少速度.
-    /// </summary>
-    public float DianLiangSubSpeed = 0.1f;
-    /// <summary>
     /// 脚踏板最高速度.
     /// </summary>
     public float mTopJiaoTaSpeed = 110f;
@@ -558,7 +554,7 @@ public class PlayerController : MonoBehaviour
         mNetSynGame.InitData(m_PlayerAnimator);
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.mNetPlayerComList.Add(this);
-        mRankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.AddRankDt((RankManage.RankEnum)index, false);
+        mRankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.AddRankDt((RankManage.RankEnum)index, IsNetControlPort);
     }
 
     /// <summary>
@@ -1032,6 +1028,10 @@ public class PlayerController : MonoBehaviour
     /// 脚踏板电量恢复数值.
     /// </summary>
     public float DianLiangHuiFuVal = 10f;
+    /// <summary>
+    /// 电池电量减少速度.
+    /// </summary>
+    public float DianLiangSubSpeed = 0.1f;
     void GetInput()
     {
         jiaoTaBan = pcvr.GetInstance().mGetJiaoTaBan;
@@ -1533,7 +1533,6 @@ public class PlayerController : MonoBehaviour
                         m_PlayerAnimator.SetBool("IsFinish", true);
                         mNetSynGame.SynNetAnimator("IsFinish", NetworkSynchronizeGame.AnimatorType.Bool, true);
                     }
-                    SortPlayerRankList();
                     GlobalData.GetInstance().AddYiWanChengLevel(Application.loadedLevel);
                 }
             }
@@ -2715,21 +2714,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         return isNetShowEndUI;
-    }
-    
-    bool IsRankListSort = false;
-    /// <summary>
-    /// 对排名数据进行排序.
-    /// </summary>
-    public void SortPlayerRankList()
-    {
-        if (IsRankListSort)
-        {
-            return;
-        }
-        IsRankListSort = true;
-        Debug.Log("SortPlayerRankList...");
-        SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SortRankDtList();
     }
 
     /// <summary>
