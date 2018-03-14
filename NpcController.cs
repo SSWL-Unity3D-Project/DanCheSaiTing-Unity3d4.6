@@ -115,7 +115,13 @@ public class NpcController : MonoBehaviour
 		}
 	}
 
-	void FixedUpdate()
+    /// <summary>
+    /// 运动的路程.
+    /// </summary>
+    float mDistanceMove = 0.0f;
+    private Vector3 PosRecord;
+
+    void FixedUpdate()
 	{
         if (!IsNetControlPort)
         {
@@ -126,16 +132,19 @@ public class NpcController : MonoBehaviour
         {
             return;
         }
-
-
+        
         int pathNum = (m_NpcPathNum + 1) % m_NpcPath.childCount;
-        //if (m_NpcPathNum == m_NpcPath.childCount - 1)
-        //{
-        //    return;
-        //}
-
         if (PlayerController.GetInstance().timmerstar > 5.0f)
-		{
+        {
+            float length = Vector3.Distance(PosRecord, transform.position);
+            mDistanceMove += length;
+            PosRecord = transform.position;
+            if (mRankDt != null)
+            {
+                mRankDt.UpdataDisMoveValue(mDistanceMove);
+                SendNpcDisMoveVal(mDistanceMove);
+            }
+
             if (Time.time - TimeLastRandPlayer > TimeRandPlayer)
             {
                 TimeLastRandPlayer = Time.time;
@@ -404,5 +413,38 @@ public class NpcController : MonoBehaviour
     {
         //Debug.Log("RpcNpcUpdateRankDtTimeFinish...");
         mRankDt.UpdateRankDtTimeFinish(time);
+    }
+
+    /// <summary>
+    /// 发送Npc比赛运动路程的消息.
+    /// </summary>
+    void SendNpcDisMoveVal(float disVal)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcNpcDisMoveVal", RPCMode.Others, disVal);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Npc比赛运动路程的消息.
+    /// </summary>
+    [RPC]
+    void RpcNpcDisMoveVal(float disVal)
+    {
+        if (mRankDt != null)
+        {
+            mRankDt.UpdataDisMoveValue(disVal);
+        }
     }
 }

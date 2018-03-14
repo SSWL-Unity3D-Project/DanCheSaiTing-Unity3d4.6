@@ -58,6 +58,10 @@ public class RankManage
         /// 比赛使用时间.
         /// </summary>
         public float TimeUsedVal = 0f;
+        /// <summary>
+        /// 运动的路程信息.
+        /// </summary>
+        public float DisMoveVal = 0f;
         public RankData(RankEnum rankType, bool isPlayer)
         {
             RankType = rankType;
@@ -105,6 +109,18 @@ public class RankManage
 #if UNITY_EDITOR
             //UnityEngine.Debug.Log("UpdateRankDtTimeFinish -> TimePathNodeCur " + TimePathNodeCur + ", node " + node + ", RankType " + RankType);
 #endif
+        }
+
+        /// <summary>
+        /// 更新参赛选手的运动路程信息.
+        /// </summary>
+        public void UpdataDisMoveValue(float disVal)
+        {
+            if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+            {
+                return;
+            }
+            DisMoveVal = disVal;
         }
     }
 

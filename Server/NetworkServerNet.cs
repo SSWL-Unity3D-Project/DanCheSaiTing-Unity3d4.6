@@ -24,7 +24,6 @@ public class NetworkServerNet : MonoBehaviour
     string MasterServerIpFile = "./MasterServerIP.info";
     string MasterServerIp = "192.168.0.2";
     private int mPort = 23465;
-    bool IsTryToLinkServer = true;
     bool IsCreateServer = true;
     /// <summary>
     /// 游戏场景中网络root脚本.

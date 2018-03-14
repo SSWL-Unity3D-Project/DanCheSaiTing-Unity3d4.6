@@ -272,6 +272,10 @@ public class PlayerController : MonoBehaviour
     public float m_timmerFinished = 0.0f;
     public ColorCorrectionCurves m_ColorEffect;
     public UIController m_UIController;
+    /// <summary>
+    /// 运动的路程.
+    /// </summary>
+    [HideInInspector]
     public float m_distance = 0.0f;
     private Vector3 PosRecord;
     [HideInInspector]
@@ -943,6 +947,12 @@ public class PlayerController : MonoBehaviour
             float length = Vector3.Distance(PosRecord, transform.position);
             m_distance += length;
             PosRecord = transform.position;
+            if (mRankDt != null)
+            {
+                mRankDt.UpdataDisMoveValue(m_distance);
+                SendPlayerDisMoveVal(m_distance);
+            }
+
             if (!m_CanDrive && canDrive)
             {
                 m_IsHitshake = true;
@@ -2809,5 +2819,38 @@ public class PlayerController : MonoBehaviour
     void RpcPlayerRankTimeServerStartVal(float time)
     {
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SetTimeServerStartVal(time);
+    }
+
+    /// <summary>
+    /// 发送Player比赛运动路程的消息.
+    /// </summary>
+    void SendPlayerDisMoveVal(float disVal)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcPlayerDisMoveVal", RPCMode.Others, disVal);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Player比赛运动路程的消息.
+    /// </summary>
+    [RPC]
+    void RpcPlayerDisMoveVal(float disVal)
+    {
+        if (mRankDt != null)
+        {
+            mRankDt.UpdataDisMoveValue(disVal);
+        }
     }
 }
