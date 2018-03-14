@@ -37,16 +37,16 @@ public class RankDtUI : MonoBehaviour
     /// <summary>
     /// 显示运动路程UI信息.
     /// </summary>
-    public void ShowJiFenInfo(int disVal)
+    public void ShowDisMoveInfo(int disVal)
     {
-        int jiFenTmp = 0;
-        string jiFenStr = disVal.ToString();
+        int tmpVal = 0;
+        string valStr = disVal.ToString();
         for (int i = 0; i < 6; i++)
         {
-            if (jiFenStr.Length > i)
+            if (valStr.Length > i)
             {
-                jiFenTmp = disVal % 10;
-                mDisMoveUIArray[i].spriteName = jiFenTmp.ToString();
+                tmpVal = disVal % 10;
+                mDisMoveUIArray[i].spriteName = tmpVal.ToString();
                 disVal = (int)(disVal / 10f);
                 mDisMoveUIArray[i].enabled = true;
             }

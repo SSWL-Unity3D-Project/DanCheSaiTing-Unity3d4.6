@@ -33,7 +33,6 @@ public class RankListUICtrl : MonoBehaviour
     /// </summary>
     public void ShowRankListUI()
     {
-        int indexVal = 0;
         RankManage.RankData rankDt = null;
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SortRankDtList();
 
@@ -43,39 +42,19 @@ public class RankListUICtrl : MonoBehaviour
             rankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.RankDtList[i];
             if (rankDt.IsPlayerData)
             {
+                mRankDtUIArray[i].transform.localScale += new Vector3(0.5f, 0.5f, 0f);
 #if UNITY_EDITOR
-                Debug.Log("ShowRankListUI -> PlayerTimeUsed " + rankDt.TimeUsedVal.ToString("f2"));
+                Debug.Log("ShowRankListUI -> PlayerTimeUsed " + rankDt.TimeUsedVal.ToString("f2")
+                    + ", disMove " + rankDt.DisMoveVal.ToString("f2"));
 #endif
             }
-			indexVal = (int)rankDt.RankType;
+
 #if UNITY_EDITOR
             Debug.Log("ShowRankListUI -> index " + i + ", RankType " + rankDt.RankType);
 #endif
             mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
+            mRankDtUIArray[i].ShowDisMoveInfo((int)rankDt.DisMoveVal);
         }
         gameObject.SetActive(true);
     }
-
-    /// <summary>
-    /// 显示玩家积分.
-    /// </summary>
-    //public void ShowJiFenInfo(int jiFen)
-    //{
-    //    int jiFenTmp = 0;
-    //    string jiFenStr = jiFen.ToString();
-    //    for (int i = 0; i < 6; i++)
-    //    {
-    //        if (jiFenStr.Length > i)
-    //        {
-    //            jiFenTmp = jiFen % 10;
-    //            JiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
-    //            jiFen = (int)(jiFen / 10f);
-    //            JiFenSpriteArray[i].enabled = true;
-    //        }
-    //        else
-    //        {
-    //            JiFenSpriteArray[i].enabled = false;
-    //        }
-    //    }
-    //}
 }
