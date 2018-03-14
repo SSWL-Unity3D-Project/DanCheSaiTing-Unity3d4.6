@@ -108,18 +108,21 @@ public class Loading : SSUiRoot
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
         NetworkEvent.GetInstance().OnRpcSendLoadLevelMsgEvent += OnRpcSendLoadLevelMsgEvent;
     }
-    
+
+    bool IsClearYiWanChengInfo = false;
     void Update ()
 	{
-        if (Time.time - TimeLastYiWanChengVal >= 15f)
+        if (Time.time - TimeLastYiWanChengVal >= 15f && !IsClearYiWanChengInfo)
         {
             if (mLevelSelectUI == null)
             {
+                IsClearYiWanChengInfo = true;
                 GlobalData.GetInstance().ClearYiWanChengLevel();
             }
         }
 
-		if (!m_IsStartGame) {
+		if (!m_IsStartGame)
+        {
 			UpdateTex();
 		}
 

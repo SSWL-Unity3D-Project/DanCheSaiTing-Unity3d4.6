@@ -12,7 +12,7 @@ public class GlobalData
     /// <summary>
     /// 已完成的关卡.
     /// </summary>
-    public List<int> YiWanChengLvList;
+    public List<int> YiWanChengLvList = new List<int>();
     private static  GlobalData Instance;
 	public static GlobalData GetInstance()
 	{
