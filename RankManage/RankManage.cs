@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 玩家排名信息管理.
@@ -66,7 +67,7 @@ public class RankManage
         {
             RankType = rankType;
 			IsPlayerData = isPlayer;
-			UnityEngine.Debug.Log("SortRankDtList -> isPlayer " + isPlayer + ", RankType " + RankType);
+			Debug.Log("SortRankDtList -> isPlayer " + isPlayer + ", RankType " + RankType);
         }
 
         /// <summary>
@@ -74,9 +75,36 @@ public class RankManage
         /// </summary>
         public void UpdateRankDtTimeFinish(float timeVal)
         {
-            if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+            if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
             {
-                return;
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                    if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    //多人联机.
+                    if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
+                    {
+                        if (NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.GameBackMovie)
+                        {
+                            //游戏结束.
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //单机游戏.
+                if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+                {
+                    return;
+                }
             }
 
             if (IsMoveToFinishPoint)
@@ -86,7 +114,7 @@ public class RankManage
             IsMoveToFinishPoint = true;
             TimeFinishPoint = timeVal;
 #if UNITY_EDITOR
-            UnityEngine.Debug.Log("UpdateRankDtTimeFinish -> TimeFinishPoint " + TimeFinishPoint + ", RankType " + RankType);
+            Debug.Log("UpdateRankDtTimeFinish -> TimeFinishPoint " + TimeFinishPoint + ", RankType " + RankType);
 #endif
         }
 
@@ -95,9 +123,36 @@ public class RankManage
         /// </summary>
         public void UpdateRankDtPathPoint(int node, float timeVal)
         {
-            if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+            if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
             {
-                return;
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                    if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    //多人联机.
+                    if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
+                    {
+                        if (NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.GameBackMovie)
+                        {
+                            //游戏结束.
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //单机游戏.
+                if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+                {
+                    return;
+                }
             }
 
             if (IsMoveToFinishPoint)
@@ -107,7 +162,7 @@ public class RankManage
             PathNodeCur = node;
             TimePathNodeCur = timeVal;
 #if UNITY_EDITOR
-            //UnityEngine.Debug.Log("UpdateRankDtTimeFinish -> TimePathNodeCur " + TimePathNodeCur + ", node " + node + ", RankType " + RankType);
+            //Debug.Log("UpdateRankDtTimeFinish -> TimePathNodeCur " + TimePathNodeCur + ", node " + node + ", RankType " + RankType);
 #endif
         }
 
@@ -116,9 +171,36 @@ public class RankManage
         /// </summary>
         public void UpdataDisMoveValue(float disVal)
         {
-            if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+            if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
             {
-                return;
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                    if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    //多人联机.
+                    if (NetworkServerNet.GetInstance().mNetworkRootGame != null)
+                    {
+                        if (NetworkServerNet.GetInstance().mNetworkRootGame.ePlayerGameNetState == NetworkServerNet.PlayerGameNetType.GameBackMovie)
+                        {
+                            //游戏结束.
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //单机游戏.
+                if (PlayerController.GetInstance().m_IsFinished || PlayerController.GetInstance().m_UIController.m_IsGameOver)
+                {
+                    return;
+                }
             }
             DisMoveVal = disVal;
         }
@@ -135,7 +217,7 @@ public class RankManage
     {
         if (rankType == RankEnum.Null)
         {
-            UnityEngine.Debug.LogError("AddRankDt -> rankType was wrong!");
+            Debug.LogError("AddRankDt -> rankType was wrong!");
             return null;
         }
         RankData rankDt = new RankData(rankType, isPlayer);
@@ -143,7 +225,7 @@ public class RankManage
         return rankDt;
     }
 
-    public int CompareRankDt(RankData x, RankData y)//排序器  
+    int CompareRankDt(RankData x, RankData y)//排序器  
     {
         if (x == null)
         {
@@ -209,15 +291,15 @@ public class RankManage
 #if UNITY_EDITOR
         for (int i = 0; i < RankDtList.Count; i++)
         {
-            UnityEngine.Debug.Log("SortRankDtList -> index " + i + ", node " + RankDtList[i].PathNodeCur + ", timeNode " + RankDtList[i].TimePathNodeCur + ", RankType " + RankDtList[i].RankType);
-            UnityEngine.Debug.Log("SortRankDtList -> TimeFinishPoint " + RankDtList[i].TimeFinishPoint + ", IsMoveToFinishPoint " + RankDtList[i].IsMoveToFinishPoint);
+            Debug.Log("SortRankDtList -> index " + i + ", node " + RankDtList[i].PathNodeCur + ", timeNode " + RankDtList[i].TimePathNodeCur + ", RankType " + RankDtList[i].RankType);
+            Debug.Log("SortRankDtList -> TimeFinishPoint " + RankDtList[i].TimeFinishPoint + ", IsMoveToFinishPoint " + RankDtList[i].IsMoveToFinishPoint);
         }
 #endif
     }
 
     public void SetTimeStartVal(float timeVal)
     {
-        UnityEngine.Debug.Log("SetTimeStartVal -> time " + timeVal.ToString("f2"));
+        Debug.Log("SetTimeStartVal -> time " + timeVal.ToString("f2"));
         TimeStartVal = timeVal;
     }
 
@@ -226,7 +308,7 @@ public class RankManage
     /// </summary>
     public void SetTimeServerStartVal(float timeVal)
     {
-        UnityEngine.Debug.Log("SetTimeServerStartVal -> time " + timeVal.ToString("f2"));
+        Debug.Log("SetTimeServerStartVal -> time " + timeVal.ToString("f2"));
         TimeServerStartVal = timeVal;
     }
 }

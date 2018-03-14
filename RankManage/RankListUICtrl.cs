@@ -13,7 +13,7 @@ public class RankListUICtrl : MonoBehaviour
     /// <summary>
     /// 排名列表头像.
     /// </summary>
-    public UITexture[] RankTouXiangArray;
+    //public UITexture[] RankTouXiangArray;
     /// <summary>
     /// 排名数据UI列表控制.
     /// </summary>
@@ -21,12 +21,12 @@ public class RankListUICtrl : MonoBehaviour
     /// <summary>
     /// 积分父级Tr列表.
     /// </summary>
-    public Transform[] mJiFenTrArray;
+    //public Transform[] mJiFenTrArray;
     /// <summary>
     /// 积分Tr.
     /// </summary>
-    public Transform mJiFenTr;
-    public UISprite[] JiFenSpriteArray;
+    //public Transform mJiFenTr;
+    //public UISprite[] JiFenSpriteArray;
 
     /// <summary>
     /// 显示排行榜UI.
@@ -35,14 +35,14 @@ public class RankListUICtrl : MonoBehaviour
     {
         int indexVal = 0;
         RankManage.RankData rankDt = null;
+        SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SortRankDtList();
+
         for (int i = 0; i < 4; i++)
 		{
 			mRankDtUIArray[i].gameObject.SetActive(true);
             rankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.RankDtList[i];
             if (rankDt.IsPlayerData)
             {
-                mJiFenTr.parent = mJiFenTrArray[i];
-                mJiFenTr.localPosition = Vector3.zero;
 #if UNITY_EDITOR
                 Debug.Log("ShowRankListUI -> PlayerTimeUsed " + rankDt.TimeUsedVal.ToString("f2"));
 #endif
@@ -51,8 +51,7 @@ public class RankListUICtrl : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("ShowRankListUI -> index " + i + ", RankType " + rankDt.RankType);
 #endif
-            //RankTouXiangArray[i].mainTexture = TouXiangImgArray[indexVal];
-            //mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
+            mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
         }
         gameObject.SetActive(true);
     }
@@ -60,23 +59,23 @@ public class RankListUICtrl : MonoBehaviour
     /// <summary>
     /// 显示玩家积分.
     /// </summary>
-    public void ShowJiFenInfo(int jiFen)
-    {
-        int jiFenTmp = 0;
-        string jiFenStr = jiFen.ToString();
-        for (int i = 0; i < 6; i++)
-        {
-            if (jiFenStr.Length > i)
-            {
-                jiFenTmp = jiFen % 10;
-                JiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
-                jiFen = (int)(jiFen / 10f);
-                JiFenSpriteArray[i].enabled = true;
-            }
-            else
-            {
-                JiFenSpriteArray[i].enabled = false;
-            }
-        }
-    }
+    //public void ShowJiFenInfo(int jiFen)
+    //{
+    //    int jiFenTmp = 0;
+    //    string jiFenStr = jiFen.ToString();
+    //    for (int i = 0; i < 6; i++)
+    //    {
+    //        if (jiFenStr.Length > i)
+    //        {
+    //            jiFenTmp = jiFen % 10;
+    //            JiFenSpriteArray[i].spriteName = jiFenTmp.ToString();
+    //            jiFen = (int)(jiFen / 10f);
+    //            JiFenSpriteArray[i].enabled = true;
+    //        }
+    //        else
+    //        {
+    //            JiFenSpriteArray[i].enabled = false;
+    //        }
+    //    }
+    //}
 }
