@@ -100,13 +100,6 @@ public class UIController : SSUiRoot
         set
         {
             _IsGameOver = value;
-            if (_IsGameOver)
-            {
-                if (m_Player != null)
-                {
-                    m_Player.SortPlayerRankList();
-                }
-            }
         }
         get
         {
@@ -119,8 +112,16 @@ public class UIController : SSUiRoot
     private int m_Score = 0;
 	private int m_totalTime = 0;
 	private int m_JiluRecord = 0;
-	
-	public UISprite m_ScoreFenGewei;
+
+    /// <summary>
+    /// 游戏排名UI预制.
+    /// </summary>
+    public GameObject RankListUIPrefab;
+    /// <summary>
+    /// 游戏排名控制UI.
+    /// </summary>
+    RankListUICtrl mRankListUICom;
+    public UISprite m_ScoreFenGewei;
 	public UISprite m_ScoreMiaoShiwei;
 	public UISprite m_ScoreMiaoGewei;
 	public UISprite m_RecordFenGewei;
@@ -388,6 +389,36 @@ public class UIController : SSUiRoot
                         }
                     }
 
+                    bool isDisplayRankUI = false;
+                    if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+                    {
+                        if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                        {
+                            //没有玩家选择链接服务器进行联机游戏.
+                            if (PlayerController.GetInstance().m_IsFinished)
+                            {
+                                isDisplayRankUI = true;
+                            }
+                        }
+                        else
+                        {
+                            //多人联机.
+                            isDisplayRankUI = true;
+                        }
+                    }
+                    else
+                    {
+                        //单机游戏.
+                        if (PlayerController.GetInstance().m_IsFinished)
+                        {
+                            isDisplayRankUI = true;
+                        }
+                    }
+
+                    if (isDisplayRankUI)
+                    {
+                        SpawnRankListUI();
+                    }
                     m_IsCongratulate = true;
                     m_JindutiaoObj.SetActive(false);
                     m_daojishiObj.SetActive(false);
@@ -876,6 +907,19 @@ public class UIController : SSUiRoot
         if (ChaoJiJiaSuObj != null)
         {
             Destroy(ChaoJiJiaSuObj);
+        }
+    }
+
+    /// <summary>
+    /// 产生游戏排名UI界面.
+    /// </summary>
+    void SpawnRankListUI()
+    {
+        if (mRankListUICom == null && RankListUIPrefab != null)
+        {
+            GameObject obj = (GameObject)Instantiate(RankListUIPrefab, mUICamera.transform);
+            mRankListUICom = obj.GetComponent<RankListUICtrl>();
+            mRankListUICom.ShowRankListUI();
         }
     }
 }
