@@ -11,10 +11,6 @@ public class LevelSelectUI : MonoBehaviour
     /// </summary>
     public Animator mAnimator;
     /// <summary>
-    /// 场景图集.
-    /// </summary>
-    public UITexture[] LevelArray;
-    /// <summary>
     /// 已完成图集.
     /// </summary>
     public GameObject[] YiWanChengUI = new GameObject[4];
@@ -28,11 +24,6 @@ public class LevelSelectUI : MonoBehaviour
         {
             _mSelectLevel = value;
             Debug.Log("LevelSelectUI -> Level " + _mSelectLevel);
-
-            for (int i = 0; i < 4; i++)
-            {
-                LevelArray[i].depth = (i + 1) == _mSelectLevel ? 3 : 2;
-            }
         }
         get
         {
