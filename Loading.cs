@@ -112,7 +112,7 @@ public class Loading : SSUiRoot
     bool IsClearYiWanChengInfo = false;
     void Update ()
 	{
-        if (Time.time - TimeLastYiWanChengVal >= 15f && !IsClearYiWanChengInfo)
+        if (Time.time - TimeLastYiWanChengVal >= 20f && !IsClearYiWanChengInfo)
         {
             if (mLevelSelectUI == null)
             {

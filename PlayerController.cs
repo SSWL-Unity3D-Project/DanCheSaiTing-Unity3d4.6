@@ -555,6 +555,22 @@ public class PlayerController : MonoBehaviour
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.mNetPlayerComList.Add(this);
         mRankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.AddRankDt((RankManage.RankEnum)index, IsNetControlPort);
+
+        if (QuanShuMax > 1)
+        {
+            for (int i = 0; i < FinishRender.Length; i++)
+            {
+                if (FinishRender[i] != null)
+                {
+                    FinishRender[i].enabled = false;
+                }
+            }
+            IsShowZhongDian = false;
+        }
+        else
+        {
+            IsShowZhongDian = true;
+        }
     }
 
     /// <summary>
