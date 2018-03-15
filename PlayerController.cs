@@ -829,7 +829,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Time.frameCount % 3 == 0 && !m_UIController.m_IsGameOver && !m_IsFinished)
             {
-                if (Time.time - TimeLastChaoJiJiaSuUI > 30f)
+                if (Time.time - TimeLastChaoJiJiaSuUI > 30f && mSpeedDaoJuState != DaoJuCtrl.DaoJuType.FeiXingYi)
                 {
                     //30秒触发一次.
                     TimeLastChaoJiJiaSuUI = Time.time;
@@ -1091,36 +1091,39 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (jiaoTaBan > JiaoTaBanAniVal)
+        if (m_IsFinished || m_UIController.m_IsGameOver)
         {
             if (m_PlayerAnimator.gameObject.activeInHierarchy)
             {
-                m_PlayerAnimator.SetBool("IsRun2", true);
                 m_PlayerAnimator.SetBool("IsRun1", false);
-                mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, true);
-                mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
-            }
-            m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
-        }
-        else if (jiaoTaBan > 0f)
-        {
-            if (m_PlayerAnimator.gameObject.activeInHierarchy)
-            {
-                m_PlayerAnimator.SetBool("IsRun1", true);
                 m_PlayerAnimator.SetBool("IsRun2", false);
-                mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, true);
+                mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
                 mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
             }
-            m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
         }
         else
         {
-            if (m_PlayerAnimator.gameObject.activeInHierarchy)
+            if (jiaoTaBan > JiaoTaBanAniVal)
             {
-                m_PlayerAnimator.SetBool("IsRun1", false);
-                m_PlayerAnimator.SetBool("IsRun2", false);
-                mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
-                mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
+                if (m_PlayerAnimator.gameObject.activeInHierarchy)
+                {
+                    m_PlayerAnimator.SetBool("IsRun2", true);
+                    m_PlayerAnimator.SetBool("IsRun1", false);
+                    mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, true);
+                    mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
+                }
+                m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
+            }
+            else if (jiaoTaBan > 0f)
+            {
+                if (m_PlayerAnimator.gameObject.activeInHierarchy)
+                {
+                    m_PlayerAnimator.SetBool("IsRun1", true);
+                    m_PlayerAnimator.SetBool("IsRun2", false);
+                    mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, true);
+                    mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
+                }
+                m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
             }
         }
 
