@@ -827,7 +827,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Time.frameCount % 3 == 0)
+            if (Time.frameCount % 3 == 0 && !m_UIController.m_IsGameOver && !m_IsFinished)
             {
                 if (Time.time - TimeLastChaoJiJiaSuUI > 30f)
                 {
@@ -839,7 +839,7 @@ public class PlayerController : MonoBehaviour
 
             if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0 || m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
             {
-                if (Time.time - TimeLastFaShaDaoDanUI > 10f)
+                if (Time.time - TimeLastFaShaDaoDanUI > 10f && !m_UIController.m_IsGameOver && !m_IsFinished)
                 {
                     GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
                     if (aimNpc != null)

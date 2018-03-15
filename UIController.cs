@@ -339,6 +339,8 @@ public class UIController : SSUiRoot
 
                 if (isShowOverUI)
                 {
+                    RemoveChaoJiJiaSuUI();
+                    RemoveFaSheDaoDanUI();
                     if (m_Player.m_IsFinished)
                     {
                         //到达终点.
