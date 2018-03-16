@@ -865,11 +865,11 @@ public class PlayerController : MonoBehaviour
             {
                 IsPlayHuiTouAni = false;
                 m_IsHitshake = true;
-                if (m_PlayerAnimator.gameObject.activeInHierarchy)
+                /*if (m_PlayerAnimator.gameObject.activeInHierarchy)
                 {
                     m_PlayerAnimator.SetTrigger("IsDiaoluo");
                     mNetSynGame.SynNetAnimator("IsDiaoluo", NetworkSynchronizeGame.AnimatorType.Trigger);
-                }
+                }*/
                 TimeRandHuiTou = UnityEngine.Random.Range(3, 15);
                 TimeLastHuiTou = Time.time;
             }
@@ -1136,6 +1136,16 @@ public class PlayerController : MonoBehaviour
                 }
                 m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
             }
+			else
+			{
+				if (m_PlayerAnimator.gameObject.activeInHierarchy)
+				{
+					m_PlayerAnimator.SetBool("IsRun1", false);
+					m_PlayerAnimator.SetBool("IsRun2", false);
+					mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
+					mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
+				}
+			}
         }
 
         if (JiaoTaBanFenShanTr != null)
