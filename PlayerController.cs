@@ -995,6 +995,17 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+		
+		if (m_IsFinished || m_UIController.m_IsGameOver)
+		{
+			if (m_PlayerAnimator.gameObject.activeInHierarchy)
+			{
+				m_PlayerAnimator.SetBool("IsRun1", false);
+				m_PlayerAnimator.SetBool("IsRun2", false);
+				mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
+				mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
+			}
+		}
 
         if (!m_IsFinished && !m_UIController.m_IsGameOver && timmerstar >= 5.0f)
         {
