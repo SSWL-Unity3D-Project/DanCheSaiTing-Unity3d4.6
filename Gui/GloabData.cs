@@ -19,7 +19,7 @@ public class GlobalData
 		if (Instance == null)
         {
 			Instance = new GlobalData();
-            bool isChineseGame = false;
+            bool isChineseGame = true;
             if (!isChineseGame)
             {
                 Instance.GameTextVal = GameTextType.English;
