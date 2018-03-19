@@ -29,17 +29,26 @@ public class pcvr : MonoBehaviour
             {
                 MyCOMDevice.GetInstance();
             }
+            Instance.Init();
         }
         return Instance;
     }
 
+    void Init()
+    {
+        InitYouMenInfo();
+    }
+
     void FixedUpdate()
     {
+        byte[] readBuf = MyCOMDevice.ComThreadClass.ReadByteMsg;
         if (bIsHardWare)
         {
             UpdatePcvrJiaoTaBanVal();
         }
-        UpdatePcvrPowerVal();
+
+        int youMenVal = ((readBuf[2] & 0x0f) << 8) + readBuf[3];
+        UpdatePcvrPowerVal(youMenVal);
         UpdatePcvrSteerVal();
         UpdatePlayerCoinDt();
     }
@@ -111,15 +120,132 @@ public class pcvr : MonoBehaviour
     [HideInInspector]
     public float mGetPower = 0f;
     /// <summary>
+    /// 油门最大值.
+    /// </summary>
+    int YouMenMaxVal = 0x0fff;
+    /// <summary>
+    /// 油门最小值.
+    /// </summary>
+    int YouMenMinVal = 0x00;
+    /// <summary>
+    /// 油门当前值.
+    /// </summary>
+    int YouMenCurVal = 0x00;
+    /// <summary>
+    /// 油门检测计数.
+    /// </summary>
+    int CountYouMen = 100;
+    float TimeYouMen;
+
+    /// <summary>
+    /// 初始化油门校验.
+    /// </summary>
+    public void InitCheckYouMenValInfo()
+    {
+        YouMenMinVal = 0;
+        CountYouMen = 0;
+    }
+
+    /// <summary>
+    /// 检测油门最小值信息.
+    /// </summary>
+    void CheckYouMenValInfo()
+    {
+        if (!bIsHardWare)
+        {
+            return;
+        }
+
+        if (CountYouMen >= 10)
+        {
+            return;
+        }
+
+        if (Time.realtimeSinceStartup - TimeYouMen < 0.1f)
+        {
+            return;
+        }
+        TimeYouMen = Time.realtimeSinceStartup;
+
+        CountYouMen++;
+        YouMenMinVal += YouMenCurVal;
+        if (CountYouMen >= 10)
+        {
+            string fileName = ReadGameInfo.GetInstance().mFileName;
+            YouMenMinVal = (int)(YouMenMinVal / 10f);
+            HandleJson.GetInstance().WriteToFileXml(fileName, "YouMenMinVal", YouMenMinVal.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 初始化油门信息.
+    /// </summary>
+    void InitYouMenInfo()
+    {
+        string strVal = "";
+        string fileName = ReadGameInfo.GetInstance().mFileName;
+        strVal = HandleJson.GetInstance().ReadFromFileXml(fileName, "YouMenMaxVal");
+        if (strVal == null || strVal == "")
+        {
+            strVal = "4095";
+            HandleJson.GetInstance().WriteToFileXml(fileName, "YouMenMaxVal", strVal);
+        }
+        YouMenMaxVal = System.Convert.ToInt32(strVal);
+        
+        strVal = HandleJson.GetInstance().ReadFromFileXml(fileName, "YouMenMinVal");
+        if (strVal == null || strVal == "")
+        {
+            strVal = "0";
+            HandleJson.GetInstance().WriteToFileXml(fileName, "YouMenMinVal", strVal);
+        }
+        YouMenMinVal = System.Convert.ToInt32(strVal);
+    }
+
+    /// <summary>
+    /// 保存油门校准结果.
+    /// </summary>
+    public void SaveYouMenVal()
+    {
+        string fileName = ReadGameInfo.GetInstance().mFileName;
+        YouMenMaxVal = YouMenCurVal;
+        HandleJson.GetInstance().WriteToFileXml(fileName, "YouMenMaxVal", YouMenCurVal.ToString());
+    }
+
+    /// <summary>
     /// 更新油门信息.
     /// </summary>
-    void UpdatePcvrPowerVal()
+    void UpdatePcvrPowerVal(int youMenVal)
     {
         if (!bIsHardWare)
         {
             mGetPower = Input.GetAxis("Vertical");
             return;
         }
+        
+        float youMenInput = 0f;
+        YouMenCurVal = youMenVal;
+        if (YouMenMinVal < YouMenMaxVal)
+        {
+            //油门正接.
+            if (youMenVal < YouMenMinVal)
+            {
+                youMenVal = YouMenMinVal;
+            }
+            youMenInput = ((float)youMenVal - YouMenMinVal) / (YouMenMaxVal - YouMenMinVal);
+        }
+        else
+        {
+            //油门反接.
+            if (youMenVal > YouMenMinVal)
+            {
+                youMenVal = YouMenMinVal;
+            }
+            youMenInput = ((float)YouMenMinVal - youMenVal) / (YouMenMinVal - YouMenMaxVal);
+        }
+        youMenInput = Mathf.Clamp01(youMenInput);
+        mGetPower = youMenInput >= 0.05f ? 1f : 0f;
+
+        CheckYouMenValInfo();
     }
 
     enum SteerEnum
@@ -145,6 +271,7 @@ public class pcvr : MonoBehaviour
             return;
         }
 
+        //方向校准.
         SteerEnum steerState = (SteerEnum)(MyCOMDevice.ComThreadClass.ReadByteMsg[30]);
         switch (steerState)
         {

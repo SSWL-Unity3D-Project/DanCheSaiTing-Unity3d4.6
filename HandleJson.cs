@@ -1,36 +1,18 @@
 ﻿using UnityEngine;
 using System.Xml;
 using System.IO;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System;
 
-public class HandleJson {
-
+public class HandleJson
+{
 	private static  HandleJson Instance;
 	public static HandleJson GetInstance()
 	{
-		if (Instance==null) {
+		if (Instance==null)
+        {
 			Instance = new HandleJson();
 		}
 		return Instance;
-	}
-
-	public void ExeCommand()
-	{
-		Process p = new Process();
-		p.StartInfo.FileName = "checkIp.exe";
-		p.StartInfo.UseShellExecute = false;
-		p.StartInfo.RedirectStandardInput = true;
-		p.StartInfo.RedirectStandardOutput = true;
-		p.StartInfo.RedirectStandardError = true;
-		p.StartInfo.CreateNoWindow = true;//true表示不显示黑框，false表示显示dos界面
-		//string strOutput = null;
-		p.Start();
-		//要执行的dos命令  p.StandardInput.WriteLine("");
-		//p.StandardInput.WriteLine("exit");
-		
-		//p.Close();
 	}
 
 	//write to file
@@ -72,13 +54,12 @@ public class HandleJson {
 			xmlDoc.Save(filepath);
 		}
 	}
-
-	
+    	
 	public void WriteToFilePathXml(string filepath, string attribute, string valueStr)
 	{
 		//string filepath = Application.dataPath + "/" + fileName;
 		#if UNITY_ANDROID
-//		filepath = Application.persistentDataPath + "//" + fileName;
+        //filepath = Application.persistentDataPath + "//" + fileName;
 		#endif
 		
 		//create file
@@ -166,14 +147,6 @@ public class HandleJson {
 			File.SetAttributes(filepath, FileAttributes.Normal);
 			xmlDoc.Save(filepath);
 		}
-		
 		return valueStr;
 	}
-
-	#region handle ini file
-	[DllImport("kernel32.dll")]
-	public extern static int GetPrivateProfileStringA(string segName, string keyName, string sDefault, byte[] buffer, int iLen, string fileName);
-	[DllImport("kernel32.dll")]
-	public extern static int WritePrivateProfileString(string segName, string keyName, string sValue, string fileName);
-	#endregion
 }
