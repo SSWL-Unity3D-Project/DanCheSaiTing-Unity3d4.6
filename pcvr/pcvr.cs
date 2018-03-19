@@ -38,6 +38,7 @@ public class pcvr : MonoBehaviour
     {
         InitYouMenInfo();
         InitSteerInfo();
+        InitJiaoTaBanInfo();
     }
 
     void FixedUpdate()
@@ -45,7 +46,8 @@ public class pcvr : MonoBehaviour
         byte[] readBuf = MyCOMDevice.ComThreadClass.ReadByteMsg;
         if (bIsHardWare)
         {
-            UpdatePcvrJiaoTaBanVal();
+            int jiaTaBan = ((readBuf[30] & 0x0f) << 8) + readBuf[31];
+            UpdatePcvrJiaoTaBanVal(jiaTaBan);
         }
 
         int youMenVal = ((readBuf[2] & 0x0f) << 8) + readBuf[3];
@@ -60,7 +62,7 @@ public class pcvr : MonoBehaviour
     {
         if (!bIsHardWare)
         {
-            UpdatePcvrJiaoTaBanVal();
+            UpdatePcvrJiaoTaBanVal(0);
         }
     }
 
@@ -82,9 +84,51 @@ public class pcvr : MonoBehaviour
     public float mGetJiaoTaBan = 0f;
     bool IsHitJiaoTaBan = false;
     /// <summary>
-    /// 更新油门信息.
+    /// 编码器(脚踏板)信息.
     /// </summary>
-    void UpdatePcvrJiaoTaBanVal()
+    public int BianMaQiCurVal = 0x00;
+    /// <summary>
+    /// 编码器(脚踏板)信息最大值.
+    /// </summary>
+    int BianMaQiMaxVal = 0x0fff;
+    /// <summary>
+    /// 编码器(脚踏板)信息最小值.
+    /// </summary>
+    int BianMaQiMinVal = 0x00;
+    /// <summary>
+    /// 初始化脚踏板信息.
+    /// </summary>
+    void InitJiaoTaBanInfo()
+    {
+        string fileName = ReadGameInfo.GetInstance().mFileName;
+        string strVal = HandleJson.GetInstance().ReadFromFileXml(fileName, "BianMaQiMaxVal");
+        if (strVal == null || strVal == "")
+        {
+            strVal = "31000";
+            HandleJson.GetInstance().WriteToFileXml(fileName, "BianMaQiMaxVal", strVal);
+        }
+        BianMaQiMaxVal = System.Convert.ToInt32(strVal);
+        BianMaQiMinVal = 30000;
+    }
+
+    /// <summary>
+    /// 保存脚踏板信息.
+    /// </summary>
+    public void SaveJiaoTaBanVal()
+    {
+        if (!bIsHardWare)
+        {
+            return;
+        }
+        string fileName = ReadGameInfo.GetInstance().mFileName;
+        BianMaQiMaxVal = BianMaQiCurVal;
+        HandleJson.GetInstance().WriteToFileXml(fileName, "BianMaQiMaxVal", BianMaQiCurVal.ToString());
+    }
+    
+    /// <summary>
+    /// 更新脚踏板信息.
+    /// </summary>
+    void UpdatePcvrJiaoTaBanVal(int bianMaQiVal)
     {
         if (!bIsHardWare)
         {
@@ -116,7 +160,29 @@ public class pcvr : MonoBehaviour
         }
         else
         {
-
+            float bianMaQiInput = 0f;
+            BianMaQiCurVal = bianMaQiVal;
+            if (BianMaQiMinVal < BianMaQiMaxVal)
+            {
+                //编码器(脚踏板)正接.
+                if (bianMaQiVal < BianMaQiMinVal)
+                {
+                    bianMaQiVal = BianMaQiMinVal;
+                }
+                bianMaQiInput = ((float)bianMaQiVal - BianMaQiMinVal) / (BianMaQiMaxVal - BianMaQiMinVal);
+            }
+            else
+            {
+                //编码器(脚踏板)反接.
+                if (bianMaQiVal > BianMaQiMinVal)
+                {
+                    bianMaQiVal = BianMaQiMinVal;
+                }
+                bianMaQiInput = ((float)BianMaQiMinVal - bianMaQiVal) / (BianMaQiMinVal - BianMaQiMaxVal);
+            }
+            bianMaQiInput = Mathf.Clamp01(bianMaQiInput);
+            bianMaQiInput = bianMaQiInput < 0.01f ? 0f : bianMaQiInput;
+            mGetJiaoTaBan = bianMaQiInput;
         }
     }
 
@@ -253,7 +319,6 @@ public class pcvr : MonoBehaviour
 
     [HideInInspector]
     public float mGetSteer = 0f;
-    float TimeLastSteer = 0f;
     /// <summary>
     /// 方向最大值.
     /// </summary>
