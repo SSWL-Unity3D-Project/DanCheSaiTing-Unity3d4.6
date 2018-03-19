@@ -37,6 +37,7 @@ public class pcvr : MonoBehaviour
     void Init()
     {
         InitYouMenInfo();
+        InitSteerInfo();
     }
 
     void FixedUpdate()
@@ -49,7 +50,9 @@ public class pcvr : MonoBehaviour
 
         int youMenVal = ((readBuf[2] & 0x0f) << 8) + readBuf[3];
         UpdatePcvrPowerVal(youMenVal);
-        UpdatePcvrSteerVal();
+
+        int fangXiangVal = ((readBuf[4] & 0x0f) << 8) + readBuf[5];
+        UpdatePcvrSteerVal(fangXiangVal);
         UpdatePlayerCoinDt();
     }
 
@@ -248,22 +251,113 @@ public class pcvr : MonoBehaviour
         CheckYouMenValInfo();
     }
 
-    enum SteerEnum
-    {
-        //Left = 0x55,
-        //Right = 0xaa,
-        Left = 0xaa,
-        Right = 0x55,
-        Center = 0x00,
-    }
-
     [HideInInspector]
     public float mGetSteer = 0f;
     float TimeLastSteer = 0f;
     /// <summary>
+    /// 方向最大值.
+    /// </summary>
+    int SteerValMaxAy = 0x0fff;
+    /// <summary>
+    /// 方向中间值.
+    /// </summary>
+    int SteerValCenAy = 0x07ff;
+    /// <summary>
+    /// 方向最小值.
+    /// </summary>
+    int SteerValMinAy = 0x00;
+    /// <summary>
+    /// 方向当前值.
+    /// </summary>
+    int SteerValCurAy = 0x00;
+    /// <summary>
+    /// 是否校准方向.
+    /// </summary>
+    bool IsJiaoZhunSteer = false;
+
+    /// <summary>
+    /// 初始化方向信息.
+    /// </summary>
+    void InitSteerInfo()
+    {
+        string fileName = ReadGameInfo.GetInstance().mFileName;
+        string strVal = HandleJson.GetInstance().ReadFromFileXml(fileName, "SteerValMax");
+        if (strVal == null || strVal == "")
+        {
+            strVal = "4095";
+            HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMax", strVal);
+        }
+        SteerValMaxAy = System.Convert.ToInt32(strVal);
+
+        strVal = HandleJson.GetInstance().ReadFromFileXml(fileName, "SteerValCen");
+        if (strVal == null || strVal == "")
+        {
+            strVal = "2047";
+            HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValCen", strVal);
+        }
+        SteerValCenAy = System.Convert.ToInt32(strVal);
+        
+        strVal = HandleJson.GetInstance().ReadFromFileXml(fileName, "SteerValMin");
+        if (strVal == null || strVal == "")
+        {
+            strVal = "0";
+            HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMin", strVal);
+        }
+        SteerValMinAy = System.Convert.ToInt32(strVal);
+    }
+
+    public enum PcvrValState
+    {
+        ValMin,
+        ValCenter,
+        ValMax,
+    }
+
+    /// <summary>
+    /// 初始化方向校准.
+    /// </summary>
+    public void InitJiaoZhunSteer()
+    {
+        IsJiaoZhunSteer = true;
+    }
+
+    /// <summary>
+    /// 结束方向校准.
+    /// </summary>
+    public void EndJiaoZhunSteer()
+    {
+        IsJiaoZhunSteer = false;
+    }
+
+    /// <summary>
+    /// 保存方向信息.
+    /// </summary>
+    public void SaveSteerVal(PcvrValState key)
+    {
+        string fileName = ReadGameInfo.GetInstance().mFileName;
+        switch (key)
+        {
+            case PcvrValState.ValMin:
+                SteerValMinAy = SteerValCurAy;
+                HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMin" , SteerValCurAy.ToString());
+                break;
+
+            case PcvrValState.ValCenter:
+                SteerValCenAy = SteerValCurAy;
+                HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValCen", SteerValCurAy.ToString());
+                break;
+
+            case PcvrValState.ValMax:
+                SteerValMaxAy = SteerValCurAy;
+                HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMax", SteerValCurAy.ToString());
+                break;
+        }
+    }
+
+    /// <summary>
     /// 更新转向信息.
     /// </summary>
-	void UpdatePcvrSteerVal()
+	void UpdatePcvrSteerVal(int fangXiangVal)
     {
         if (!bIsHardWare)
         {
@@ -271,31 +365,46 @@ public class pcvr : MonoBehaviour
             return;
         }
 
-        //方向校准.
-        SteerEnum steerState = (SteerEnum)(MyCOMDevice.ComThreadClass.ReadByteMsg[30]);
-        switch (steerState)
+        SteerValCurAy = fangXiangVal;
+        if (IsJiaoZhunSteer)
         {
-            case SteerEnum.Left:
-                {
-                    mGetSteer = -1f;
-                    TimeLastSteer = Time.time;
-                    break;
-                }
-            case SteerEnum.Center:
-                {
-                    if (Time.time - TimeLastSteer > 0.2f)
-                    {
-                        mGetSteer = 0f;
-                    }
-                    break;
-                }
-            case SteerEnum.Right:
-                {
-                    mGetSteer = 1f;
-                    TimeLastSteer = Time.time;
-                    break;
-                }
+            return;
         }
+
+        int steerMaxVal = SteerValMaxAy;
+        int steerMinVal = SteerValMinAy;
+        int steerCenVal = SteerValCenAy;
+        float fangXiangValTmp = 0f;
+        if (fangXiangVal >= steerCenVal)
+        {
+            if (steerMaxVal > steerMinVal)
+            {
+                //正接方向.
+                fangXiangValTmp = ((float)fangXiangVal - steerCenVal) / (steerMaxVal - steerCenVal);
+            }
+            else
+            {
+                //反接方向.
+                fangXiangValTmp = ((float)steerCenVal - fangXiangVal) / (steerMinVal - steerCenVal);
+            }
+        }
+        else
+        {
+            if (steerMaxVal > steerMinVal)
+            {
+                //正接方向.
+                fangXiangValTmp = ((float)fangXiangVal - steerCenVal) / (steerCenVal - steerMinVal);
+            }
+            else
+            {
+                //反接方向.
+                fangXiangValTmp = ((float)steerCenVal - fangXiangVal) / (steerCenVal - steerMaxVal);
+            }
+        }
+
+        fangXiangValTmp = Mathf.Clamp(fangXiangValTmp, -1f, 1f);
+        fangXiangValTmp = Mathf.Abs(fangXiangValTmp) <= 0.15f ? 0f : fangXiangValTmp;
+        mGetSteer = fangXiangValTmp;
     }
 
     /// <summary>
