@@ -3,6 +3,10 @@
 public class RankDtUI : MonoBehaviour
 {
     /// <summary>
+    /// 时间UI总控.
+    /// </summary>
+    public GameObject TimeUIObj;
+    /// <summary>
     /// 分个位.
     /// </summary>
     public UISprite FenGewei;
@@ -15,10 +19,15 @@ public class RankDtUI : MonoBehaviour
     /// </summary>
     public UISprite MiaoGewei;
     /// <summary>
-    /// 运动路程UI.
+    /// 剩余运动路程UI.
     /// mDisMoveUIArray
     /// </summary>
-    public UISprite[] mDisMoveUIArray;
+    public UISprite[] mDisMoveUIArray = new UISprite[6];
+    /// <summary>
+    /// 完成度UI.
+    /// mDisMoveUIArray
+    /// </summary>
+    public UISprite[] mWanChengDuUIArray = new UISprite[3];
     /// <summary>
     /// 显示时间.
     /// </summary>
@@ -33,11 +42,22 @@ public class RankDtUI : MonoBehaviour
         MiaoShiwei.spriteName = miaoshiwei.ToString();
         MiaoGewei.spriteName = miaogewei.ToString();
     }
+
+    /// <summary>
+    /// 隐藏时间UI.
+    /// </summary>
+    public void HiddenTimeUI()
+    {
+        if (TimeUIObj != null)
+        {
+            TimeUIObj.SetActive(false);
+        }
+    }
     
     /// <summary>
-    /// 显示运动路程UI信息.
+    /// 显示剩余运动路程的UI信息.
     /// </summary>
-    public void ShowDisMoveInfo(int disVal)
+    public void ShowShengYuDisMoveInfo(int disVal)
     {
         int tmpVal = 0;
         string valStr = disVal.ToString();
@@ -53,6 +73,29 @@ public class RankDtUI : MonoBehaviour
             else
             {
                 mDisMoveUIArray[i].enabled = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 显示完成度的UI信息.
+    /// </summary>
+    public void ShowWanChengDuInfo(int val)
+    {
+        int tmpVal = 0;
+        string valStr = val.ToString();
+        for (int i = 0; i < 3; i++)
+        {
+            if (valStr.Length > i)
+            {
+                tmpVal = val % 10;
+                mWanChengDuUIArray[i].spriteName = tmpVal.ToString();
+                val = (int)(val / 10f);
+                mWanChengDuUIArray[i].enabled = true;
+            }
+            else
+            {
+                mWanChengDuUIArray[i].enabled = false;
             }
         }
     }

@@ -6,27 +6,9 @@
 public class RankListUICtrl : MonoBehaviour
 {
     /// <summary>
-    /// 头像列表.
-    /// TouXiangImgArray[x] -> 0 猪猪侠, 1 波比, 2 超人强, 3 菲菲.
-    /// </summary>
-    //public Texture[] TouXiangImgArray;
-    /// <summary>
-    /// 排名列表头像.
-    /// </summary>
-    //public UITexture[] RankTouXiangArray;
-    /// <summary>
     /// 排名数据UI列表控制.
     /// </summary>
     public RankDtUI[] mRankDtUIArray;
-    /// <summary>
-    /// 积分父级Tr列表.
-    /// </summary>
-    //public Transform[] mJiFenTrArray;
-    /// <summary>
-    /// 积分Tr.
-    /// </summary>
-    //public Transform mJiFenTr;
-    //public UISprite[] JiFenSpriteArray;
 
     /// <summary>
     /// 显示排行榜UI.
@@ -35,6 +17,7 @@ public class RankListUICtrl : MonoBehaviour
     {
         RankManage.RankData rankDt = null;
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SortRankDtList();
+        float pathDis = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.DistancePath;
 
         for (int i = 0; i < 4; i++)
 		{
@@ -52,8 +35,21 @@ public class RankListUICtrl : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("ShowRankListUI -> index " + i + ", RankType " + rankDt.RankType);
 #endif
-            mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
-            mRankDtUIArray[i].ShowDisMoveInfo((int)rankDt.DisMoveVal);
+            if (rankDt.IsMoveToFinishPoint)
+            {
+                mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
+            }
+            else
+            {
+                mRankDtUIArray[i].HiddenTimeUI();
+            }
+
+            int disVal = (int)(pathDis - rankDt.DisMoveVal);
+            mRankDtUIArray[i].ShowShengYuDisMoveInfo(disVal < 0 ? 0 : disVal);
+
+            float wanChengDu = rankDt.DisMoveVal / pathDis;
+            wanChengDu = wanChengDu > 1f ? 1f : wanChengDu;
+            mRankDtUIArray[i].ShowWanChengDuInfo((int)(wanChengDu * 100f));
         }
         gameObject.SetActive(true);
     }
