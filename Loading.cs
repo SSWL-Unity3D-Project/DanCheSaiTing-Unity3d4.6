@@ -26,7 +26,8 @@ public class Loading : SSUiRoot
     /// <summary>
     /// 游戏模式选择UI界面.
     /// </summary>
-    GameModeSelect mGameModeSelect;
+    [HideInInspector]
+    public GameModeSelect mGameModeSelect;
     /// <summary>
     /// UI摄像机.
     /// </summary>
@@ -334,22 +335,35 @@ public class Loading : SSUiRoot
                         if (mGameModeSelect.eGameMode == NetworkRootMovie.GameMode.NoLink)
                         {
                             //玩家选择单机游戏.
-                            if (m_IsBeginOk && !m_HasBegin)
+                            if (mLevelSelectUI == null)
                             {
+                                //产生选择游戏场景UI.
+                                SpawnLevelSelectUI();
                                 m_BeginSource.Play();
-                                m_Loading.SetActive(true);
-                                timmerstar = true;
-                                m_HasBegin = true;
+                                m_IsStartGame = true;
+                                m_Tishi.SetActive(false);
                                 mGameModeSelect.HiddenSelf();
-                                SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink;
-                                NetworkRootMovie.GetInstance().ePlayerSelectGameMode = NetworkRootMovie.GameMode.NoLink;
-                                NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
-                                NetworkServerNet.GetInstance().RemoveMasterServerHost();
+                            }
+                            else
+                            {
+                                if (m_IsBeginOk && !m_HasBegin)
+                                {
+                                    m_BeginSource.Play();
+                                    m_Loading.SetActive(true);
+                                    timmerstar = true;
+                                    m_HasBegin = true;
+                                    mLevelSelectUI.HiddenSelf();
+                                    SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink;
+                                    NetworkRootMovie.GetInstance().ePlayerSelectGameMode = NetworkRootMovie.GameMode.NoLink;
+                                    NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(false);
+                                    NetworkServerNet.GetInstance().RemoveMasterServerHost();
+                                }
                             }
                         }
 
                         if (mGameModeSelect.eGameMode == NetworkRootMovie.GameMode.Link)
                         {
+                            //玩家选择联机游戏.
                             if (mGameLinkPlayer == null)
                             {
                                 NetworkRootMovie.GetInstance().ePlayerSelectGameMode = NetworkRootMovie.GameMode.Link;
@@ -363,6 +377,7 @@ public class Loading : SSUiRoot
                                 {
                                     //发送网络消息-开始联机游戏.
                                     NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.NetSendLoadLevel(LoadSceneCount);
+                                    mLevelSelectUI.HiddenSelf();
                                 }
                             }
                         }
@@ -450,7 +465,7 @@ public class Loading : SSUiRoot
     {
         GameObject obj = (GameObject)Instantiate(LinkPlayerPrefab, mUICamera.transform);
         mGameLinkPlayer = obj.GetComponent<GameLinkPlayer>();
-        mGameLinkPlayer.Init();
+        mGameLinkPlayer.Init(this);
     }
 
     /// <summary>
@@ -501,13 +516,13 @@ public class Loading : SSUiRoot
     /// <summary>
     /// 产生选择游戏场景UI.
     /// </summary>
-    void SpawnLevelSelectUI()
+    public void SpawnLevelSelectUI()
     {
         if (mLevelSelectUI == null)
         {
             GameObject obj = (GameObject)Instantiate(LevelSelectUIPrefab, mUICamera.transform);
             mLevelSelectUI = obj.GetComponent<LevelSelectUI>();
-            mLevelSelectUI.Init();
+            mLevelSelectUI.Init(this);
         }
     }
 }

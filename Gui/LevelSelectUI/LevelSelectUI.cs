@@ -32,9 +32,32 @@ public class LevelSelectUI : MonoBehaviour
     }
     float TimeLastSelect = 0f;
 
-    public void Init()
+    public void Init(Loading loadingCom)
     {
-        SetActiveStartBt(true);
+        bool isActiveStartBt = false;
+        switch (NetworkRootMovie.GetInstance().eNetState)
+        {
+            case NetworkRootMovie.GameNetType.NoLink:
+                {
+                    isActiveStartBt = true;
+                    break;
+                }
+            case NetworkRootMovie.GameNetType.Link:
+                {
+                    if (loadingCom.mGameModeSelect.eGameMode == NetworkRootMovie.GameMode.Link)
+                    {
+                        isActiveStartBt = false;
+                    }
+                    else
+                    {
+                        isActiveStartBt = true;
+                    }
+                    break;
+                }
+
+        }
+        SetActiveStartBt(isActiveStartBt);
+
         for (int i = 0; i < 4; i++)
         {
             if (YiWanChengUI[i] != null)
