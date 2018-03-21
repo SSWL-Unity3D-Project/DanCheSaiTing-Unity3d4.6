@@ -17,26 +17,32 @@ public class ReadGameInfo : MonoBehaviour
 	 */
 	int GameAudioVolume;
 	#if USE_HANDLE_JSON
-	static HandleJson PHandleJson;
-	static string FileName = "XKGameConfig.xml";
+	HandleJson mHandleJson;
+    [HideInInspector]
+    public string mFileName = "GameConfig.xml";
 	#endif
 	static public ReadGameInfo GetInstance()
 	{
-		if (Instance == null) {
-			#if USE_HANDLE_JSON
-			PHandleJson = HandleJson.GetInstance();
-			#endif
+		if (Instance == null)
+        {
 			GameObject obj = new GameObject("_ReadGameInfo");
 			DontDestroyOnLoad(obj);
 			Instance = obj.AddComponent<ReadGameInfo>();
 			Instance.InitGameInfo();
-		}
-		return Instance;
+        }
+        return Instance;
 	}
+
+    /// <summary>
+    /// 初始化游戏配置信息.
+    /// </summary>
 	void InitGameInfo()
-	{
-		m_pInsertCoinNum = "0";
-		
+    {
+#if USE_HANDLE_JSON
+        mHandleJson = HandleJson.GetInstance();
+#endif
+
+        m_pInsertCoinNum = "0";		
 		int gameModeSt = PlayerPrefs.GetInt("GAME_MODE");
 		if (gameModeSt != 0 && gameModeSt != 1) {
 			gameModeSt = 1; //0->运营模式, 1->免费模式.
@@ -66,16 +72,16 @@ public class ReadGameInfo : MonoBehaviour
 
 		
 		#if USE_HANDLE_JSON
-		string readInfo = PHandleJson.ReadFromFileXml(FileName, "GameAudioVolume");
+		string readInfo = mHandleJson.ReadFromFileXml(mFileName, "GameAudioVolume");
 		if (readInfo == null || readInfo == "") {
 			readInfo = "7";
-			PHandleJson.WriteToFileXml(FileName, "GameAudioVolume", readInfo);
+			mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", readInfo);
 		}
 
 		value = Convert.ToInt32(readInfo);
 		if (value < 0 || value > 10) {
 			value = 7;
-			PHandleJson.WriteToFileXml(FileName, "GameAudioVolume", value.ToString());
+			mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", value.ToString());
 		}
 		#else
 		value = PlayerPrefs.GetInt("GameAudioVolume");
@@ -103,7 +109,7 @@ public class ReadGameInfo : MonoBehaviour
 	public void WriteGameAudioVolume(int value)
 	{
 		#if USE_HANDLE_JSON
-		PHandleJson.WriteToFileXml(FileName, "GameAudioVolume", value.ToString());
+		mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", value.ToString());
 		#else
 		PlayerPrefs.SetInt("GameAudioVolume", value);
 		PlayerPrefs.Save();

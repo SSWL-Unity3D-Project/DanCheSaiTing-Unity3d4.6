@@ -16,8 +16,10 @@ public class GameLinkPlayer : MonoBehaviour
     /// 记录开始按键时间.
     /// </summary>
     float TimeLastStartBt = 0f;
-    public void Init()
+    Loading mLoadingCom;
+    public void Init(Loading loadingScript)
     {
+        mLoadingCom = loadingScript;
         SetAcitveStartBt(false);
         SetPlayerUITexture(0);
     }
@@ -37,6 +39,8 @@ public class GameLinkPlayer : MonoBehaviour
                     {
                         //循环动画场景主服务器有且只有1个动画服务端时,才允许显示开始按键.
                         SetAcitveStartBt(true);
+                        //产生选择游戏场景UI.
+                        mLoadingCom.SpawnLevelSelectUI();
                     }
                 }
                 else
