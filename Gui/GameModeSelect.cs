@@ -3,15 +3,11 @@
 public class GameModeSelect : MonoBehaviour
 {
     [HideInInspector]
-    public NetworkRootMovie.GameMode eGameMode = NetworkRootMovie.GameMode.Null;
+	public NetworkRootMovie.GameMode eGameMode = NetworkRootMovie.GameMode.NoLink;
     /// <summary>
-    /// 联机模式UI动画.
+    /// 模式UI动画.
     /// </summary>
-    public Animator LinkAni;
-    /// <summary>
-    /// 单机模式UI动画.
-    /// </summary>
-    public Animator NoLinkAni;
+    public Animator ModeAni;
     /// <summary>
     /// 开始按键UI.
     /// </summary>
@@ -19,34 +15,27 @@ public class GameModeSelect : MonoBehaviour
 
     public void Init()
     {
-        SetActiveStartBt(false);
+		eGameMode = NetworkRootMovie.GameMode.NoLink;
+        SetActiveStartBt(true);
     }
 
     void Update()
     {
         float steerVal = pcvr.GetInstance().mGetSteer;
-        if (steerVal > 0f && eGameMode != NetworkRootMovie.GameMode.NoLink)
+        if (steerVal < 0f && eGameMode != NetworkRootMovie.GameMode.NoLink)
         {
             Debug.Log("player select noLink...");
-            if (eGameMode == NetworkRootMovie.GameMode.Null)
-            {
-                SetActiveStartBt(true);
-            }
             eGameMode = NetworkRootMovie.GameMode.NoLink;
-            NoLinkAni.SetBool("IsPlay", true);
-            LinkAni.SetBool("IsPlay", false);
+			ModeAni.SetBool("IsDanJi", true);
+			ModeAni.SetBool("IsLianJi", false);
         }
 
-        if (steerVal < 0f && eGameMode != NetworkRootMovie.GameMode.Link)
+        if (steerVal > 0f && eGameMode != NetworkRootMovie.GameMode.Link)
         {
             Debug.Log("player select Link...");
-            if (eGameMode == NetworkRootMovie.GameMode.Null)
-            {
-                SetActiveStartBt(true);
-            }
             eGameMode = NetworkRootMovie.GameMode.Link;
-            NoLinkAni.SetBool("IsPlay", false);
-            LinkAni.SetBool("IsPlay", true);
+			ModeAni.SetBool("IsDanJi", false);
+			ModeAni.SetBool("IsLianJi", true);
         }
     }
 
