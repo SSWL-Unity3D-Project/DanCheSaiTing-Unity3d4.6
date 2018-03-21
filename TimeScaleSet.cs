@@ -11,7 +11,21 @@ public class TimeScaleSet : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag == "player")
-        {
+		{
+			PlayerControllerForMoiew aiPlayerScript = other.GetComponent<PlayerControllerForMoiew>();
+			if (aiPlayerScript != null)
+			{
+				if (m_IsTimeScaleSet)
+				{
+					Time.timeScale = TimeScaleset;
+				}
+				
+				if (m_IsCameraEffect)
+				{
+					m_CameraEffect.SampleStrength = m_CameraEffectSet;
+				}
+			}
+
             PlayerController playerScript = other.GetComponent<PlayerController>();
             if (playerScript != null && playerScript.IsNetControlPort)
             {
