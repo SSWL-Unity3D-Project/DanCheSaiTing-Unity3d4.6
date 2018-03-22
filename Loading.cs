@@ -379,6 +379,7 @@ public class Loading : SSUiRoot
                                     mLevelSelectUI.HiddenSelf();
                                     mGameLinkPlayer.SetActiveLinkNameParent(true);
                                     mGameLinkPlayer.SetAcitveStartBt(true);
+                                    mGameLinkPlayer.ChangeUINameScale(0);
                                 }
                                 else
                                 {

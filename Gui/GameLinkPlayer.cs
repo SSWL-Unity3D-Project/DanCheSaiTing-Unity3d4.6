@@ -29,6 +29,14 @@ public class GameLinkPlayer : MonoBehaviour
         SetPlayerUITexture(0);
     }
 
+    /// <summary>
+    /// 玩家索引.
+    /// </summary>
+    int IndexPlayer = 0;
+    /// <summary>
+    /// 当前联机到服务器的玩家数.
+    /// </summary>
+    int PlayerLinkServerCount = 0;
     void Update()
     {
         if (Time.frameCount % 30 == 0)
@@ -53,6 +61,23 @@ public class GameLinkPlayer : MonoBehaviour
                     TimeLastStartBt = 0f;
                 }
             }
+
+            if (NetworkServerNet.GetInstance() != null)
+            {
+                if (IndexPlayer != NetworkServerNet.GetInstance().IndexSpawnPlayer)
+                {
+                    IndexPlayer = NetworkServerNet.GetInstance().IndexSpawnPlayer;
+                    Debug.Log("GameLinkPlayer::update -> IndexPlayer == " + IndexPlayer);
+                    ChangeUINameScale(IndexPlayer);
+                }
+
+                if (PlayerLinkServerCount != NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie)
+                {
+                    PlayerLinkServerCount = NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie;
+                    Debug.Log("GameLinkPlayer::update -> PlayerLinkServerCount == " + PlayerLinkServerCount);
+                    SetPlayerUITexture(PlayerLinkServerCount);
+                }
+            }
         }
     }
 
@@ -64,6 +89,24 @@ public class GameLinkPlayer : MonoBehaviour
     public void SetActiveLinkNameParent(bool isActive)
     {
         LinkNameParent.SetActive(isActive);
+    }
+
+    /// <summary>
+    /// 改变玩家昵称UI大小.
+    /// </summary>
+    public void ChangeUINameScale(int index)
+    {
+        for (int i = 0; i < PlayerUITextureArray.Length; i++)
+        {
+            if (index == i)
+            {
+                PlayerUITextureArray[i].transform.localScale = new Vector3(1.3f, 1.3f, 1f);
+            }
+            else
+            {
+                PlayerUITextureArray[i].transform.localScale = Vector3.one;
+            }
+        }
     }
 
     /// <summary>
@@ -85,7 +128,7 @@ public class GameLinkPlayer : MonoBehaviour
     /// </summary>
     public void SetPlayerUITexture(int indexVal)
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < PlayerUITextureArray.Length; i++)
         {
             if (i > indexVal)
             {

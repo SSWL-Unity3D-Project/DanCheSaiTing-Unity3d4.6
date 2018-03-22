@@ -62,7 +62,8 @@ public class NetworkRpcMsgCtrl : MonoBehaviour
 	[RPC]
 	void RpcSendSpawnPlayerIndex(NetworkPlayer playerNet, int index)
 	{
-		if (playerNet != Network.player)
+        NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie = index;
+        if (playerNet != Network.player)
         {
 			return;
 		}

@@ -43,7 +43,7 @@ public class NetworkServerNet : MonoBehaviour
     /// 玩家网络数据索引.
     /// </summary>
     [HideInInspector]
-    public int IndexSpawnPlayer;
+    public int IndexSpawnPlayer = 0;
     float TimeLastCreatServer;
     /// <summary>
     /// 网络游戏类型名称.
@@ -162,6 +162,7 @@ public class NetworkServerNet : MonoBehaviour
             //循环动画场景.
             LinkServerPlayerNum_Movie = 0; //初始化.
             LinkServerPlayerNum_Game = 0; //重置.
+            SetIndexSpawnPlayer(0);
             NetworkRootMovie.GetInstance().CreateNetworkRpc();
         }
 
