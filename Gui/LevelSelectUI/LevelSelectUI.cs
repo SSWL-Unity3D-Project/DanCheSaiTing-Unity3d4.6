@@ -31,10 +31,15 @@ public class LevelSelectUI : MonoBehaviour
         }
     }
     float TimeLastSelect = 0f;
+    /// <summary>
+    /// 循环动画UI总控.
+    /// </summary>
+    Loading mLoadingCom;
 
     public void Init(Loading loadingCom)
     {
         bool isActiveStartBt = false;
+        mLoadingCom = loadingCom;
         switch (NetworkRootMovie.GetInstance().eNetState)
         {
             case NetworkRootMovie.GameNetType.NoLink:
@@ -120,5 +125,6 @@ public class LevelSelectUI : MonoBehaviour
     public void HiddenSelf()
     {
         gameObject.SetActive(false);
+        mLoadingCom.mLoadSceneCount = mSelectLevel;
     }
 }
