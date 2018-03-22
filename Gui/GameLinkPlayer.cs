@@ -118,7 +118,7 @@ public class GameLinkPlayer : MonoBehaviour
         {
             if (index == i)
             {
-                PlayerUITextureArray[i].transform.localScale = new Vector3(1.3f, 1.3f, 1f);
+                PlayerUITextureArray[i].transform.localScale = new Vector3(1.2f, 1.2f, 1f);
             }
             else
             {
