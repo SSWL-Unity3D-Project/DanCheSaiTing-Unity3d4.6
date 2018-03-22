@@ -30,7 +30,7 @@ public class RankListUICtrl : MonoBehaviour
             if (rankDt.IsPlayerData)
             {
                 mRankDtUIArray[i].ShowPlayerRankBeiJingUI(mPlayerBJTexture);
-                mRankDtUIArray[i].transform.localScale += new Vector3(0.5f, 0.5f, 0f);
+                mRankDtUIArray[i].transform.localScale += new Vector3(0.1f, 0.1f, 0f);
 #if UNITY_EDITOR
                 Debug.Log("ShowRankListUI -> PlayerTimeUsed " + rankDt.TimeUsedVal.ToString("f2")
                     + ", disMove " + rankDt.DisMoveVal.ToString("f2"));
