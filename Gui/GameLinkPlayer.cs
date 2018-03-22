@@ -3,6 +3,10 @@
 public class GameLinkPlayer : MonoBehaviour
 {
     /// <summary>
+    /// 联机玩家昵称列表父级.
+    /// </summary>
+    public GameObject LinkNameParent;
+    /// <summary>
     /// 开始按键UI.
     /// </summary>
     public GameObject StartBtObj;
@@ -20,6 +24,7 @@ public class GameLinkPlayer : MonoBehaviour
     public void Init(Loading loadingScript)
     {
         mLoadingCom = loadingScript;
+        SetActiveLinkNameParent(false);
         SetAcitveStartBt(false);
         SetPlayerUITexture(0);
     }
@@ -38,7 +43,7 @@ public class GameLinkPlayer : MonoBehaviour
                     if (TimeLastStartBt >= 3f)
                     {
                         //循环动画场景主服务器有且只有1个动画服务端时,才允许显示开始按键.
-                        SetAcitveStartBt(true);
+                        //SetAcitveStartBt(true);
                         //产生选择游戏场景UI.
                         mLoadingCom.SpawnLevelSelectUI();
                     }
@@ -51,9 +56,14 @@ public class GameLinkPlayer : MonoBehaviour
         }
     }
 
-    void SetAcitveStartBt(bool isActive)
+    public void SetAcitveStartBt(bool isActive)
     {
         StartBtObj.SetActive(isActive);
+    }
+
+    public void SetActiveLinkNameParent(bool isActive)
+    {
+        LinkNameParent.SetActive(isActive);
     }
 
     /// <summary>
@@ -71,7 +81,7 @@ public class GameLinkPlayer : MonoBehaviour
 
     /// <summary>
     /// 设置联机玩家UI信息.
-    /// indexVal [0, 7].
+    /// indexVal [0, 4].
     /// </summary>
     public void SetPlayerUITexture(int indexVal)
     {

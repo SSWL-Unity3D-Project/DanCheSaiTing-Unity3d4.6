@@ -373,11 +373,21 @@ public class Loading : SSUiRoot
                             }
                             else
                             {
-                                if (mGameLinkPlayer.StartBtObj.activeInHierarchy)
+                                if (mLevelSelectUI.StartBtObj.activeInHierarchy)
                                 {
-                                    //发送网络消息-开始联机游戏.
-                                    NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.NetSendLoadLevel(LoadSceneCount);
+                                    //联机游戏,主服务器选择游戏关卡.
                                     mLevelSelectUI.HiddenSelf();
+                                    mGameLinkPlayer.SetActiveLinkNameParent(true);
+                                    mGameLinkPlayer.SetAcitveStartBt(true);
+                                }
+                                else
+                                {
+                                    if (mGameLinkPlayer.StartBtObj.activeInHierarchy)
+                                    {
+                                        //发送网络消息-开始联机游戏.
+                                        NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.NetSendLoadLevel(mLevelSelectUI.mSelectLevel);
+                                        mLevelSelectUI.HiddenSelf();
+                                    }
                                 }
                             }
                         }
@@ -426,7 +436,7 @@ public class Loading : SSUiRoot
         }
 	}
 
-    static int LoadSceneCount;
+    int LoadSceneCount;
 	void OnLoadingClicked()
 	{
 		if(timmerstar)
@@ -443,7 +453,7 @@ public class Loading : SSUiRoot
                 Debug.Log("OnLoadingClicked -> levelVal == " + levelVal);
                 StartCoroutine (loadScene(levelVal));
 				timmerstar = false;
-                LoadSceneCount++;
+                //LoadSceneCount++;
             }
 		}
     }

@@ -46,7 +46,7 @@ public class LevelSelectUI : MonoBehaviour
                 {
                     if (loadingCom.mGameModeSelect.eGameMode == NetworkRootMovie.GameMode.Link)
                     {
-                        isActiveStartBt = false;
+                        isActiveStartBt = true;
                     }
                     else
                     {
