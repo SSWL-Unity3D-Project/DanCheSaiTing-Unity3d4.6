@@ -45,10 +45,24 @@ public class RankListUICtrl : MonoBehaviour
             }
 
             int disVal = (int)(pathDis - rankDt.DisMoveVal);
-            mRankDtUIArray[i].ShowShengYuDisMoveInfo(disVal < 0 ? 0 : disVal);
+            if (rankDt.IsMoveToFinishPoint)
+            {
+                mRankDtUIArray[i].ShowShengYuDisMoveInfo(0);
+            }
+            else
+            {
+                mRankDtUIArray[i].ShowShengYuDisMoveInfo(disVal < 0 ? 0 : disVal);
+            }
 
             float wanChengDu = rankDt.DisMoveVal / pathDis;
-            wanChengDu = wanChengDu > 1f ? 1f : wanChengDu;
+            if (rankDt.IsMoveToFinishPoint)
+            {
+                wanChengDu = 1f;
+            }
+            else
+            {
+                wanChengDu = wanChengDu > 1f ? 1f : wanChengDu;
+            }
             mRankDtUIArray[i].ShowWanChengDuInfo((int)(wanChengDu * 100f));
         }
         gameObject.SetActive(true);
