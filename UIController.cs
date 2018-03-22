@@ -391,6 +391,7 @@ public class UIController : SSUiRoot
                         }
                     }
 
+                    float timeRankVal = 0f;
                     bool isDisplayRankUI = false;
                     if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
                     {
@@ -406,6 +407,11 @@ public class UIController : SSUiRoot
                         {
                             //多人联机.
                             isDisplayRankUI = true;
+                            timeRankVal = 3f;
+                            if (!PlayerController.GetInstance().m_IsFinished)
+                            {
+                                SpawnTiaoZhanShiBaiUI();
+                            }
                         }
                     }
                     else
@@ -419,7 +425,7 @@ public class UIController : SSUiRoot
 
                     if (isDisplayRankUI)
                     {
-                        SpawnRankListUI();
+                        StartCoroutine(SpawnRankListUI(timeRankVal));
                     }
                     m_IsCongratulate = true;
                     m_JindutiaoObj.SetActive(false);
@@ -915,13 +921,78 @@ public class UIController : SSUiRoot
     /// <summary>
     /// 产生游戏排名UI界面.
     /// </summary>
-    void SpawnRankListUI()
+    IEnumerator SpawnRankListUI(float timeVal)
     {
+        yield return new WaitForSeconds(timeVal);
+        if (mTaiZhanChengGongUI != null)
+        {
+            RemoveTiaoZhanChengGongUI();
+        }
+
+        if (mTaiZhanShiBaiUI != null)
+        {
+            RemoveTiaoZhanShiBaiUI();
+        }
+
         if (mRankListUICom == null && RankListUIPrefab != null)
         {
             GameObject obj = (GameObject)Instantiate(RankListUIPrefab, mUICamera.transform);
             mRankListUICom = obj.GetComponent<RankListUICtrl>();
             mRankListUICom.ShowRankListUI();
+        }
+    }
+
+    /// <summary>
+    /// 挑战成功UI预制.
+    /// </summary>
+    public GameObject TiaoZhanChengGongUIPrefab;
+    GameObject mTaiZhanChengGongUI;
+    /// <summary>
+    /// 联机游戏产生挑战成功UI界面.
+    /// </summary>
+    public void SpawnTiaoZhanChengGongUI()
+    {
+        if (mTaiZhanChengGongUI == null && TiaoZhanChengGongUIPrefab != null)
+        {
+            mTaiZhanChengGongUI = (GameObject)Instantiate(TiaoZhanChengGongUIPrefab, mUICamera.transform);
+        }
+    }
+
+    /// <summary>
+    /// 删除挑战成功UI界面.
+    /// </summary>
+    public void RemoveTiaoZhanChengGongUI()
+    {
+        if (mTaiZhanChengGongUI != null)
+        {
+            Destroy(mTaiZhanChengGongUI);
+        }
+    }
+
+    /// <summary>
+    /// 挑战失败UI预制.
+    /// </summary>
+    public GameObject TiaoZhanShiBaiUIPrefab;
+    GameObject mTaiZhanShiBaiUI;
+    /// <summary>
+    /// 联机游戏产生挑战失败UI界面.
+    /// </summary>
+    public void SpawnTiaoZhanShiBaiUI()
+    {
+        if (mTaiZhanShiBaiUI == null && TiaoZhanShiBaiUIPrefab != null)
+        {
+            mTaiZhanShiBaiUI = (GameObject)Instantiate(TiaoZhanShiBaiUIPrefab, mUICamera.transform);
+        }
+    }
+
+    /// <summary>
+    /// 删除挑战失败UI界面.
+    /// </summary>
+    public void RemoveTiaoZhanShiBaiUI()
+    {
+        if (mTaiZhanShiBaiUI != null)
+        {
+            Destroy(mTaiZhanShiBaiUI);
         }
     }
 }

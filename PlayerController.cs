@@ -1574,6 +1574,19 @@ public class PlayerController : MonoBehaviour
                         mNetSynGame.SynNetAnimator("IsFinish", NetworkSynchronizeGame.AnimatorType.Bool, true);
                     }
                     GlobalData.GetInstance().AddYiWanChengLevel(Application.loadedLevel);
+
+                    if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+                    {
+                        if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                        {
+                            //没有玩家选择链接服务器进行联机游戏.
+                        }
+                        else
+                        {
+                            //多人联机.
+                            m_UIController.SpawnTiaoZhanChengGongUI();
+                        }
+                    }
                 }
             }
         }
