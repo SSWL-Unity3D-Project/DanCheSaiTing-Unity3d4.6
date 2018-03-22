@@ -6,6 +6,10 @@
 public class RankListUICtrl : MonoBehaviour
 {
     /// <summary>
+    /// 玩家排行信息背景.
+    /// </summary>
+    public Texture mPlayerBJTexture;
+    /// <summary>
     /// 排名数据UI列表控制.
     /// </summary>
     public RankDtUI[] mRankDtUIArray;
@@ -25,6 +29,7 @@ public class RankListUICtrl : MonoBehaviour
             rankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.RankDtList[i];
             if (rankDt.IsPlayerData)
             {
+                mRankDtUIArray[i].ShowPlayerRankBeiJingUI(mPlayerBJTexture);
                 mRankDtUIArray[i].transform.localScale += new Vector3(0.5f, 0.5f, 0f);
 #if UNITY_EDITOR
                 Debug.Log("ShowRankListUI -> PlayerTimeUsed " + rankDt.TimeUsedVal.ToString("f2")
@@ -45,10 +50,24 @@ public class RankListUICtrl : MonoBehaviour
             }
 
             int disVal = (int)(pathDis - rankDt.DisMoveVal);
-            mRankDtUIArray[i].ShowShengYuDisMoveInfo(disVal < 0 ? 0 : disVal);
+            if (rankDt.IsMoveToFinishPoint)
+            {
+                mRankDtUIArray[i].ShowShengYuDisMoveInfo(0);
+            }
+            else
+            {
+                mRankDtUIArray[i].ShowShengYuDisMoveInfo(disVal < 0 ? 0 : disVal);
+            }
 
             float wanChengDu = rankDt.DisMoveVal / pathDis;
-            wanChengDu = wanChengDu > 1f ? 1f : wanChengDu;
+            if (rankDt.IsMoveToFinishPoint)
+            {
+                wanChengDu = 1f;
+            }
+            else
+            {
+                wanChengDu = wanChengDu > 1f ? 1f : wanChengDu;
+            }
             mRankDtUIArray[i].ShowWanChengDuInfo((int)(wanChengDu * 100f));
         }
         gameObject.SetActive(true);

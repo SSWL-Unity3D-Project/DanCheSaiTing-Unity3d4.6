@@ -3,6 +3,10 @@
 public class GameLinkPlayer : MonoBehaviour
 {
     /// <summary>
+    /// 正在创建服务器UI.
+    /// </summary>
+    public GameObject UICreateSever;
+    /// <summary>
     /// 联机玩家昵称列表父级.
     /// </summary>
     public GameObject LinkNameParent;
@@ -27,6 +31,7 @@ public class GameLinkPlayer : MonoBehaviour
         SetActiveLinkNameParent(false);
         SetAcitveStartBt(false);
         SetPlayerUITexture(0);
+        SetActiveUICreateSever(true);
     }
 
     /// <summary>
@@ -54,6 +59,8 @@ public class GameLinkPlayer : MonoBehaviour
                         //SetAcitveStartBt(true);
                         //产生选择游戏场景UI.
                         mLoadingCom.SpawnLevelSelectUI();
+                        //隐藏创建服务器的UI提示.
+                        SetActiveUICreateSever(false);
                     }
                 }
                 else
@@ -68,6 +75,7 @@ public class GameLinkPlayer : MonoBehaviour
                 {
                     IndexPlayer = NetworkServerNet.GetInstance().IndexSpawnPlayer;
                     Debug.Log("GameLinkPlayer::update -> IndexPlayer == " + IndexPlayer);
+                    SetActiveLinkNameParent(true);
                     ChangeUINameScale(IndexPlayer);
                 }
 
@@ -89,6 +97,16 @@ public class GameLinkPlayer : MonoBehaviour
     public void SetActiveLinkNameParent(bool isActive)
     {
         LinkNameParent.SetActive(isActive);
+        if (isActive)
+        {
+            //隐藏正在创建服务器的UI提示.
+            SetActiveUICreateSever(false);
+        }
+    }
+
+    void SetActiveUICreateSever(bool isActive)
+    {
+        UICreateSever.SetActive(isActive);
     }
 
     /// <summary>

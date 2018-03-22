@@ -387,7 +387,6 @@ public class Loading : SSUiRoot
                                     {
                                         //发送网络消息-开始联机游戏.
                                         NetworkRootMovie.GetInstance().mNetworkRpcMsgScript.NetSendLoadLevel(mLevelSelectUI.mSelectLevel);
-                                        mLevelSelectUI.HiddenSelf();
                                     }
                                 }
                             }
@@ -437,7 +436,24 @@ public class Loading : SSUiRoot
         }
 	}
 
-    int LoadSceneCount;
+    int _mLoadSceneCount = 0;
+    /// <summary>
+    /// 加载游戏的关卡信息.
+    /// </summary>
+    [HideInInspector]
+    public int mLoadSceneCount
+    {
+        set
+        {
+            Debug.Log("Loading -> mLoadSceneCount == " + value);
+            _mLoadSceneCount = value;
+        }
+        get
+        {
+            return _mLoadSceneCount;
+        }
+    }
+
 	void OnLoadingClicked()
 	{
 		if(timmerstar)
@@ -445,16 +461,10 @@ public class Loading : SSUiRoot
 			timmerforstar += Time.deltaTime;
 			if(timmerforstar > 1.5f)
 			{
-                if (mLevelSelectUI != null)
-                {
-                    LoadSceneCount = mLevelSelectUI.mSelectLevel - 1;
-                }
-
-                int levelVal = (LoadSceneCount % (Application.levelCount - 2)) + 1;
+                int levelVal = ((mLoadSceneCount - 1) % (Application.levelCount - 2)) + 1;
                 Debug.Log("OnLoadingClicked -> levelVal == " + levelVal);
                 StartCoroutine (loadScene(levelVal));
 				timmerstar = false;
-                //LoadSceneCount++;
             }
 		}
     }
@@ -491,7 +501,7 @@ public class Loading : SSUiRoot
     IEnumerator OnNetCallPlayerIntoGame(int level)
     {
         float timeVal = Network.peerType == NetworkPeerType.Server ? 3f : 0f;
-        LoadSceneCount = level;
+        mLoadSceneCount = level;
         mGameLinkPlayer.OnClickStartBt();
         yield return new WaitForSeconds(timeVal);
         

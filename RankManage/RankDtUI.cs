@@ -3,6 +3,10 @@
 public class RankDtUI : MonoBehaviour
 {
     /// <summary>
+    /// 玩家排行信息背景.
+    /// </summary>
+    public UITexture mPlayerBJUITexture;
+    /// <summary>
     /// 时间UI总控.
     /// </summary>
     public GameObject TimeUIObj;
@@ -97,6 +101,17 @@ public class RankDtUI : MonoBehaviour
             {
                 mWanChengDuUIArray[i].enabled = false;
             }
+        }
+    }
+
+    /// <summary>
+    /// 显示玩家排行背景.
+    /// </summary>
+    public void ShowPlayerRankBeiJingUI(Texture textureVal)
+    {
+        if (textureVal != null && mPlayerBJUITexture != null)
+        {
+            mPlayerBJUITexture.mainTexture = textureVal;
         }
     }
 }
