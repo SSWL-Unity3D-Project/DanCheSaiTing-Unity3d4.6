@@ -613,6 +613,11 @@ public class UIController : SSUiRoot
                 //联机最终倒计时结束,玩家未到达终点.
                 m_IsGameOver = true;
             }
+
+            if (mNetEndDaoJiShiCom != null)
+            {
+                mNetEndDaoJiShiCom.HiddenSelf();
+            }
         }
         TimeNetEndVal = timeVal;
 
@@ -636,8 +641,23 @@ public class UIController : SSUiRoot
         //更新最终倒计时.
         if (mNetEndDaoJiShiCom != null)
         {
-            mNetEndDaoJiShiCom.m_pNetMiaoshiwei.spriteName = TimeMiaoshiwei.ToString();
-            mNetEndDaoJiShiCom.m_pNetMiaogewei.spriteName = TimeMiaogewei.ToString();
+            if (TimeMiaoshiwei == 0)
+            {
+                mNetEndDaoJiShiCom.m_pNetMiaoshiwei.enabled = false;
+            }
+            else
+            {
+                mNetEndDaoJiShiCom.m_pNetMiaoshiwei.spriteName = TimeMiaoshiwei.ToString();
+            }
+
+            if (TimeMiaogewei >= 1 && TimeMiaogewei <= 5)
+            {
+                mNetEndDaoJiShiCom.m_pNetMiaogewei.spriteName = TimeMiaogewei.ToString();
+            }
+            else
+            {
+                mNetEndDaoJiShiCom.m_pNetMiaogewei.enabled = false;
+            }
         }
     }
 
