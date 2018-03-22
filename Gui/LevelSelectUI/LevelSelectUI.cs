@@ -77,9 +77,9 @@ public class LevelSelectUI : MonoBehaviour
     void Update()
     {
         float steerVal = pcvr.GetInstance().mGetSteer;
-        if (steerVal > 0f && Time.time - TimeLastSelect > 0.5f)
+        if (steerVal > 0f && Time.realtimeSinceStartup - TimeLastSelect > 0.5f)
         {
-            TimeLastSelect = Time.time;
+            TimeLastSelect = Time.realtimeSinceStartup;
             int level = mSelectLevel;
             level++;
             if (level > 4)
@@ -94,9 +94,9 @@ public class LevelSelectUI : MonoBehaviour
             Debug.Log("aniName -> " + trigger);
         }
 
-        if (steerVal < 0f && Time.time - TimeLastSelect > 0.5f)
+        if (steerVal < 0f && Time.realtimeSinceStartup - TimeLastSelect > 0.5f)
         {
-            TimeLastSelect = Time.time;
+            TimeLastSelect = Time.realtimeSinceStartup;
             int level = mSelectLevel;
             level--;
             if (level < 1)
