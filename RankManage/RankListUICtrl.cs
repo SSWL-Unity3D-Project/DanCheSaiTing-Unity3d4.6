@@ -40,25 +40,8 @@ public class RankListUICtrl : MonoBehaviour
 #if UNITY_EDITOR
             Debug.Log("ShowRankListUI -> index " + i + ", RankType " + rankDt.RankType);
 #endif
-            if (rankDt.IsMoveToFinishPoint)
-            {
-                mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
-            }
-            else
-            {
-                mRankDtUIArray[i].HiddenTimeUI();
-            }
 
             int disVal = (int)(pathDis - rankDt.DisMoveVal);
-            if (rankDt.IsMoveToFinishPoint)
-            {
-                mRankDtUIArray[i].ShowShengYuDisMoveInfo(0);
-            }
-            else
-            {
-                mRankDtUIArray[i].ShowShengYuDisMoveInfo(disVal < 0 ? 0 : disVal);
-            }
-
             float wanChengDu = rankDt.DisMoveVal / pathDis;
             if (rankDt.IsMoveToFinishPoint)
             {
@@ -69,6 +52,24 @@ public class RankListUICtrl : MonoBehaviour
                 wanChengDu = wanChengDu > 1f ? 1f : wanChengDu;
             }
             mRankDtUIArray[i].ShowWanChengDuInfo((int)(wanChengDu * 100f));
+            
+            if (rankDt.IsMoveToFinishPoint || wanChengDu >= 1f)
+            {
+                mRankDtUIArray[i].ShowTimeUsedVal((int)rankDt.TimeUsedVal);
+            }
+            else
+            {
+                mRankDtUIArray[i].HiddenTimeUI();
+            }
+
+            if (rankDt.IsMoveToFinishPoint || wanChengDu >= 1f)
+            {
+                mRankDtUIArray[i].ShowShengYuDisMoveInfo(0);
+            }
+            else
+            {
+                mRankDtUIArray[i].ShowShengYuDisMoveInfo(disVal < 0 ? 0 : disVal);
+            }
         }
         gameObject.SetActive(true);
     }
