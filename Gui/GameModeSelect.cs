@@ -12,30 +12,43 @@ public class GameModeSelect : MonoBehaviour
     /// 开始按键UI.
     /// </summary>
     public GameObject StartBtObj;
+    /// <summary>
+    /// 循环动画UI总控.
+    /// </summary>
+    Loading mLoadingCom;
 
-    public void Init()
+    public void Init(Loading loadingCom)
     {
 		eGameMode = NetworkRootMovie.GameMode.NoLink;
+        mLoadingCom = loadingCom;
         SetActiveStartBt(true);
     }
 
     void Update()
     {
         float steerVal = pcvr.GetInstance().mGetSteer;
-        if (steerVal < 0f && eGameMode != NetworkRootMovie.GameMode.NoLink)
+        if (steerVal < -0.3f)
         {
-            Debug.Log("player select noLink...");
-            eGameMode = NetworkRootMovie.GameMode.NoLink;
-			ModeAni.SetBool("IsDanJi", true);
-			ModeAni.SetBool("IsLianJi", false);
+            if (eGameMode != NetworkRootMovie.GameMode.NoLink)
+            {
+                Debug.Log("player select noLink...");
+                mLoadingCom.m_ModeSource.Play();
+                eGameMode = NetworkRootMovie.GameMode.NoLink;
+                ModeAni.SetBool("IsDanJi", true);
+                ModeAni.SetBool("IsLianJi", false);
+            }
         }
 
-        if (steerVal > 0f && eGameMode != NetworkRootMovie.GameMode.Link)
+        if (steerVal > 0.3f)
         {
-            Debug.Log("player select Link...");
-            eGameMode = NetworkRootMovie.GameMode.Link;
-			ModeAni.SetBool("IsDanJi", false);
-			ModeAni.SetBool("IsLianJi", true);
+            if (eGameMode != NetworkRootMovie.GameMode.Link)
+            {
+                Debug.Log("player select Link...");
+                mLoadingCom.m_ModeSource.Play();
+                eGameMode = NetworkRootMovie.GameMode.Link;
+                ModeAni.SetBool("IsDanJi", false);
+                ModeAni.SetBool("IsLianJi", true);
+            }
         }
     }
 

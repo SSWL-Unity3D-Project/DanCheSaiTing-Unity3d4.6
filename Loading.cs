@@ -45,7 +45,15 @@ public class Loading : SSUiRoot
 	private bool m_IsStartGame =false;
 	public AudioSource m_TbSource;
 	public AudioSource m_BeginSource;
-	public GameObject m_Loading;
+    /// <summary>
+    /// 模式选择音效.
+    /// </summary>
+	public AudioSource m_ModeSource;
+    /// <summary>
+    /// 关卡选择音效.
+    /// </summary>
+    public AudioSource m_LevelSource;
+    public GameObject m_Loading;
 	public GameObject m_Tishi;
 	private string GameMode = "";
 
@@ -498,7 +506,7 @@ public class Loading : SSUiRoot
     {
         GameObject obj = (GameObject)Instantiate(GameModePrefab, mUICamera.transform);
         mGameModeSelect = obj.GetComponent<GameModeSelect>();
-        mGameModeSelect.Init();
+        mGameModeSelect.Init(this);
     }
 
     /// <summary>

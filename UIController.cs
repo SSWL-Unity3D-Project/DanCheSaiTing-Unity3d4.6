@@ -143,7 +143,7 @@ public class UIController : SSUiRoot
 	public AudioSource m_FinishiAudio;
 	public AudioSource m_NewRecordAudio;
 	public AudioSource m_NewRecordHitAudio;
-	private bool m_HasTishi = false;
+    private bool m_HasTishi = false;
 	public AudioSource m_BeginDaojishiAudio;
 	private bool m_HasPlay = false;
 

@@ -84,6 +84,7 @@ public class LevelSelectUI : MonoBehaviour
         float steerVal = pcvr.GetInstance().mGetSteer;
         if (steerVal > 0f && Time.realtimeSinceStartup - TimeLastSelect > 0.5f)
         {
+            mLoadingCom.m_LevelSource.Play();
             TimeLastSelect = Time.realtimeSinceStartup;
             int level = mSelectLevel;
             level++;
@@ -101,6 +102,7 @@ public class LevelSelectUI : MonoBehaviour
 
         if (steerVal < 0f && Time.realtimeSinceStartup - TimeLastSelect > 0.5f)
         {
+            mLoadingCom.m_LevelSource.Play();
             TimeLastSelect = Time.realtimeSinceStartup;
             int level = mSelectLevel;
             level--;
