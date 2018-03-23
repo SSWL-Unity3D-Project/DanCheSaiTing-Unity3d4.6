@@ -277,8 +277,19 @@ public class RankManage
                 //x和y在相同路径点上.
                 retval = x.TimePathNodeCur.CompareTo(y.TimePathNodeCur);
             }
+            else
+            {
+                int retvalTmp = y.DisMoveVal.CompareTo(x.DisMoveVal);
+                if (retvalTmp != retval)
+                {
+                    retval = retvalTmp;
+                    Debug.Log("fixRank -> xDis == " + x.DisMoveVal + ", yDis == " + y.DisMoveVal
+                        + ", xNode == " + x.PathNodeCur + ", yNode == " + y.PathNodeCur
+                        + ", xType == " + x.RankType + ", yType == " + y.RankType);
+                }
+            }
 
-            float timeUsed = UnityEngine.Time.time - TimeStartVal;
+            float timeUsed = Time.time - TimeStartVal;
             x.TimeUsedVal = y.TimeUsedVal = timeUsed;
         }
         return retval;
