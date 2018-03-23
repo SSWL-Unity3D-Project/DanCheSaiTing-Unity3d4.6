@@ -118,8 +118,31 @@ public class NpcController : MonoBehaviour
     /// <summary>
     /// 运动的路程.
     /// </summary>
-    float mDistanceMove = 0.0f;
+    public float mDistanceMove = 0.0f;
     private Vector3 PosRecord;
+    void Update()
+    {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
+        if (PlayerController.GetInstance().timmerstar > 5.0f)
+        {
+            float length = Vector3.Distance(PosRecord, transform.position);
+            mDistanceMove += length;
+            PosRecord = transform.position;
+            if (mRankDt != null)
+            {
+                mRankDt.UpdataDisMoveValue(mDistanceMove);
+                SendNpcDisMoveVal(mDistanceMove);
+            }
+        }
+        else
+        {
+            PosRecord = transform.position;
+        }
+    }
 
     void FixedUpdate()
 	{
@@ -136,15 +159,6 @@ public class NpcController : MonoBehaviour
         int pathNum = (m_NpcPathNum + 1) % m_NpcPath.childCount;
         if (PlayerController.GetInstance().timmerstar > 5.0f)
         {
-            float length = Vector3.Distance(PosRecord, transform.position);
-            mDistanceMove += length;
-            PosRecord = transform.position;
-            if (mRankDt != null)
-            {
-                mRankDt.UpdataDisMoveValue(mDistanceMove);
-                SendNpcDisMoveVal(mDistanceMove);
-            }
-
             if (Time.time - TimeLastRandPlayer > TimeRandPlayer)
             {
                 TimeLastRandPlayer = Time.time;

@@ -4,6 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 玩家排名信息管理.
 /// </summary>
+[System.Serializable]
 public class RankManage
 {
     /// <summary>
@@ -29,6 +30,7 @@ public class RankManage
     /// <summary>
     /// 排名数据.
     /// </summary>
+    [System.Serializable]
     public class RankData
     {
         /// <summary>

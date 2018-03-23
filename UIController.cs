@@ -701,7 +701,7 @@ public class UIController : SSUiRoot
 
 	void UpdateJinduTiao()
 	{
-		m_JinduTiao.fillAmount = (m_Player.m_distance)/Distance;
+		m_JinduTiao.fillAmount = (m_Player.mDistanceMove)/Distance;
 		if(m_JinduTiao.fillAmount > 1.0f)
 		{
 			m_JinduTiao.fillAmount = 1.0f;

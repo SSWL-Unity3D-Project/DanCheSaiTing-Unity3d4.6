@@ -271,8 +271,8 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 运动的路程.
     /// </summary>
-    [HideInInspector]
-    public float m_distance = 0.0f;
+    //[HideInInspector]
+    public float mDistanceMove = 0.0f;
     private Vector3 PosRecord;
     [HideInInspector]
     public float m_LimitSpeed = 10.0f;
@@ -601,7 +601,6 @@ public class PlayerController : MonoBehaviour
         //pcvr.GetInstance();
         //m_pTopSpeed = Convert_Miles_Per_Hour_To_Meters_Per_Second(m_pTopSpeed);
         rigidbody.centerOfMass = m_massCenter.localPosition;
-        PosRecord = transform.position;
         mask = 1 << (LayerMask.NameToLayer("shexianjiance"));
 
         PathPoint = new Transform[Path.childCount];
@@ -824,6 +823,7 @@ public class PlayerController : MonoBehaviour
                 SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SetTimeStartVal(timeVal);
                 SendPlayerPlayerRankTimeServerStartVal(timeVal);
             }
+            PosRecord = transform.position;
         }
         else
         {
@@ -957,12 +957,12 @@ public class PlayerController : MonoBehaviour
             }
 
             float length = Vector3.Distance(PosRecord, transform.position);
-            m_distance += length;
+            mDistanceMove += length;
             PosRecord = transform.position;
             if (mRankDt != null)
             {
-                mRankDt.UpdataDisMoveValue(m_distance);
-                SendPlayerDisMoveVal(m_distance);
+                mRankDt.UpdataDisMoveValue(mDistanceMove);
+                SendPlayerDisMoveVal(mDistanceMove);
             }
 
             if (!m_CanDrive && canDrive)
