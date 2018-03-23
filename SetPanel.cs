@@ -46,13 +46,13 @@ public class SetPanel : MonoBehaviour
 		m_ZhujiemianXingXing.localPosition = new Vector3(-510.0f,212.0f,0.0f);
 		string GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
 		if (GameMode == "" || GameMode == null) {
-			GameMode = "oper";
+			GameMode = ReadGameInfo.GameMode.Oper.ToString();
 		}
 
 		m_CoinForStar.text = ReadGameInfo.GetInstance().ReadStarCoinNumSet();
 		int minSpeedPlayer = (int)ReadGameInfo.GetInstance().ReadPlayerMinSpeedVal();
 		PlayerMinSpeed.text = minSpeedPlayer.ToString();
-		if(GameMode == "oper")
+		if(GameMode == ReadGameInfo.GameMode.Oper.ToString())
 		{
 			m_GameModeDuigou1.enabled = true;
 			m_GameModeDuigou2.enabled = false;
@@ -389,14 +389,14 @@ public class SetPanel : MonoBehaviour
                 {
                     m_GameModeDuigou1.enabled = true;
                     m_GameModeDuigou2.enabled = false;
-                    ReadGameInfo.GetInstance().WriteGameStarMode("oper");
+                    ReadGameInfo.GetInstance().WriteGameStarMode(ReadGameInfo.GameMode.Oper.ToString());
                     break;
                 }
             case 2:
                 {
                     m_GameModeDuigou1.enabled = false;
                     m_GameModeDuigou2.enabled = true;
-                    ReadGameInfo.GetInstance().WriteGameStarMode("FREE");
+                    ReadGameInfo.GetInstance().WriteGameStarMode(ReadGameInfo.GameMode.Free.ToString());
                     break;
                 }
             case 3:

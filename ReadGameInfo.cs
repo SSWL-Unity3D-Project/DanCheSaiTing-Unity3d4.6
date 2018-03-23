@@ -6,7 +6,12 @@ using System;
 public class ReadGameInfo : MonoBehaviour 
 {
 	static private ReadGameInfo Instance = null;
-	private HandleJson handleJsonObj;
+    public enum GameMode
+    {
+        Oper, //运营.
+        Free, //免费.
+    }
+    private HandleJson handleJsonObj;
 	public string m_pStarCoinNum = "";
 	public string m_pGameMode = "";
 	public string m_pInsertCoinNum = "0";
@@ -48,7 +53,7 @@ public class ReadGameInfo : MonoBehaviour
 			gameModeSt = 1; //0->运营模式, 1->免费模式.
 			PlayerPrefs.SetInt("GAME_MODE", gameModeSt);
 		}
-		m_pGameMode = gameModeSt == 0 ? "oper" : "FREE";
+		m_pGameMode = gameModeSt == 0 ? ReadGameInfo.GameMode.Oper.ToString() : ReadGameInfo.GameMode.Free.ToString();
 
 		int coinStart = PlayerPrefs.GetInt("START_COIN");
 		if (coinStart == 0) {
@@ -96,7 +101,7 @@ public class ReadGameInfo : MonoBehaviour
 	public void FactoryReset()
 	{
 		WriteStarCoinNumSet("1");
-		WriteGameStarMode("oper");
+		WriteGameStarMode(GameMode.Oper.ToString());
 		WriteInsertCoinNum("0");
 		WriteGameRecord(180);
 		WritePlayerMinSpeedVal(0);
@@ -141,7 +146,7 @@ public class ReadGameInfo : MonoBehaviour
 	}
 	public void WriteGameStarMode(string value)
 	{
-		int gameModeSt = value == "oper" ? 0 : 1;
+		int gameModeSt = value == GameMode.Oper.ToString() ? 0 : 1;
 		PlayerPrefs.SetInt("GAME_MODE", gameModeSt);
 		m_pGameMode = value;
 	}

@@ -85,7 +85,7 @@ public class Loading : SSUiRoot
 		//m_MovieTex.Play();
 		m_HasBegin = false;
 		GameMode = ReadGameInfo.GetInstance ().ReadGameStarMode();
-		if(GameMode == "oper")
+		if(GameMode == ReadGameInfo.GameMode.Oper.ToString())
 		{
 			m_FreeTexture.enabled = false;
 			CoinNumSet = ReadGameInfo.GetInstance ().ReadStarCoinNumSet();
@@ -101,9 +101,7 @@ public class Loading : SSUiRoot
 			m_IsBeginOk = true;
 			m_FreeTexture.enabled = true;
 		}
-		//Invoke("OnClickBeginBt", UnityEngine.Random.Range(1f, 5f)); //test
 		m_Loading.SetActive(false);
-		//pcvr.ShaCheBtLight = StartLightState.Mie;
 
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickSetEnterBtEvent += ClickSetEnterBtEvent;
 		InputEventCtrl.GetInstance().mListenPcInputEvent.ClickStartBtOneEvent += ClickStartBtOneEvent;
@@ -129,7 +127,7 @@ public class Loading : SSUiRoot
 
 		if (pcvr.bIsHardWare)
         {
-			if (GlobalData.GetInstance().CoinCur != m_InserNum && GameMode == "oper")
+			if (GlobalData.GetInstance().CoinCur != m_InserNum && GameMode == ReadGameInfo.GameMode.Oper.ToString())
             {
 				m_InserNum = GlobalData.GetInstance().CoinCur - 1;
 				OnClickInsertBt();
@@ -137,7 +135,7 @@ public class Loading : SSUiRoot
 		}
 		else
         {
-			if(Input.GetKeyDown(KeyCode.T) && GameMode == "oper")
+			if(Input.GetKeyDown(KeyCode.T) && GameMode == ReadGameInfo.GameMode.Oper.ToString())
 			{
 				OnClickInsertBt();
 			}
@@ -243,7 +241,7 @@ public class Loading : SSUiRoot
 
 	void UpdateTex()
 	{
-		if(GameMode == "FREE" || m_InserNum >= Convert.ToInt32(CoinNumSet))
+		if(GameMode == ReadGameInfo.GameMode.Free.ToString() || m_InserNum >= Convert.ToInt32(CoinNumSet))
 		{
 			m_InserTimmer = 0.0f;
 			m_IsBeginOk = true;
@@ -314,21 +312,32 @@ public class Loading : SSUiRoot
                 {
                     if (mGameModeSelect == null)
                     {
-                        //创建游戏模式选择UI界面.
-                        SpawnGameModeUI();
-                        m_BeginSource.Play();
-                        m_IsStartGame = true;
-                        if (GameMode == "oper")
+                        if (GameMode == ReadGameInfo.GameMode.Oper.ToString())
                         {
-                            m_InserNum -= Convert.ToInt32(CoinNumSet);
-                            UpdateInsertCoin();
-                            ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
-                            if (pcvr.bIsHardWare)
+                            if (m_InserNum >= Convert.ToInt32(CoinNumSet))
                             {
-                                pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(Convert.ToInt32(CoinNumSet), pcvrTXManage.PlayerCoinEnum.player01);
+                                //创建游戏模式选择UI界面.
+                                SpawnGameModeUI();
+                                m_BeginSource.Play();
+                                m_IsStartGame = true;
+                                m_InserNum -= Convert.ToInt32(CoinNumSet);
+                                UpdateInsertCoin();
+                                ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
+                                if (pcvr.bIsHardWare)
+                                {
+                                    pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(Convert.ToInt32(CoinNumSet), pcvrTXManage.PlayerCoinEnum.player01);
+                                }
+                                m_Tishi.SetActive(false);
                             }
                         }
-                        m_Tishi.SetActive(false);
+                        else
+                        {
+                            //创建游戏模式选择UI界面.
+                            SpawnGameModeUI();
+                            m_BeginSource.Play();
+                            m_IsStartGame = true;
+                            m_Tishi.SetActive(false);
+                        }
                     }
                     else
                     {
@@ -403,21 +412,34 @@ public class Loading : SSUiRoot
 
                     if (mLevelSelectUI == null)
                     {
-                        //产生选择游戏场景UI.
-                        SpawnLevelSelectUI();
-                        m_BeginSource.Play();
-                        m_IsStartGame = true;
-                        if (GameMode == "oper")
+                        if (GameMode == ReadGameInfo.GameMode.Oper.ToString())
                         {
-                            m_InserNum -= Convert.ToInt32(CoinNumSet);
-                            UpdateInsertCoin();
-                            ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
-                            if (pcvr.bIsHardWare)
+                            //运营模式.
+                            if (m_InserNum >= Convert.ToInt32(CoinNumSet))
                             {
-                                pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(Convert.ToInt32(CoinNumSet), pcvrTXManage.PlayerCoinEnum.player01);
+                                //产生选择游戏场景UI.
+                                SpawnLevelSelectUI();
+                                m_BeginSource.Play();
+                                m_IsStartGame = true;
+                                m_InserNum -= Convert.ToInt32(CoinNumSet);
+                                UpdateInsertCoin();
+                                ReadGameInfo.GetInstance().WriteInsertCoinNum(m_InserNum.ToString());
+                                if (pcvr.bIsHardWare)
+                                {
+                                    pcvr.GetInstance().mPcvrTXManage.SubPlayerCoin(Convert.ToInt32(CoinNumSet), pcvrTXManage.PlayerCoinEnum.player01);
+                                }
+                                m_Tishi.SetActive(false);
                             }
                         }
-                        m_Tishi.SetActive(false);
+                        else
+                        {
+                            //免费模式.
+                            //产生选择游戏场景UI.
+                            SpawnLevelSelectUI();
+                            m_BeginSource.Play();
+                            m_IsStartGame = true;
+                            m_Tishi.SetActive(false);
+                        }
                     }
                     else
                     {

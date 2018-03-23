@@ -20,10 +20,10 @@ public class TouBiInfoCtrl : MonoBehaviour
 	{
 		//IsCloseQiNang = false;
 		IsCloseDongGan = false;
-        GameMode = SSGameCtrl.GetInstance().mPlayerDataManage.GameMode;
-		if(GameMode == "oper")
+        GameMode = ReadGameInfo.GetInstance().ReadGameStarMode();
+		if(GameMode == ReadGameInfo.GameMode.Oper.ToString())
 		{
-			CoinNumSetTex.spriteName = SSGameCtrl.GetInstance().mPlayerDataManage.CoinNumNeed.ToString();
+			CoinNumSetTex.spriteName = ReadGameInfo.GetInstance().ReadStarCoinNumSet();
 			UpdateInsertCoin();
             
             TouBiObj.SetActive(true);
@@ -43,7 +43,7 @@ public class TouBiInfoCtrl : MonoBehaviour
 	{
 		if (pcvr.bIsHardWare)
         {
-			if (GlobalData.GetInstance().CoinCur != SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum && GameMode == "oper")
+			if (GlobalData.GetInstance().CoinCur != SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum && GameMode == ReadGameInfo.GameMode.Oper.ToString())
             {
                 SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum = GlobalData.GetInstance().CoinCur - 1;
 				OnClickInsertBt();
@@ -51,7 +51,7 @@ public class TouBiInfoCtrl : MonoBehaviour
 		}
 		else
         {
-			if (Input.GetKeyDown(KeyCode.T) && GameMode == "oper") {
+			if (Input.GetKeyDown(KeyCode.T) && GameMode == ReadGameInfo.GameMode.Oper.ToString()) {
 				OnClickInsertBt();
             }
         }
