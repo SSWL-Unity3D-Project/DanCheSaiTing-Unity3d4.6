@@ -1549,31 +1549,28 @@ public class PlayerController : MonoBehaviour
 
         if (other.tag == "finish" && m_UIController.m_pGameTime > 0f && m_UIController.TimeNetEndVal > 0f)
         {
-            if (!m_IsFinished)
-            {
-                if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
-                {
-                    if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
-                    {
-                        //没有玩家选择链接服务器进行联机游戏.
-                    }
-                    else
-                    {
-                        if (QuanShuMax - 1 == QuanShuCount)
-                        {
-                            //到达终点.
-                            SendOnPlayerMoveToFinishPoint();
-                        }
-                    }
-                }
-            }
-
             if (Time.time - TimeQuanShuVal >= 20f)
             {
                 TimeQuanShuVal = Time.time;
                 QuanShuCount++;
                 if (QuanShuMax <= QuanShuCount)
                 {
+                    if (!m_IsFinished)
+                    {
+                        if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+                        {
+                            if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                            {
+                                //没有玩家选择链接服务器进行联机游戏.
+                            }
+                            else
+                            {
+                                //到达终点.
+                                SendOnPlayerMoveToFinishPoint();
+                            }
+                        }
+                    }
+
                     mRankDt.UpdateRankDtTimeFinish(Time.time);
                     SendPlayerUpdateRankDtTimeFinish(Time.time);
                     m_IsFinished = true;

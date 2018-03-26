@@ -479,7 +479,7 @@ public class UIController : SSUiRoot
 				m_CameraShake.setCameraShakeImpulseValue();
 			}
 
-			if(m_CongratulateTimmer > 5f && !IsLoadMovie)
+			if(m_CongratulateTimmer > 9f && !IsLoadMovie)
 			{
 				//MyCOMDevice.GetInstance().ForceRestartComPort();
 				LoadMovieLevel();
