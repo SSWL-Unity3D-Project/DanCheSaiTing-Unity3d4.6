@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public float m_pTopSpeed = 100.0f;
     private float throttle = 0.0f;
-    private float jiaoTaBan = 0.0f;
+    private float mJiaoTaBan = 0.0f;
     public bool canDrive = true;
     public WheelCollider m_wheel;
     public Transform m_pLookTarget;
@@ -993,6 +993,14 @@ public class PlayerController : MonoBehaviour
     {
         if (!IsNetControlPort)
         {
+            if (_Instance != null && _Instance.timmerstar >= 5.0f)
+            {
+                if (JiaoTaBanFenShanTr != null)
+                {
+                    //转动脚踏板风扇.
+                    JiaoTaBanFenShanTr.Rotate(Vector3.forward * JiaoTaBanFenShanTopSpeed * mJiaoTaBan);
+                }
+            }
             return;
         }
 		
@@ -1061,7 +1069,8 @@ public class PlayerController : MonoBehaviour
     public float DianLiangSubSpeed = 0.1f;
     void GetInput()
     {
-        jiaoTaBan = pcvr.GetInstance().mGetJiaoTaBan;
+        mJiaoTaBan = pcvr.GetInstance().mGetJiaoTaBan;
+        NetSendPlayerJiaoTaBanVal(mJiaoTaBan);
         mSteer = pcvr.GetInstance().mGetSteer;
         if (!IsClickShaCheBt)
         {
@@ -1114,7 +1123,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (jiaoTaBan > JiaoTaBanAniVal)
+            if (mJiaoTaBan > JiaoTaBanAniVal)
             {
                 if (m_PlayerAnimator.gameObject.activeInHierarchy)
                 {
@@ -1123,9 +1132,9 @@ public class PlayerController : MonoBehaviour
                     mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, true);
                     mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, false);
                 }
-                m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
+                m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (mJiaoTaBan * DianLiangHuiFuVal);
             }
-            else if (jiaoTaBan > 0f)
+            else if (mJiaoTaBan > 0f)
             {
                 if (m_PlayerAnimator.gameObject.activeInHierarchy)
                 {
@@ -1134,7 +1143,7 @@ public class PlayerController : MonoBehaviour
                     mNetSynGame.SynNetAnimator("IsRun1", NetworkSynchronizeGame.AnimatorType.Bool, true);
                     mNetSynGame.SynNetAnimator("IsRun2", NetworkSynchronizeGame.AnimatorType.Bool, false);
                 }
-                m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (jiaoTaBan * DianLiangHuiFuVal);
+                m_UIController.mPlayerDaoJuManageUI.DianLiangVal += (mJiaoTaBan * DianLiangHuiFuVal);
             }
 			else
 			{
@@ -1151,7 +1160,7 @@ public class PlayerController : MonoBehaviour
         if (JiaoTaBanFenShanTr != null)
         {
             //转动脚踏板风扇.
-            JiaoTaBanFenShanTr.Rotate(Vector3.forward * JiaoTaBanFenShanTopSpeed * jiaoTaBan);
+            JiaoTaBanFenShanTr.Rotate(Vector3.forward * JiaoTaBanFenShanTopSpeed * mJiaoTaBan);
         }
 
         if (mSteer < -SteerOffset)
@@ -1458,12 +1467,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (throttle > 0f || jiaoTaBan > 0f)
+            if (throttle > 0f || mJiaoTaBan > 0f)
             {
                 if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu)
                 {
                     float youMenSpeedVal = m_pTopSpeed * throttle;
-                    float jiaoTaBanSpeedVal = mTopJiaoTaSpeed < m_pTopSpeed ? (mTopJiaoTaSpeed * jiaoTaBan) : m_pTopSpeed * jiaoTaBan;
+                    float jiaoTaBanSpeedVal = mTopJiaoTaSpeed < m_pTopSpeed ? (mTopJiaoTaSpeed * mJiaoTaBan) : m_pTopSpeed * mJiaoTaBan;
                     float speedVal = youMenSpeedVal > jiaoTaBanSpeedVal ? youMenSpeedVal : jiaoTaBanSpeedVal;
                     speedVal = speedVal < PlayerMinSpeedVal ? PlayerMinSpeedVal : speedVal;
                     speedVal /= 3.2f;   //gzkun//3.6f;
@@ -2570,6 +2579,26 @@ public class PlayerController : MonoBehaviour
                 daoJuCom.OnDestroyThis();
             }
         }
+    }
+
+    /// <summary>
+    /// 通过网络消息发送将要销毁的障碍物
+    /// </summary>
+    public void NetSendPlayerJiaoTaBanVal(float jiaoTaBan)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            mNetViewCom.RPC("RpcOnAmmoHitZhangAiWu", RPCMode.Others, jiaoTaBan);
+        }
+    }
+
+    /// <summary>
+    /// 发送子弹击中障碍物道具的数据索引信息.
+    /// </summary>
+    [RPC]
+    void RpcNetSendPlayerJiaoTaBanVal(float jiaoTaBan)
+    {
+        mJiaoTaBan = jiaoTaBan;
     }
 
     /// <summary>
