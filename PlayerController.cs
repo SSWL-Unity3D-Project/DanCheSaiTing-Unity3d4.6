@@ -571,6 +571,7 @@ public class PlayerController : MonoBehaviour
         {
             IsShowZhongDian = true;
         }
+        rigidbody.isKinematic = true;
     }
 
     /// <summary>
@@ -807,10 +808,24 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     float TimeLastChaoJiJiaSuUI = -15f;
 
+    bool IsInitStartGameInfo = false;
+    void InitStartGameInfo()
+    {
+        IsInitStartGameInfo = true;
+        rigidbody.isKinematic = false;
+    }
+
     void Update()
     {
         if (!IsNetControlPort)
         {
+            if (_Instance != null && _Instance.timmerstar >= 5f)
+            {
+                if (!IsInitStartGameInfo)
+                {
+                    InitStartGameInfo();
+                }
+            }
             return;
         }
 
@@ -827,6 +842,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (!IsInitStartGameInfo)
+            {
+                InitStartGameInfo();
+            }
+
             if (Time.frameCount % 3 == 0 && !m_UIController.m_IsGameOver && !m_IsFinished)
             {
                 if (Time.time - TimeLastChaoJiJiaSuUI > 30f && mSpeedDaoJuState != DaoJuCtrl.DaoJuType.FeiXingYi)
@@ -1022,15 +1042,16 @@ public class PlayerController : MonoBehaviour
             m_pLookTarget.eulerAngles = new Vector3(0.0f, transform.eulerAngles.y, 0.0f);
             CalculateEnginePower(canDrive);
         }
-        if (!m_IsFinished && !m_UIController.m_IsGameOver)
+
+        if (!m_IsFinished && !m_UIController.m_IsGameOver && timmerstar >= 5f)
         {
             if (m_IsInWarter && rigidbody.velocity.magnitude * 3.6f < m_LimitSpeed && canDrive)
             {
-                //				Debug.Log("1111111111111111");
                 m_OldWaterDirection = Vector3.Lerp(m_OldWaterDirection, m_WaterDirection, Time.deltaTime);
                 rigidbody.velocity = m_OldWaterDirection.normalized * m_LimitSpeed / 3.6f;
             }
         }
+
         if (m_IsJiasu)
         {
             m_JiasuTimmer += Time.deltaTime;
