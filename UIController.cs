@@ -509,6 +509,12 @@ public class UIController : SSUiRoot
         {
             NetworkServerNet.GetInstance().RemoveMasterServerHost();
         }
+
+        if (SSGameCtrl.GetInstance().eGameMode == NetworkRootMovie.GameMode.Link)
+        {
+            //重置网络玩家索引信息.
+            NetworkServerNet.GetInstance().SetIndexSpawnPlayer(0);
+        }
         StartCoroutine(CheckUnloadUnusedAssets());
 	}
 
