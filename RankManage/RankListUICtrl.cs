@@ -37,9 +37,9 @@ public class RankListUICtrl : MonoBehaviour
 #endif
             }
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
             Debug.Log("ShowRankListUI -> index " + i + ", RankType " + rankDt.RankType);
-#endif
+//#endif
 
             int disVal = (int)(pathDis - rankDt.DisMoveVal);
             float wanChengDu = rankDt.DisMoveVal / pathDis;

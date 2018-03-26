@@ -2351,13 +2351,14 @@ public class PlayerController : MonoBehaviour
         bool isFollowNpc = false;
         Transform aimNpcTr = null;
         GameObject ammo = null;
+        int indexVal = DaoDanSpawnCount % SpawnDaoDanTr.Length;
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            ammo = (GameObject)Network.Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation, 0);
+            ammo = (GameObject)Network.Instantiate(DaoDanPrefab, SpawnDaoDanTr[indexVal].position, SpawnDaoDanTr[indexVal].rotation, 0);
         }
         else
         {
-            ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[DaoDanSpawnCount].position, SpawnDaoDanTr[DaoDanSpawnCount].rotation);
+            ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[indexVal].position, SpawnDaoDanTr[indexVal].rotation);
         }
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         ammoMoveCom.SetIsNetControlPort(true);
@@ -2433,13 +2434,14 @@ public class PlayerController : MonoBehaviour
     public void SpawnDiLeiAmmo()
     {
         GameObject ammo = null;
+        int indexVal = DiLeiDt.AmmoSpawnCount % DiLeiDt.SpawnAmmoTr.Length;
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            ammo = (GameObject)Network.Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].position, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].rotation, 0);
+            ammo = (GameObject)Network.Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[indexVal].position, DiLeiDt.SpawnAmmoTr[indexVal].rotation, 0);
         }
         else
         {
-            ammo = (GameObject)Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].position, DiLeiDt.SpawnAmmoTr[DiLeiDt.AmmoSpawnCount].rotation);
+            ammo = (GameObject)Instantiate(DiLeiDt.AmmoPrefab, DiLeiDt.SpawnAmmoTr[indexVal].position, DiLeiDt.SpawnAmmoTr[indexVal].rotation);
         }
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         ammoMoveCom.SetIsNetControlPort(true);

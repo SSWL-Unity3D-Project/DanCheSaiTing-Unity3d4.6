@@ -222,6 +222,7 @@ public class RankManage
             Debug.LogError("AddRankDt -> rankType was wrong!");
             return null;
         }
+        Debug.Log("AddRankDt -> rankType " + rankType);
         RankData rankDt = new RankData(rankType, isPlayer);
         RankDtList.Add(rankDt);
         return rankDt;
