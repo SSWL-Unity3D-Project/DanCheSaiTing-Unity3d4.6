@@ -514,6 +514,8 @@ public class UIController : SSUiRoot
         {
             //重置网络玩家索引信息.
             NetworkServerNet.GetInstance().SetIndexSpawnPlayer(0);
+            //重置选择联机游戏的玩家数量.
+            NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie = 0;
         }
         StartCoroutine(CheckUnloadUnusedAssets());
 	}

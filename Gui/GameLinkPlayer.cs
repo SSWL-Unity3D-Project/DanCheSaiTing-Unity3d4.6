@@ -17,8 +17,15 @@ public class GameLinkPlayer : MonoBehaviour
     /// <summary>
     /// 联机玩家UI列表.
     /// </summary>
-    public UITexture[] PlayerUITextureArray = new UITexture[8];
-    public Texture[] PlayerTexureArray = new Texture[8];
+    public UITexture[] PlayerUITextureArray = new UITexture[4];
+    /// <summary>
+    /// 玩家昵称UI.
+    /// </summary>
+    public Texture[] PlayerTexureArray = new Texture[4];
+    /// <summary>
+    /// Ai昵称UI
+    /// </summary>
+    public Texture[] AiTexureArray = new Texture[4];
     bool IsClickStartBt = false;
     /// <summary>
     /// 记录开始按键时间.
@@ -150,9 +157,12 @@ public class GameLinkPlayer : MonoBehaviour
         {
             if (i > indexVal)
             {
-                break;
+                PlayerUITextureArray[i].mainTexture = AiTexureArray[i];
             }
-            PlayerUITextureArray[i].mainTexture = PlayerTexureArray[i];
+            else
+            {
+                PlayerUITextureArray[i].mainTexture = PlayerTexureArray[i];
+            }
         }
     }
 

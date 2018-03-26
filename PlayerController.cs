@@ -1890,13 +1890,27 @@ public class PlayerController : MonoBehaviour
             m_RadialBlurEffect.SampleStrength = Mathf.Lerp(m_RadialBlurEffect.SampleStrength, 0f, 30f * Time.deltaTime);
         }
     }
+
+    enum ChuanShuiHua
+    {
+        Null,
+        Open,
+        Close,
+    }
+    ChuanShuiHua mChuanShuiHua = ChuanShuiHua.Null;
     void UpdateShuihua()
     {
 
         if (rigidbody.velocity.magnitude * 3.6f >= m_speedForshuihua && !m_IsOffShuihua)
         {
-            m_partical[0].SetActive(true);
-            m_partical[1].SetActive(true);
+            if (mChuanShuiHua != ChuanShuiHua.Open)
+            {
+                mChuanShuiHua = ChuanShuiHua.Open;
+                m_partical[0].SetActive(true);
+                m_partical[1].SetActive(true);
+                NetSendActiveChuanShuiHuaZL(true);
+            }
+
             if (!m_ShuihuaAudio.isPlaying)
             {
                 m_ShuihuaAudio.Play();
@@ -1905,19 +1919,44 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            m_partical[0].SetActive(false);
-            m_partical[1].SetActive(false);
+            if (mChuanShuiHua != ChuanShuiHua.Close)
+            {
+                mChuanShuiHua = ChuanShuiHua.Close;
+                m_partical[0].SetActive(false);
+                m_partical[1].SetActive(false);
+                NetSendActiveChuanShuiHuaZL(false);
+            }
             m_ShuihuaAudio.Stop();
         }
-        if (m_IsOffShuihua)
+
+        if (!m_IsOffShuihua != m_partical[2].activeInHierarchy)
         {
-            m_partical[2].SetActive(false);
-        }
-        else
-        {
-            m_partical[2].SetActive(true);
+            m_partical[2].SetActive(!m_IsOffShuihua);
         }
     }
+    
+    /// <summary>
+    /// 通过网络消息发送船水花粒子的显示隐藏.
+    /// </summary>
+    public void NetSendActiveChuanShuiHuaZL(bool isActive)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            mNetViewCom.RPC("RpcNetSendActiveChuanTouShuiHua", RPCMode.Others, isActive == true ? 1 : 0);
+        }
+    }
+
+    /// <summary>
+    /// 发送网络消息发送船水花粒子的显示隐藏.信息.
+    /// </summary>
+    [RPC]
+    void RpcNetSendActiveChuanShuiHuaZL(int activeVal)
+    {
+        bool isActive = activeVal == 1 ? true : false;
+        m_partical[0].SetActive(isActive);
+        m_partical[1].SetActive(isActive);
+    }
+
     float m_HitshakeTimmerSet = 0.2f;
     private float m_HitshakeTimmer = 0.0f;
     [HideInInspector]
@@ -2014,6 +2053,27 @@ public class PlayerController : MonoBehaviour
     {
         ChuanTouShuiHuaTX.SetActive(isActive);
     }
+    
+    /// <summary>
+    /// 通过网络消息发送船头水花的显示隐藏.
+    /// </summary>
+    public void NetSendActiveChuanTouShuiHua(bool isActive)
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            mNetViewCom.RPC("RpcNetSendActiveChuanTouShuiHua", RPCMode.Others, isActive == true ? 1 : 0);
+        }
+    }
+
+    /// <summary>
+    /// 发送船头水花的显示隐藏信息.
+    /// </summary>
+    [RPC]
+    void RpcNetSendActiveChuanTouShuiHua(int activeVal)
+    {
+        SetAcitveChuanTouShuiHuaTX(activeVal == 1 ? true : false);
+    }
+
 
     /// <summary>
     /// 使玩家道具掉落.
