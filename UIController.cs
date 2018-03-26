@@ -151,7 +151,14 @@ public class UIController : SSUiRoot
     {
         if (SSGameCtrl.GetInstance().mSSGameRoot != null)
         {
-            m_pGameTime = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.m_pGameTime;
+            if (SSGameCtrl.GetInstance().eGameMode == NetworkRootMovie.GameMode.Link)
+            {
+                m_pGameTime = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.m_pGameTimeNet;
+            }
+            else
+            {
+                m_pGameTime = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.m_pGameTime;
+            }
             Distance = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.DistancePath;
             TimeNetEndVal = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.TimeNetEndVal;
         }

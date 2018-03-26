@@ -162,7 +162,11 @@ public class SSGameDataManage : MonoBehaviour
         /// <summary>
         /// 游戏时长信息.
         /// </summary>
-        public float m_pGameTime = 300.0f;
+        public float m_pGameTime = 300f;
+        /// <summary>
+        /// 多人联机游戏时间.
+        /// </summary>
+        public float m_pGameTimeNet = 300f;
         /// <summary>
         /// 游戏当前关卡的路径长度信息.
         /// </summary>
