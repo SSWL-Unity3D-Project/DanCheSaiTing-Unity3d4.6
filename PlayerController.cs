@@ -493,6 +493,7 @@ public class PlayerController : MonoBehaviour
         InitStartInfo();
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
+            m_LimitSpeed = 0f;
             mNetViewCom.RPC("RpcGetPlayerIndex", RPCMode.OthersBuffered, index);
             NetSendPlayerTrInfo();
         }
