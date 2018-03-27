@@ -493,7 +493,7 @@ public class PlayerController : MonoBehaviour
         InitStartInfo();
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            mNetViewCom.RPC("RpcGetPlayerIndex", RPCMode.Others, index);
+            mNetViewCom.RPC("RpcGetPlayerIndex", RPCMode.OthersBuffered, index);
         }
     }
 
@@ -509,6 +509,7 @@ public class PlayerController : MonoBehaviour
     void InitPlayerMode(int index)
     {
         Debug.Log("InitPlayerMode -> index == " + index);
+        name = "zhuJiao_" + index;
         for (int i = 0; i < PlayerObjArray.Length; i++)
         {
             PlayerObjArray[i].SetActive(index == i ? true : false);
@@ -847,6 +848,14 @@ public class PlayerController : MonoBehaviour
                 InitStartGameInfo();
             }
 
+            if (IsAmmoHitPlayer)
+            {
+                if (Time.realtimeSinceStartup - TimeLastAmmoHit >= 3f)
+                {
+                    IsAmmoHitPlayer = false;
+                }
+            }
+
             if (Time.frameCount % 3 == 0 && !m_UIController.m_IsGameOver && !m_IsFinished)
             {
                 if (Time.time - TimeLastChaoJiJiaSuUI > 30f && mSpeedDaoJuState != DaoJuCtrl.DaoJuType.FeiXingYi)
@@ -917,10 +926,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (SpeedMovePlayer > 105f && !m_IsFinished)
-            {
-                if (!m_IsHitshake)
-                {
+            //if (SpeedMovePlayer > 105f && !m_IsFinished)
+            //{
+                //if (!m_IsHitshake)
+                //{
                     //if (pcvr.m_IsOpneLeftQinang || pcvr.m_IsOpneRightQinang) {
                     //	pcvr.m_IsOpneForwardQinang = false;
                     //	pcvr.m_IsOpneBehindQinang = false;
@@ -929,16 +938,16 @@ public class PlayerController : MonoBehaviour
                     //pcvr.m_IsOpneForwardQinang = true;
                     //pcvr.m_IsOpneBehindQinang = false;
                     //}
-                }
-            }
-            else
-            {
-                if (!m_IsHitshake)
-                {
+                //}
+            //}
+            //else
+            //{
+            //    if (!m_IsHitshake)
+            //    {
                     //pcvr.m_IsOpneForwardQinang = false;
                     //pcvr.m_IsOpneBehindQinang = false;
-                }
-            }
+            //    }
+            //}
 
             if (!m_BeijingAudio.isPlaying)
             {
@@ -1045,14 +1054,14 @@ public class PlayerController : MonoBehaviour
 
         if (!m_IsFinished && !m_UIController.m_IsGameOver && timmerstar >= 5f)
         {
-            if (m_IsInWarter && rigidbody.velocity.magnitude * 3.6f < m_LimitSpeed && canDrive)
+            if (m_IsInWarter && rigidbody.velocity.magnitude * 3.6f < m_LimitSpeed && canDrive && !IsAmmoHitPlayer)
             {
                 m_OldWaterDirection = Vector3.Lerp(m_OldWaterDirection, m_WaterDirection, Time.deltaTime);
                 rigidbody.velocity = m_OldWaterDirection.normalized * m_LimitSpeed / 3.6f;
             }
         }
 
-        if (m_IsJiasu)
+        if (m_IsJiasu && !IsAmmoHitPlayer)
         {
             m_JiasuTimmer += Time.deltaTime;
             if (m_JiasuTimmer < m_JiasuTimeSet)
@@ -1067,10 +1076,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    float Convert_Miles_Per_Hour_To_Meters_Per_Second(float value)
-    {
-        return value * 0.44704f;
-    }
+    //float Convert_Miles_Per_Hour_To_Meters_Per_Second(float value)
+    //{
+    //    return value * 0.44704f;
+    //}
 
     float mSteer;
     float mSteerTimeCur;
@@ -1479,7 +1488,7 @@ public class PlayerController : MonoBehaviour
         if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi || mSpeedDaoJuState == DaoJuCtrl.DaoJuType.PenQiJiaSu)
         {
             //喷气加速和飞行翼状态时不用踩脚踏板或加油门.
-            if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu)
+            if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu && !IsAmmoHitPlayer)
             {
                 float speedVal = m_pTopSpeed;
                 speedVal /= 3.2f;   //gzkun//3.6f;
@@ -1490,7 +1499,7 @@ public class PlayerController : MonoBehaviour
         {
             if (throttle > 0f || mJiaoTaBan > 0f)
             {
-                if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu)
+                if (SpeedMovePlayer <= m_pTopSpeed && !m_IsPubu && !IsAmmoHitPlayer)
                 {
                     float youMenSpeedVal = m_pTopSpeed * throttle;
                     float jiaoTaBanSpeedVal = mTopJiaoTaSpeed < m_pTopSpeed ? (mTopJiaoTaSpeed * mJiaoTaBan) : m_pTopSpeed * mJiaoTaBan;
@@ -1508,17 +1517,19 @@ public class PlayerController : MonoBehaviour
             float throttleForce = rigidbody.mass * m_PubuPower;
             rigidbody.AddForce(transform.forward * Time.deltaTime * (throttleForce));
         }
+
         if (!canDrive && !m_IsPubu)
         {
-            //			float throttleForce = rigidbody.mass * m_HitPower;
+            //float throttleForce = rigidbody.mass * m_HitPower;
             rigidbody.AddForce(Vector3.up * m_GravitySet * rigidbody.mass * Time.deltaTime);
         }
+
         if (m_IsInZhiwuCollider)
         {
             if (rigidbody.velocity.magnitude > 15.0f)
             {
                 rigidbody.velocity = transform.forward * m_SpeedForZhiwu.magnitude * m_ParameterForZhiwu;
-                //				Debug.Log("rigidbody.velocity" + rigidbody.velocity.magnitude);
+                //Debug.Log("rigidbody.velocity" + rigidbody.velocity.magnitude);
             }
             else
             {
@@ -2038,6 +2049,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    bool IsAmmoHitPlayer = false;
+    float TimeLastAmmoHit = 0f;
+    /// <summary>
+    /// 眩晕特效粒子.
+    /// </summary>
+    public GameObject XuanYunTXPrefab;
+    /// <summary>
+    /// 眩晕特效产生点.
+    /// </summary>
+    public Transform XuanYunTxSpawnTr;
     /// <summary>
     /// 当玩家被子弹攻击时.
     /// </summary>
@@ -2049,8 +2070,20 @@ public class PlayerController : MonoBehaviour
             && !playerScript.m_UIController.m_IsGameOver
             && playerScript.timmerstar >= 5.0f)
         {
-            Debug.Log("OnAmmoHitPlayer...");
+            Debug.Log(name + "::OnAmmoHitPlayer...");
             rigidbody.AddForce(-transform.forward * 80000.0f, ForceMode.Force);
+            if (XuanYunTXPrefab != null && XuanYunTxSpawnTr != null)
+            {
+                GameObject obj = (GameObject)Instantiate(XuanYunTXPrefab);
+                obj.transform.parent = XuanYunTxSpawnTr;
+                obj.transform.localPosition = Vector3.zero;
+            }
+
+            if (IsNetControlPort)
+            {
+                IsAmmoHitPlayer = true;
+                TimeLastAmmoHit = Time.realtimeSinceStartup;
+            }
         }
     }
 
