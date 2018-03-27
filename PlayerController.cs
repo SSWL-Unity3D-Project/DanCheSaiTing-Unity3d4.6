@@ -820,13 +820,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!IsNetControlPort)
         {
-            if (_Instance != null && _Instance.timmerstar >= 5f)
-            {
-                if (!IsInitStartGameInfo)
-                {
-                    InitStartGameInfo();
-                }
-            }
             return;
         }
 
@@ -843,11 +836,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (!IsInitStartGameInfo)
-            {
-                InitStartGameInfo();
-            }
-
             if (IsAmmoHitPlayer)
             {
                 if (Time.realtimeSinceStartup - TimeLastAmmoHit >= 3f)
@@ -1024,6 +1012,11 @@ public class PlayerController : MonoBehaviour
         {
             if (_Instance != null && _Instance.timmerstar >= 5.0f)
             {
+                if (!IsInitStartGameInfo)
+                {
+                    InitStartGameInfo();
+                }
+
                 if (JiaoTaBanFenShanTr != null)
                 {
                     //转动脚踏板风扇.
@@ -1032,8 +1025,17 @@ public class PlayerController : MonoBehaviour
             }
             return;
         }
-		
-		if (m_IsFinished || m_UIController.m_IsGameOver)
+
+        if (timmerstar >= 5f)
+        {
+            if (!IsInitStartGameInfo)
+            {
+                InitStartGameInfo();
+            }
+        }
+
+
+        if (m_IsFinished || m_UIController.m_IsGameOver)
 		{
 			if (m_PlayerAnimator.gameObject.activeInHierarchy)
 			{
@@ -2695,18 +2697,18 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// 通过网络消息发送将要销毁的障碍物
+    /// 通过网络消息发送脚踏板信息.
     /// </summary>
     public void NetSendPlayerJiaoTaBanVal(float jiaoTaBan)
     {
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
-            mNetViewCom.RPC("RpcOnAmmoHitZhangAiWu", RPCMode.Others, jiaoTaBan);
+            mNetViewCom.RPC("RpcNetSendPlayerJiaoTaBanVal", RPCMode.Others, jiaoTaBan);
         }
     }
 
     /// <summary>
-    /// 发送子弹击中障碍物道具的数据索引信息.
+    /// 发送脚踏板信息.
     /// </summary>
     [RPC]
     void RpcNetSendPlayerJiaoTaBanVal(float jiaoTaBan)
