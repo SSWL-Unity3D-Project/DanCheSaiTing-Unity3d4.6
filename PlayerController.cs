@@ -494,6 +494,7 @@ public class PlayerController : MonoBehaviour
         if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
         {
             mNetViewCom.RPC("RpcGetPlayerIndex", RPCMode.OthersBuffered, index);
+            NetSendPlayerTrInfo();
         }
     }
 
@@ -1965,7 +1966,28 @@ public class PlayerController : MonoBehaviour
             m_partical[2].SetActive(!m_IsOffShuihua);
         }
     }
-    
+
+    /// <summary>
+    /// 通过网络消息发送玩家的tr信息.
+    /// </summary>
+    public void NetSendPlayerTrInfo()
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            mNetViewCom.RPC("RpcNetSendPlayerTrInfo", RPCMode.OthersBuffered, transform.position, transform.rotation);
+        }
+    }
+
+    /// <summary>
+    /// 发送玩家的tr信息.
+    /// </summary>
+    [RPC]
+    void RpcNetSendPlayerTrInfo(Vector3 pos, Quaternion rot)
+    {
+        transform.position = pos;
+        transform.rotation = rot;
+    }
+
     /// <summary>
     /// 通过网络消息发送船水花粒子的显示隐藏.
     /// </summary>
@@ -1978,7 +2000,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// 发送网络消息发送船水花粒子的显示隐藏.信息.
+    /// 发送船水花粒子的显示隐藏信息.
     /// </summary>
     [RPC]
     void RpcNetSendActiveChuanShuiHuaZL(int activeVal)
