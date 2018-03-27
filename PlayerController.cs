@@ -1546,11 +1546,11 @@ public class PlayerController : MonoBehaviour
             rigidbody.velocity = (transform.forward * 200f) / 3.6f;
 
             //gzknu
-            if (!m_IsHitshake)
-            {
+            //if (!m_IsHitshake)
+            //{
                 //pcvr.m_IsOpneForwardQinang = true;
                 //pcvr.m_IsOpneBehindQinang = false;
-            }
+            //}
         }
         //OnNpcHitPlayer();
     }
