@@ -614,8 +614,12 @@ public class PlayerController : MonoBehaviour
             string str = (i + 1).ToString();
             PathPoint[i] = Path.FindChild(str);
         }
-        transform.position = PathPoint[0].position;
-        transform.eulerAngles = new Vector3(PathPoint[0].eulerAngles.x, PathPoint[0].eulerAngles.y, PathPoint[0].eulerAngles.z);
+
+        if (Network.peerType == NetworkPeerType.Disconnected)
+        {
+            transform.position = PathPoint[0].position;
+            transform.eulerAngles = new Vector3(PathPoint[0].eulerAngles.x, PathPoint[0].eulerAngles.y, PathPoint[0].eulerAngles.z);
+        }
         m_WaterDirection = m_OldWaterDirection = PathPoint[1].position - PathPoint[0].position;
         //		m_SpeedRecord = rigidbody.velocity.magnitude;
         _Instance = this;
