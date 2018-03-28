@@ -552,6 +552,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        SSGameDataManage.PlayerData playerDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerDt;
+        m_UIController = playerDt.m_UIController;
+
         mNetViewCom = GetComponent<NetworkView>();
         FinishRender = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.FinishRender;
         QuanShuMax = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.QuanShuMax;
@@ -832,7 +835,11 @@ public class PlayerController : MonoBehaviour
 
         if (timmerstar < 5.0f)
         {
-            timmerstar += Time.deltaTime;
+            if (m_UIController.IsGameStart)
+            {
+                timmerstar += Time.deltaTime;
+            }
+
             if (timmerstar >= 5f)
             {
                 float timeVal = Time.time;
@@ -3092,6 +3099,39 @@ public class PlayerController : MonoBehaviour
         if (mRankDt != null)
         {
             mRankDt.UpdataDisMoveValue(disVal);
+        }
+    }
+
+    /// <summary>
+    /// 通过网络消息发送打开UI界面的信息.
+    /// </summary>
+    public void NetSendPlayerAcitveUIPanel()
+    {
+        if (Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                mNetViewCom.RPC("RpcGetPlayerAcitveUIPanel", RPCMode.All);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 通过网络消息接收打开UI界面的信息.
+    /// </summary>
+    [RPC]
+    void RpcGetPlayerAcitveUIPanel()
+    {
+        Debug.Log("RpcGetPlayerAcitveUIPanel...");
+        if (m_UIController == null)
+        {
+            SSGameDataManage.PlayerData playerDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mPlayerDt;
+            m_UIController = playerDt.m_UIController;
+        }
+
+        if (m_UIController != null)
+        {
+            m_UIController.SetActiveUIRoot(true);
         }
     }
 }

@@ -32,6 +32,7 @@ public class SSGameRoot : MonoBehaviour
                     mSSGameDataManage.mGameData.SpawnNpc(1);
                     mSSGameDataManage.mGameData.SpawnNpc(2);
                     mSSGameDataManage.mGameData.SpawnNpc(3);
+                    mUIController.SetActiveUIRoot(true);
                     break;
                 }
             case NetworkRootMovie.GameMode.Link:
@@ -81,7 +82,12 @@ public class SSGameRoot : MonoBehaviour
                     mSSGameDataManage.mGameData.SpawnNpc(i);
                 }
             }
-            mUIController.SetActiveUIRoot(true);
+            //mUIController.SetActiveUIRoot(true);
+
+            if (PlayerController.GetInstance() != null)
+            {
+                PlayerController.GetInstance().NetSendPlayerAcitveUIPanel();
+            }
         }
     }
 
@@ -93,6 +99,6 @@ public class SSGameRoot : MonoBehaviour
         int indexVal = NetworkServerNet.GetInstance().IndexSpawnPlayer;
         Debug.Log("SSGameRoot::OnConnectedToServerEvent -> creat client player, indexVal == " + indexVal);
         mSSGameDataManage.mGameData.SpawnPlayer(indexVal);
-        mUIController.SetActiveUIRoot(true);
+        //mUIController.SetActiveUIRoot(true);
     }
 }

@@ -179,21 +179,50 @@ public class UIController : SSUiRoot
     }
 
 	bool IsCloseYouMenTiShi;
-	/*void ClickPlayerYouMenBtEvent(ButtonState val)
-	{
-		if (val == ButtonState.UP) {
-			return;
-		}
-		IsCloseYouMenTiShi = true;
-	}*/
+    /// <summary>
+    /// 载入中UI预制.
+    /// </summary>
+    public GameObject ZaiRuUIPrefab;
+    GameObject ZaiRuUIObj;
+    /// <summary>
+    /// 产生载入UI.
+    /// </summary>
+    void SpawnZaiRuUI()
+    {
+        if (ZaiRuUIPrefab != null)
+        {
+            ZaiRuUIObj = (GameObject)Instantiate(ZaiRuUIPrefab, null);
+        }
+    }
 
+    /// <summary>
+    /// 删除载入UI.
+    /// </summary>
+    void RemoveZaiRuUI()
+    {
+        if (ZaiRuUIObj != null)
+        {
+            Destroy(ZaiRuUIObj);
+        }
+    }
+
+    /// <summary>
+    /// 是否游戏开始.
+    /// </summary>
+    [HideInInspector]
+    public bool IsGameStart = false;
 	void Update ()
 	{
+        if (!IsGameStart)
+        {
+            return;
+        }
+
 		if(PlayerController.GetInstance().timmerstar < 5.0f)
 		{
             //gzkun void CloseAllQiNang()
             if (!SetPanel.IsOpenSetPanel)
-            {                
+            {
                 //pcvr.m_IsOpneForwardQinang = false;
                 //pcvr.m_IsOpneBehindQinang = false;
                 //pcvr.m_IsOpneLeftQinang = false;
@@ -892,7 +921,21 @@ public class UIController : SSUiRoot
 
     public void SetActiveUIRoot(bool isActive)
     {
+        if (!isActive && ZaiRuUIObj == null)
+        {
+            SpawnZaiRuUI();
+        }
+
+        if (isActive && ZaiRuUIObj != null)
+        {
+            RemoveZaiRuUI();
+        }
+
         gameObject.SetActive(isActive);
+        if (isActive)
+        {
+            IsGameStart = true;
+        }
     }
 
     /// <summary>

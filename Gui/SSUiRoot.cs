@@ -11,9 +11,12 @@ public class SSUiRoot : MonoBehaviour
     public Object Instantiate(GameObject prefab, Transform parent)
     {
         GameObject obj = (GameObject)Instantiate(prefab);
-        obj.transform.SetParent(parent);
-        obj.transform.localScale = prefab.transform.localScale;
-        obj.transform.localPosition = prefab.transform.localPosition;
+        if (parent != null)
+        {
+            obj.transform.SetParent(parent);
+            obj.transform.localScale = prefab.transform.localScale;
+            obj.transform.localPosition = prefab.transform.localPosition;
+        }
         return obj;
     }
 }
