@@ -24,30 +24,53 @@ public class GameModeSelect : MonoBehaviour
         SetActiveStartBt(true);
     }
 
+    float TimeLastSelect = 0f;
     void Update()
     {
         float steerVal = pcvr.GetInstance().mGetSteer;
-        if (steerVal < -0.3f)
+        if (!pcvr.bIsHardWare)
         {
-            if (eGameMode != NetworkRootMovie.GameMode.NoLink)
+            if (steerVal < 0f)
             {
-                Debug.Log("player select noLink...");
-                mLoadingCom.m_ModeSource.Play();
-                eGameMode = NetworkRootMovie.GameMode.NoLink;
-                ModeAni.SetBool("IsDanJi", true);
-                ModeAni.SetBool("IsLianJi", false);
+                steerVal = -1f;
+            }
+
+            if (steerVal > 0f)
+            {
+                steerVal = 1f;
             }
         }
 
-        if (steerVal > 0.3f)
+        if (steerVal < -0.3f || steerVal > 0.3f)
         {
-            if (eGameMode != NetworkRootMovie.GameMode.Link)
+            switch (eGameMode)
             {
-                Debug.Log("player select Link...");
-                mLoadingCom.m_ModeSource.Play();
-                eGameMode = NetworkRootMovie.GameMode.Link;
-                ModeAni.SetBool("IsDanJi", false);
-                ModeAni.SetBool("IsLianJi", true);
+                case NetworkRootMovie.GameMode.NoLink:
+                    {
+                        if (eGameMode != NetworkRootMovie.GameMode.Link && Time.realtimeSinceStartup - TimeLastSelect > 0.5f)
+                        {
+                            Debug.Log("player select Link...");
+                            TimeLastSelect = Time.realtimeSinceStartup;
+                            mLoadingCom.m_ModeSource.Play();
+                            eGameMode = NetworkRootMovie.GameMode.Link;
+                            ModeAni.SetBool("IsDanJi", false);
+                            ModeAni.SetBool("IsLianJi", true);
+                        }
+                        break;
+                    }
+                case NetworkRootMovie.GameMode.Link:
+                    {
+                        if (eGameMode != NetworkRootMovie.GameMode.NoLink && Time.realtimeSinceStartup - TimeLastSelect > 0.5f)
+                        {
+                            Debug.Log("player select noLink...");
+                            TimeLastSelect = Time.realtimeSinceStartup;
+                            mLoadingCom.m_ModeSource.Play();
+                            eGameMode = NetworkRootMovie.GameMode.NoLink;
+                            ModeAni.SetBool("IsDanJi", true);
+                            ModeAni.SetBool("IsLianJi", false);
+                        }
+                        break;
+                    }
             }
         }
     }
