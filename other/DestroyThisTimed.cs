@@ -38,6 +38,10 @@ public class DestroyThisTimed : MonoBehaviour
         {
             Instantiate(BaoXiangPrefab, transform.position, transform.rotation);
         }
-        Destroy(gameObject);
+
+        if (gameObject != null)
+        {
+            Destroy(gameObject);
+        }
     }
 }

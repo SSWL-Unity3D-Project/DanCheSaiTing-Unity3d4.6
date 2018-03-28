@@ -552,6 +552,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        mNetViewCom = GetComponent<NetworkView>();
         FinishRender = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.FinishRender;
         QuanShuMax = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.QuanShuMax;
         mNetSynGame.InitData(m_PlayerAnimator);
@@ -2089,6 +2090,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public Transform XuanYunTxSpawnTr;
     /// <summary>
+    /// 眩晕特效.
+    /// </summary>
+    GameObject XuanYunTXObj;
+    /// <summary>
     /// 当玩家被子弹攻击时.
     /// </summary>
     public void OnAmmoHitPlayer()
@@ -2100,19 +2105,47 @@ public class PlayerController : MonoBehaviour
             && playerScript.timmerstar >= 5.0f)
         {
             Debug.Log(name + "::OnAmmoHitPlayer...");
-            rigidbody.AddForce(-transform.forward * 80000.0f, ForceMode.Force);
-            if (XuanYunTXPrefab != null && XuanYunTxSpawnTr != null)
+            //rigidbody.AddForce(-transform.forward * 80000.0f, ForceMode.Force);
+            NetSendAmmoHitPlayer();
+        }
+    }
+    
+    /// <summary>
+    /// 通过网络消息发送玩家被子弹击中的信息.
+    /// </summary>
+    void NetSendAmmoHitPlayer()
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (mNetViewCom != null)
             {
-                GameObject obj = (GameObject)Instantiate(XuanYunTXPrefab);
-                obj.transform.parent = XuanYunTxSpawnTr;
-                obj.transform.localPosition = Vector3.zero;
+                mNetViewCom.RPC("RpcNetSendAmmoHitPlayer", RPCMode.All);
             }
+        }
+    }
 
-            if (IsNetControlPort)
+    /// <summary>
+    /// 发送玩家被子弹击中的信息.
+    /// </summary>
+    [RPC]
+    void RpcNetSendAmmoHitPlayer()
+    {
+        Debug.Log("RpcNetSendAmmoHitPlayer -> " + name + "::OnAmmoHitPlayer...");
+        if (XuanYunTXPrefab != null && XuanYunTxSpawnTr != null)
+        {
+            if (XuanYunTXObj != null)
             {
-                IsAmmoHitPlayer = true;
-                TimeLastAmmoHit = Time.realtimeSinceStartup;
+                Destroy(XuanYunTXObj);
             }
+            XuanYunTXObj = (GameObject)Instantiate(XuanYunTXPrefab);
+            XuanYunTXObj.transform.parent = XuanYunTxSpawnTr;
+            XuanYunTXObj.transform.localPosition = Vector3.zero;
+        }
+
+        if (IsNetControlPort)
+        {
+            IsAmmoHitPlayer = true;
+            TimeLastAmmoHit = Time.realtimeSinceStartup;
         }
     }
 
