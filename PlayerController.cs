@@ -2019,6 +2019,7 @@ public class PlayerController : MonoBehaviour
     void RpcNetSendActiveChuanShuiHuaZL(int activeVal)
     {
         bool isActive = activeVal == 1 ? true : false;
+        Debug.Log("RpcNetSendActiveChuanShuiHuaZL -> " + name + ":: isActive == " + isActive);
         m_partical[0].SetActive(isActive);
         m_partical[1].SetActive(isActive);
     }
