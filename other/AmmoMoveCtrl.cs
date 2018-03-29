@@ -114,6 +114,12 @@ public class AmmoMoveCtrl : MonoBehaviour
                         {
                             npcCom.OnDaoDanHit(transform.position);
                         }
+
+                        PlayerController playerCom = GenZongTr.GetComponent<PlayerController>();
+                        if (playerCom != null && IsNetControlPort)
+                        {
+                            playerCom.OnAmmoHitPlayer();
+                        }
                         OnDestroyThis();
                         return;
                     }
@@ -406,6 +412,7 @@ public class AmmoMoveCtrl : MonoBehaviour
             {
                 npcSp.OnDestroyThis();
                 isDestroyAmmo = true;
+                break;
             }
 
             PlayerController playerScript = hits[i].GetComponent<PlayerController>();

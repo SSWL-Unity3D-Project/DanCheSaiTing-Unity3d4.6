@@ -19,6 +19,7 @@ public class AiNpcDataManage : MonoBehaviour
     {
         GameObject obj = null;
         float disVal = 0f;
+        float disValTmp = 10000f;
         for (int i = 0; i < AiNpcTrList.Count; i++)
         {
             if (AiNpcTrList.Count > i && AiNpcTrList[i] != null && tr != AiNpcTrList[i])
@@ -26,8 +27,12 @@ public class AiNpcDataManage : MonoBehaviour
                 disVal = Vector3.Distance(tr.position, AiNpcTrList[i].position);
                 if (disVal < disValMax && disVal > 3f && Vector3.Dot(AiNpcTrList[i].forward, AiNpcTrList[i].position - tr.position) > 0f)
                 {
-                    obj = AiNpcTrList[i].gameObject;
-                    break;
+                    if (disValTmp >= disVal)
+                    {
+                        //保留距离玩家最近的可攻击对象.
+                        disValTmp = disVal;
+                        obj = AiNpcTrList[i].gameObject;
+                    }
                 }
             }
         }
