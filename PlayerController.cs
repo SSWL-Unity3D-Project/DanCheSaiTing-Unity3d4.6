@@ -1132,7 +1132,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             throttle = 0f;
-            if (!m_IsJiasu && !IsIntoFeiBan)
+            if (!m_IsJiasu && !IsIntoFeiBan && !IsAmmoHitPlayer)
             {
                 rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, Time.deltaTime * 3f);
             }
@@ -1540,7 +1540,7 @@ public class PlayerController : MonoBehaviour
             rigidbody.AddForce(Vector3.up * m_GravitySet * rigidbody.mass * Time.deltaTime);
         }
 
-        if (m_IsInZhiwuCollider)
+        if (m_IsInZhiwuCollider && !IsAmmoHitPlayer)
         {
             if (rigidbody.velocity.magnitude > 15.0f)
             {
@@ -1553,7 +1553,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (IsIntoFeiBan)
+        if (IsIntoFeiBan && !IsAmmoHitPlayer)
         {
             if (Time.realtimeSinceStartup - TimeFeiBan > 0.8f)
             {
@@ -2110,7 +2110,8 @@ public class PlayerController : MonoBehaviour
         if (playerScript != null
             && !playerScript.m_IsFinished
             && !playerScript.m_UIController.m_IsGameOver
-            && playerScript.timmerstar >= 5.0f)
+            && playerScript.timmerstar >= 5.0f
+            && !IsNetControlPort)
         {
             Debug.Log(name + "::OnAmmoHitPlayer...");
             //rigidbody.AddForce(-transform.forward * 80000.0f, ForceMode.Force);

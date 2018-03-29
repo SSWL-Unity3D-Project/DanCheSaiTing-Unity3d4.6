@@ -352,7 +352,7 @@ public class AmmoMoveCtrl : MonoBehaviour
                         }
                         
                         PlayerController playerCom = mAmmoInfo.AimTr.GetComponent<PlayerController>();
-                        if (playerCom != null)
+                        if (playerCom != null && IsNetControlPort)
                         {
                             playerCom.OnAmmoHitPlayer();
                         }
@@ -409,7 +409,7 @@ public class AmmoMoveCtrl : MonoBehaviour
             }
 
             PlayerController playerScript = hits[i].GetComponent<PlayerController>();
-            if (playerScript != null)
+            if (playerScript != null && IsNetControlPort)
             {
                 playerScript.OnAmmoHitPlayer();
             }
