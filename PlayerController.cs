@@ -2098,6 +2098,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public Transform XuanYunTxSpawnTr;
     /// <summary>
+    /// 子弹爆炸粒子特效.
+    /// </summary>
+    public GameObject AmmoLiZiPrefab;
+    /// <summary>
+    /// 子弹爆炸产生点(联机情况下在主控主角端口使用).
+    /// </summary>
+    public Transform AmmoExpSpawnTr;
+    /// <summary>
     /// 眩晕特效.
     /// </summary>
     GameObject XuanYunTXObj;
@@ -2155,6 +2163,7 @@ public class PlayerController : MonoBehaviour
         {
             IsAmmoHitPlayer = true;
             TimeLastAmmoHit = Time.realtimeSinceStartup;
+            Instantiate(AmmoLiZiPrefab, AmmoExpSpawnTr.position, AmmoExpSpawnTr.rotation);
         }
     }
 
