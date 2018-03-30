@@ -2187,11 +2187,10 @@ public class PlayerController : MonoBehaviour
         {
             if (XuanYunTXObj != null)
             {
-                Destroy(XuanYunTXObj);
+                XuanYunTXObj = (GameObject)Instantiate(XuanYunTXPrefab);
+                XuanYunTXObj.transform.parent = XuanYunTxSpawnTr;
+                XuanYunTXObj.transform.localPosition = Vector3.zero;
             }
-            XuanYunTXObj = (GameObject)Instantiate(XuanYunTXPrefab);
-            XuanYunTXObj.transform.parent = XuanYunTxSpawnTr;
-            XuanYunTXObj.transform.localPosition = Vector3.zero;
         }
 
         if (IsNetControlPort)
