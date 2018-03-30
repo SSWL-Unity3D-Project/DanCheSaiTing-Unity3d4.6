@@ -16,7 +16,10 @@ public class PlayerAnimationCtrl : MonoBehaviour
     /// </summary>
     public void OnAmmoHitAnimationEnvent()
     {
-        mPlayerCtrl.ResetIsAmmoHitPlayer();
+        if (mPlayerCtrl.IsNetControlPort)
+        {
+            mPlayerCtrl.ResetIsAmmoHitPlayer();
+        }
     }
 
     /// <summary>

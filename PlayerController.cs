@@ -650,6 +650,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (m_IsFinished || m_UIController.m_IsGameOver)
+        {
+            return;
+        }
+
         if (IsAmmoHitPlayer)
         {
             if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0 || m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
@@ -2194,10 +2199,10 @@ public class PlayerController : MonoBehaviour
             if (!IsAmmoHitPlayer)
             {
                 IsAmmoHitPlayer = true;
-                mPlayerAnimation.PlayAmmoHitAnimation();
+                NetSendPlayAmmoHitPlayerAnimation();
+                Instantiate(AmmoLiZiPrefab, AmmoExpSpawnTr.position, AmmoExpSpawnTr.rotation);
             }
             //TimeLastAmmoHit = Time.realtimeSinceStartup;
-            Instantiate(AmmoLiZiPrefab, AmmoExpSpawnTr.position, AmmoExpSpawnTr.rotation);
         }
     }
 
@@ -3178,5 +3183,29 @@ public class PlayerController : MonoBehaviour
         {
             m_UIController.SetActiveUIRoot(true);
         }
+    }
+    
+    /// <summary>
+    /// 通过网络消息发送播放被子弹击中的动画信息.
+    /// </summary>
+    public void NetSendPlayAmmoHitPlayerAnimation()
+    {
+        if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+        {
+            if (IsNetControlPort)
+            {
+                mNetViewCom.RPC("RpcGetPlayAmmoHitPlayerAnimation", RPCMode.All);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 通过网络消息接收播放被子弹击中的动画信息.
+    /// </summary>
+    [RPC]
+    void RpcGetPlayAmmoHitPlayerAnimation()
+    {
+        Debug.Log("RpcGetPlayAmmoHitPlayerAnimation...");
+        mPlayerAnimation.PlayAmmoHitAnimation();
     }
 }
