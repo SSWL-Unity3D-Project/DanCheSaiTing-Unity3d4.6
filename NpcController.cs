@@ -129,13 +129,30 @@ public class NpcController : MonoBehaviour
 
         if (PlayerController.GetInstance().timmerstar > 5.0f)
         {
-            float length = Vector3.Distance(PosRecord, transform.position);
-            mDistanceMove += length;
-            PosRecord = transform.position;
-            if (mRankDt != null)
+            if (!IsMoveToFinishPoint)
             {
-                mRankDt.UpdataDisMoveValue(mDistanceMove);
-                SendNpcDisMoveVal(mDistanceMove);
+                float length = Vector3.Distance(PosRecord, transform.position);
+                mDistanceMove += length;
+                PosRecord = transform.position;
+                if (mRankDt != null)
+                {
+                    if (Network.peerType != NetworkPeerType.Disconnected)
+                    {
+                        if (!PlayerController.GetInstance().m_UIController.m_IsGameOver)
+                        {
+                            mRankDt.UpdataDisMoveValue(mDistanceMove);
+                            SendNpcDisMoveVal(mDistanceMove);
+                        }
+                    }
+                    else
+                    {
+                        if (!PlayerController.GetInstance().m_UIController.m_IsGameOver && !PlayerController.GetInstance().m_IsFinished)
+                        {
+                            mRankDt.UpdataDisMoveValue(mDistanceMove);
+                            SendNpcDisMoveVal(mDistanceMove);
+                        }
+                    }
+                }
             }
         }
         else
@@ -259,6 +276,10 @@ public class NpcController : MonoBehaviour
         Npc03,
     }
     public NpcEnum NpcState = NpcEnum.Null;
+    /// <summary>
+    /// npc是否到达终点.
+    /// </summary>
+    bool IsMoveToFinishPoint = false;
 	void OnTriggerEnter(Collider other)
     {
         if (!IsNetControlPort)
@@ -278,6 +299,10 @@ public class NpcController : MonoBehaviour
                     RandTimeFinish = UnityEngine.Random.Range(0.5f, 2.5f);
                     mRankDt.UpdateRankDtTimeFinish(Time.time);
                     SendNpcUpdateRankDtTimeFinish(Time.time);
+                }
+                else
+                {
+                    IsMoveToFinishPoint = true;
                 }
             }
         }

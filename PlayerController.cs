@@ -1006,13 +1006,19 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            float length = Vector3.Distance(PosRecord, transform.position);
-            mDistanceMove += length;
-            PosRecord = transform.position;
-            if (mRankDt != null)
+            if (!m_IsFinished)
             {
-                mRankDt.UpdataDisMoveValue(mDistanceMove);
-                SendPlayerDisMoveVal(mDistanceMove);
+                float length = Vector3.Distance(PosRecord, transform.position);
+                mDistanceMove += length;
+                PosRecord = transform.position;
+                if (mRankDt != null)
+                {
+                    if (!m_UIController.m_IsGameOver)
+                    {
+                        mRankDt.UpdataDisMoveValue(mDistanceMove);
+                        SendPlayerDisMoveVal(mDistanceMove);
+                    }
+                }
             }
 
             if (!m_CanDrive && canDrive)
