@@ -423,7 +423,7 @@ public class NpcController : MonoBehaviour
     /// 接收Npc更新到达终点的消息.
     /// </summary>
     [RPC]
-    void RpcNpcUpdateRankDtTimeFinish(int index, float time)
+    void RpcNpcUpdateRankDtTimeFinish(float time)
     {
         //Debug.Log("RpcNpcUpdateRankDtTimeFinish...");
         mRankDt.UpdateRankDtTimeFinish(time);
