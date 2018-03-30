@@ -27,6 +27,7 @@ public class PlayerAnimationCtrl : MonoBehaviour
     /// </summary>
     public void PlayAmmoHitAnimation()
     {
+		Debug.Log("PlayAmmoHitAnimation...");
         mAnimator.SetTrigger("IsAmmoHit");
     }
 }
