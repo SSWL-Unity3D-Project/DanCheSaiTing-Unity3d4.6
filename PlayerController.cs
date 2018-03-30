@@ -5,6 +5,10 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 主角动画控制脚本.
+    /// </summary>
+    public PlayerAnimationCtrl mPlayerAnimation;
+    /// <summary>
     /// 终点Render.
     /// </summary>
     [HideInInspector]
@@ -864,14 +868,14 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (IsAmmoHitPlayer)
-            {
-                if (Time.realtimeSinceStartup - TimeLastAmmoHit >= 3f)
-                {
-                    IsAmmoHitPlayer = false;
-                    m_UIController.RemoveJinYongAmmo();
-                }
-            }
+            //if (IsAmmoHitPlayer)
+            //{
+            //    if (Time.realtimeSinceStartup - TimeLastAmmoHit >= 3f)
+            //    {
+            //        IsAmmoHitPlayer = false;
+            //        m_UIController.RemoveJinYongAmmo();
+            //    }
+            //}
 
             if (Time.frameCount % 3 == 0 && !m_UIController.m_IsGameOver && !m_IsFinished)
             {
@@ -2103,7 +2107,12 @@ public class PlayerController : MonoBehaviour
     }
 
     bool IsAmmoHitPlayer = false;
-    float TimeLastAmmoHit = 0f;
+    //float TimeLastAmmoHit = 0f;
+    public void ResetIsAmmoHitPlayer()
+    {
+        IsAmmoHitPlayer = false;
+        m_UIController.RemoveJinYongAmmo();
+    }
     /// <summary>
     /// 眩晕特效粒子.
     /// </summary>
@@ -2176,8 +2185,12 @@ public class PlayerController : MonoBehaviour
 
         if (IsNetControlPort)
         {
-            IsAmmoHitPlayer = true;
-            TimeLastAmmoHit = Time.realtimeSinceStartup;
+            if (!IsAmmoHitPlayer)
+            {
+                IsAmmoHitPlayer = true;
+                mPlayerAnimation.PlayAmmoHitAnimation();
+            }
+            //TimeLastAmmoHit = Time.realtimeSinceStartup;
             Instantiate(AmmoLiZiPrefab, AmmoExpSpawnTr.position, AmmoExpSpawnTr.rotation);
         }
     }
