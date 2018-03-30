@@ -1073,4 +1073,31 @@ public class UIController : SSUiRoot
             Destroy(mTaiZhanShiBaiUI);
         }
     }
+
+    /// <summary>
+    /// 禁止使用子弹UI预制(当玩家被攻击后,按下发射按键时提示).
+    /// </summary>
+    public GameObject JinYongAmmoUIPrefab;
+    GameObject mJinYongAmmoUI;
+    /// <summary>
+    /// 联机游戏产生禁止使用子弹UI界面.
+    /// </summary>
+    public void SpawnJinYongAmmoUI()
+    {
+        if (mJinYongAmmoUI == null && JinYongAmmoUIPrefab != null)
+        {
+            mJinYongAmmoUI = (GameObject)Instantiate(JinYongAmmoUIPrefab, mUICamera.transform);
+        }
+    }
+
+    /// <summary>
+    /// 删除禁止使用子弹UI界面.
+    /// </summary>
+    public void RemoveJinYongAmmo()
+    {
+        if (mJinYongAmmoUI != null)
+        {
+            Destroy(mJinYongAmmoUI);
+        }
+    }
 }

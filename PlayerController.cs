@@ -636,9 +636,23 @@ public class PlayerController : MonoBehaviour
 
     void ClickFireBtEvent(InputEventCtrl.ButtonState val)
     {
-        if (val != InputEventCtrl.ButtonState.DOWN)
+        if (val != InputEventCtrl.ButtonState.UP)
         {
             return;
+        }
+
+        if (IsNetControlPort)
+        {
+            return;
+        }
+
+        if (IsAmmoHitPlayer)
+        {
+            if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0 || m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
+            {
+                m_UIController.SpawnJinYongAmmoUI();
+                return;
+            }
         }
 
         if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0)
@@ -855,6 +869,7 @@ public class PlayerController : MonoBehaviour
                 if (Time.realtimeSinceStartup - TimeLastAmmoHit >= 3f)
                 {
                     IsAmmoHitPlayer = false;
+                    m_UIController.RemoveJinYongAmmo();
                 }
             }
 
