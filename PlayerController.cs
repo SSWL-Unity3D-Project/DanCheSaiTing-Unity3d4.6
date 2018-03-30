@@ -640,12 +640,12 @@ public class PlayerController : MonoBehaviour
 
     void ClickFireBtEvent(InputEventCtrl.ButtonState val)
     {
-        if (val != InputEventCtrl.ButtonState.UP)
+        if (val != InputEventCtrl.ButtonState.DOWN)
         {
             return;
         }
 
-        if (IsNetControlPort)
+        if (!IsNetControlPort)
         {
             return;
         }
