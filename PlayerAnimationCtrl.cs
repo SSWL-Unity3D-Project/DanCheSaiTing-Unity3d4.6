@@ -17,7 +17,8 @@ public class PlayerAnimationCtrl : MonoBehaviour
     public void OnAmmoHitAnimationEnvent()
     {
         if (mPlayerCtrl.IsNetControlPort)
-        {
+		{
+			Debug.Log("OnAmmoHitAnimationEnvent...");
             mPlayerCtrl.ResetIsAmmoHitPlayer();
         }
     }
@@ -27,7 +28,6 @@ public class PlayerAnimationCtrl : MonoBehaviour
     /// </summary>
     public void PlayAmmoHitAnimation()
     {
-		Debug.Log("PlayAmmoHitAnimation...");
         mAnimator.SetTrigger("IsAmmoHit");
     }
 }
