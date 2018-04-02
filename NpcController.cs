@@ -390,6 +390,10 @@ public class NpcController : MonoBehaviour
                 mNetViewCom.RPC("RpcGetPlayAmmoHitNpcAnimation", RPCMode.All);
             }
         }
+        else
+        {
+            mNpcAnimationCom.PlayAmmoHitAnimation();
+        }
     }
 
     bool IsPlayAmmoHitNpc = false;
