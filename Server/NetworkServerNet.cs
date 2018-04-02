@@ -343,6 +343,10 @@ public class NetworkServerNet : MonoBehaviour
         }
         IsCreateServer = true;
 
+        //初始化MasterServer.
+        MasterServer.ipAddress = MasterServerIp;
+        Network.natFacilitatorIP = MasterServerIp;
+
         Debug.Log("start create server, time " + Time.time.ToString("f2") + ", ePlayerPortState " + ePlayerPortState
             + ", level " + Application.loadedLevel);
         Network.InitializeServer(3, mPort, true);

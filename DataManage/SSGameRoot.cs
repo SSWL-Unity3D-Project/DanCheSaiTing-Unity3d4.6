@@ -17,6 +17,7 @@ public class SSGameRoot : MonoBehaviour
     /// 游戏UI总控.
     /// </summary>
     public UIController mUIController;
+    SSTimeUpCtrl mSSTimeUpCom;
     void Awake()
     {
         Debug.Log("SSGameRoot::Awake -> peerType " + Network.peerType + ", eGameMode " + SSGameCtrl.GetInstance().eGameMode);
@@ -38,14 +39,30 @@ public class SSGameRoot : MonoBehaviour
             case NetworkRootMovie.GameMode.Link:
                 {
                     mUIController.SetActiveUIRoot(false);
+                    mSSTimeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
+                    mSSTimeUpCom.OnTimeUpOverEvent += OnTimeUpOverNotConnectEvent;
+                    mSSTimeUpCom.Init(35f);
                     break;
                 }
         }
         NetworkEvent.GetInstance().OnServerInitializedEvent += OnServerInitializedEvent;
         NetworkEvent.GetInstance().OnPlayerConnectedEvent += OnPlayerConnectedEvent;
         NetworkEvent.GetInstance().OnConnectedToServerEvent += OnConnectedToServerEvent;
+        NetworkEvent.GetInstance().OnFailedToConnectToMasterServerEvent += OnFailedToConnectToMasterServerEvent;
     }
-        
+    
+    /// <summary>
+    /// 当游戏联机超时后,尚未链接时.
+    /// </summary>
+    void OnTimeUpOverNotConnectEvent()
+    {
+        if (!mUIController.IsGameStart)
+        {
+            Debug.Log("SSGameRoot::OnTimeUpOverNotConnectEvent...");
+            OnFailedToConnectToMasterServerEvent();
+        }
+    }
+
     /// <summary>
     /// 游戏场景里服务器被初始化.
     /// </summary>
@@ -100,5 +117,21 @@ public class SSGameRoot : MonoBehaviour
         Debug.Log("SSGameRoot::OnConnectedToServerEvent -> creat client player, indexVal == " + indexVal);
         mSSGameDataManage.mGameData.SpawnPlayer(indexVal);
         //mUIController.SetActiveUIRoot(true);
+    }
+
+    bool IsFailedToConnectMasterServer = false;
+    void OnFailedToConnectToMasterServerEvent()
+    {
+        if (!IsFailedToConnectMasterServer)
+        {
+            Debug.Log("SSGameRoot -> OnFailedToConnectToMasterServerEvent...");
+            SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink; //强制修改联机状态.
+            //玩家链接主服务器失败.
+            mSSGameDataManage.mGameData.SpawnPlayer(0);
+            mSSGameDataManage.mGameData.SpawnNpc(1);
+            mSSGameDataManage.mGameData.SpawnNpc(2);
+            mSSGameDataManage.mGameData.SpawnNpc(3);
+            mUIController.SetActiveUIRoot(true);
+        }
     }
 }
