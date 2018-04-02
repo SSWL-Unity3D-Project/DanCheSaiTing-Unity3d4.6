@@ -190,28 +190,28 @@ public class NpcController : MonoBehaviour
 
 			if(!m_IsHit)
 			{
-				m_Timmer+=Time.deltaTime;
-				if(m_Timmer>TimmerSet)
+				m_Timmer += Time.deltaTime;
+				if(m_Timmer > TimmerSet)
 				{
 					if(m_NpcIndex <= m_player.PathNum)
 					{
 						m_IsJiansu = false;
 						m_IsJiasu = true;
-						m_SpeedIndex = UnityEngine.Random.Range(1.2f,1.5f);
+						m_SpeedIndex = UnityEngine.Random.Range(1.2f, 1.5f);
 					}
 					else
 					{
 						m_IsJiasu = false;
 						m_IsJiansu = true;
-						m_SpeedIndex = UnityEngine.Random.Range(0.5f,0.8f);
+						m_SpeedIndex = UnityEngine.Random.Range(0.5f, 0.8f);
 					}
 					m_Timmer = 0.0f;
 				}
 
 				if(m_IsJiasu)
 				{
-					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, (m_player.SpeedMovePlayer * m_SpeedIndex) / 3.6f, 10.0f * Time.deltaTime);
-					if(m_NpcSpeed>m_TopSpeedSet)
+					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, (m_player.SpeedMovePlayer * m_SpeedIndex) / 3.6f, 10f * Time.deltaTime);
+					if(m_NpcSpeed > m_TopSpeedSet)
 					{
 						m_NpcSpeed = m_TopSpeedSet;
 					}
@@ -219,19 +219,20 @@ public class NpcController : MonoBehaviour
 
 				if(m_IsJiansu)
 				{
-					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, (m_player.SpeedMovePlayer * m_SpeedIndex) / 3.6f, 10.0f * Time.deltaTime);
+					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, (m_player.SpeedMovePlayer * m_SpeedIndex) / 3.6f, 4f * Time.deltaTime);
 				}
 
-				if(m_NpcSpeed<=20f)
+				if(m_NpcSpeed <= 20f)
 				{
 					m_NpcSpeed = UnityEngine.Random.Range(20f, 25f);
 				}
 
 				if(m_IsEnd)
 				{
-					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed,m_EndSpeedSet,10.0f*Time.deltaTime);
+					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, m_EndSpeedSet, 10f * Time.deltaTime);
 				}
-				transform.position = Vector3.MoveTowards(transform.position,m_NpcPathPoint[pathNum],m_NpcSpeed*Time.deltaTime);
+
+				transform.position = Vector3.MoveTowards(transform.position,m_NpcPathPoint[pathNum], m_NpcSpeed * Time.deltaTime);
 				transform.forward = Vector3.Lerp( transform.forward,Vector3.Normalize(m_NpcPathPoint[pathNum] - transform.position),9.0f*Time.deltaTime);
 				transform.localEulerAngles = new Vector3(-10.0f,transform.localEulerAngles.y,transform.localEulerAngles.z);
 				if(!m_IsPubu && Physics.Raycast(transform.position+Vector3.up*25.0f,-Vector3.up,out hit,100.0f,mask.value))
@@ -241,7 +242,7 @@ public class NpcController : MonoBehaviour
 			}
 			else
 			{
-				m_HitTimmer+=Time.deltaTime;
+				m_HitTimmer += Time.deltaTime;
 				if(m_HitTimmer > 0.4f)
 				{
 					m_HitTimmer = 0.0f;
