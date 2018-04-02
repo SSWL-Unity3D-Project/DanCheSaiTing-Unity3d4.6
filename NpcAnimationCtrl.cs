@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public class PlayerAnimationCtrl : MonoBehaviour
+public class NpcAnimationCtrl : MonoBehaviour
 {
     /// <summary>
     /// 主角主控制脚本.
     /// </summary>
-    public PlayerController mPlayerCtrl;
+    public NpcController mNpcCtrl;
     /// <summary>
     /// 动画控制组件.
     /// </summary>
@@ -16,10 +16,10 @@ public class PlayerAnimationCtrl : MonoBehaviour
     /// </summary>
     public void OnAmmoHitAnimationEnvent()
     {
-        if (mPlayerCtrl.IsNetControlPort)
-		{
-			Debug.Log("Player::OnAmmoHitAnimationEnvent...");
-            mPlayerCtrl.ResetIsAmmoHitPlayer();
+        if (mNpcCtrl.IsNetControlPort)
+        {
+            Debug.Log("Npc::OnAmmoHitAnimationEnvent...");
+            mNpcCtrl.ResetIsPlayAmmoHitNpc();
         }
     }
 

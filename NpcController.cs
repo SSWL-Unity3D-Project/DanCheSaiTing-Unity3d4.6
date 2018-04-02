@@ -5,6 +5,10 @@ using System;
 public class NpcController : MonoBehaviour
 {
     /// <summary>
+    /// npc动画控制脚本.
+    /// </summary>
+    public NpcAnimationCtrl mNpcAnimationCom;
+    /// <summary>
     /// 是否是网络控制端(只有网络控制端才有主动控制权限).
     /// </summary>
     [HideInInspector]
@@ -238,7 +242,7 @@ public class NpcController : MonoBehaviour
 			else
 			{
 				m_HitTimmer+=Time.deltaTime;
-				if(m_HitTimmer>0.4f)
+				if(m_HitTimmer > 0.4f)
 				{
 					m_HitTimmer = 0.0f;
 					m_IsHit = false;
@@ -344,12 +348,17 @@ public class NpcController : MonoBehaviour
 			m_IsEnd = true;
 		}
 	}
-
+    
     /// <summary>
     /// 当导弹击中npc时.
     /// </summary>
     public void OnDaoDanHit(Vector3 posDaoDan)
     {
+        if (!IsNetControlPort)
+        {
+            return;
+        }
+
         if (Vector3.Dot(posDaoDan, transform.position) > 0f)
         {
             m_PlayerHit = transform.position;
@@ -361,6 +370,42 @@ public class NpcController : MonoBehaviour
             m_NpcPos = transform.position;
         }
         m_IsHit = true;
+
+        if (!IsPlayAmmoHitNpc)
+        {
+            IsPlayAmmoHitNpc = true;
+            NetSendPlayAmmoHitNpcAnimation();
+        }
+    }
+
+    /// <summary>
+    /// 通过网络消息发送播放被子弹击中的动画信息.
+    /// </summary>
+    public void NetSendPlayAmmoHitNpcAnimation()
+    {
+        if (Network.peerType == NetworkPeerType.Server || Network.peerType == NetworkPeerType.Client)
+        {
+            if (IsNetControlPort)
+            {
+                mNetViewCom.RPC("RpcGetPlayAmmoHitNpcAnimation", RPCMode.All);
+            }
+        }
+    }
+
+    bool IsPlayAmmoHitNpc = false;
+    public void ResetIsPlayAmmoHitNpc()
+    {
+        IsPlayAmmoHitNpc = false;
+    }
+
+    /// <summary>
+    /// 通过网络消息接收播放被子弹击中的动画信息.
+    /// </summary>
+    [RPC]
+    void RpcGetPlayAmmoHitNpcAnimation()
+    {
+        Debug.Log("RpcGetPlayAmmoHitNpcAnimation...");
+        mNpcAnimationCom.PlayAmmoHitAnimation();
     }
 
     /// <summary>
