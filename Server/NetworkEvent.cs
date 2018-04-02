@@ -55,6 +55,20 @@ public class NetworkEvent : MonoBehaviour
             OnConnectedToServerEvent();
         }
     }
+    
+    /// <summary>
+    /// 玩家链接主服务器失败消息事件.
+    /// </summary>
+    public delegate void FailedToConnectToMasterServerEvent();
+    public event FailedToConnectToMasterServerEvent OnFailedToConnectToMasterServerEvent;
+    public void OnFailedToConnectToMasterServerTrigger()
+    {
+        Debug.Log("NetworkEvent::OnFailedToConnectToMasterServerTrigger...");
+        if (OnFailedToConnectToMasterServerEvent != null)
+        {
+            OnFailedToConnectToMasterServerEvent();
+        }
+    }
 
     /// <summary>
     /// Rpc发送加载游戏关卡事件.

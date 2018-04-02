@@ -3,6 +3,10 @@
 public class GameLinkPlayer : MonoBehaviour
 {
     /// <summary>
+    /// 服务器正在维护UI提示.
+    /// </summary>
+    public GameObject UISeverWeiHu;
+    /// <summary>
     /// 正在创建服务器UI.
     /// </summary>
     public GameObject UICreateSever;
@@ -39,6 +43,8 @@ public class GameLinkPlayer : MonoBehaviour
         SetAcitveStartBt(false);
         SetPlayerUITexture(0);
         SetActiveUICreateSever(true);
+        SetActiveUISeverWeiHu(false);
+        NetworkEvent.GetInstance().OnFailedToConnectToMasterServerEvent += OnFailedToConnectToMasterServerEvent;
     }
 
     /// <summary>
@@ -51,6 +57,12 @@ public class GameLinkPlayer : MonoBehaviour
     int PlayerLinkServerCount = 0;
     void Update()
     {
+        if (IsFailedToConnectMasterServer)
+        {
+            //链接主服务器失败(主服务器游戏可能没有打开).
+            return;
+        }
+
         if (Time.frameCount % 30 == 0)
         {
             if (!StartBtObj.activeSelf && !IsClickStartBt)
@@ -113,7 +125,18 @@ public class GameLinkPlayer : MonoBehaviour
 
     void SetActiveUICreateSever(bool isActive)
     {
-        UICreateSever.SetActive(isActive);
+        if (UICreateSever != null)
+        {
+            UICreateSever.SetActive(isActive);
+        }
+    }
+
+    void SetActiveUISeverWeiHu(bool isActive)
+    {
+        if (UISeverWeiHu != null)
+        {
+            UISeverWeiHu.SetActive(isActive);
+        }
     }
 
     /// <summary>
@@ -169,5 +192,33 @@ public class GameLinkPlayer : MonoBehaviour
     public void HiddenSelf()
     {
         gameObject.SetActive(false);
+    }
+
+    bool IsFailedToConnectMasterServer = false;
+    SSTimeUpCtrl mSSTimeUpCom;
+    void OnFailedToConnectToMasterServerEvent()
+    {
+        if (!IsFailedToConnectMasterServer)
+        {
+            Debug.Log("GameLinkPlayer -> OnFailedToConnectToMasterServerEvent...");
+            IsFailedToConnectMasterServer = true;
+            SetActiveUISeverWeiHu(true);
+            SetActiveUICreateSever(false);
+            mSSTimeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
+            mSSTimeUpCom.OnTimeUpOverEvent += OnTimeUpOverServerWeiHuEvent;
+            mSSTimeUpCom.Init(5f);
+        }
+    }
+
+    void OnTimeUpOverServerWeiHuEvent()
+    {
+        if (mLoadingCom.mGameModeSelect.eGameMode == NetworkRootMovie.GameMode.Link)
+        {
+            Debug.Log("OnTimeUpOverServerWeiHuEvent...");
+            mLoadingCom.mGameModeSelect.eGameMode = NetworkRootMovie.GameMode.NoLink; //强制修改为单机模式.
+            //产生选择游戏场景UI.
+            mLoadingCom.SpawnLevelSelectUI();
+            SetActiveUISeverWeiHu(false);
+        }
     }
 }

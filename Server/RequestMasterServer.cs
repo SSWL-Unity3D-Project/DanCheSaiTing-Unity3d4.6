@@ -339,6 +339,7 @@ public class RequestMasterServer : MonoBehaviour
     void OnFailedToConnectToMasterServer(NetworkConnectionError info)
     {
         Debug.Log("Could not connect to master server: " + info);
+        NetworkEvent.GetInstance().OnFailedToConnectToMasterServerTrigger();
     }
 
     void OnMasterServerEvent(MasterServerEvent msEvent)
