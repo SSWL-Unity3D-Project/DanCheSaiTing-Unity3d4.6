@@ -3,7 +3,7 @@
 public class SSTimeUpCtrl : MonoBehaviour
 {
     float MaxTimeVal = 0f;
-    float CurTimeVal = 0f;
+    float LastTimeVal = 0f;
     bool IsInitUpTime = false;
     bool IsTimeUpOver = false;
     /// <summary>
@@ -25,6 +25,7 @@ public class SSTimeUpCtrl : MonoBehaviour
     public void Init(float maxTime)
     {
         MaxTimeVal = maxTime;
+        LastTimeVal = Time.realtimeSinceStartup;
         IsInitUpTime = true;
     }
     
@@ -34,9 +35,8 @@ public class SSTimeUpCtrl : MonoBehaviour
         {
             return;
         }
-
-        CurTimeVal += Time.deltaTime;
-        if (CurTimeVal >= MaxTimeVal)
+        
+        if (Time.realtimeSinceStartup - LastTimeVal >= MaxTimeVal)
         {
             if (!IsTimeUpOver)
             {
