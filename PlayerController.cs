@@ -2154,11 +2154,9 @@ public class PlayerController : MonoBehaviour
         if (playerScript != null
             && !playerScript.m_IsFinished
             && !playerScript.m_UIController.m_IsGameOver
-            && playerScript.timmerstar >= 5.0f
-            && !IsNetControlPort)
+            && playerScript.timmerstar >= 5.0f)
         {
             Debug.Log(name + "::OnAmmoHitPlayer...");
-            //rigidbody.AddForce(-transform.forward * 80000.0f, ForceMode.Force);
             NetSendAmmoHitPlayer();
         }
     }
@@ -2247,7 +2245,6 @@ public class PlayerController : MonoBehaviour
     {
         SetAcitveChuanTouShuiHuaTX(activeVal == 1 ? true : false);
     }
-
 
     /// <summary>
     /// 使玩家道具掉落.
@@ -3200,6 +3197,10 @@ public class PlayerController : MonoBehaviour
             {
                 mNetViewCom.RPC("RpcGetPlayAmmoHitPlayerAnimation", RPCMode.All);
             }
+        }
+        else
+        {
+             RpcGetPlayAmmoHitPlayerAnimation();
         }
     }
 

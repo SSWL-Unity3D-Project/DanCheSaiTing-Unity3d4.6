@@ -73,7 +73,7 @@ public class AiNpcDataManage : MonoBehaviour
             if (PlayerTrList.Count > i && PlayerTrList[i] != null && tr != PlayerTrList[i])
             {
                 disVal = Vector3.Distance(tr.position, PlayerTrList[i].position);
-                if (disVal < disValMax && disVal > disValMin && Vector3.Dot(PlayerTrList[i].forward, PlayerTrList[i].position - tr.position) > 0f)
+                if (disVal < disValMax && disVal > disValMin && Vector3.Dot(tr.forward, PlayerTrList[i].position - tr.position) > 0f)
                 {
                     if (disValTmp >= disVal)
                     {
