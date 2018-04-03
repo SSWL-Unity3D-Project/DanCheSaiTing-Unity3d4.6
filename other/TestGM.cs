@@ -2,11 +2,18 @@
 
 public class TestGM : MonoBehaviour
 {
+    public Animator mAnimator;
+    int mIndexVal = 0;
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.P))
         {
-            MoveAmmo();
+            //MoveAmmo();
+
+            mAnimator.gameObject.SetActive(true);
+            mAnimator.ResetTrigger("IsPlay");
+            mAnimator.SetTrigger("IsPlay");
+            mIndexVal++;
         }
     }
 

@@ -1,7 +1,4 @@
-﻿#define GAME_GRADE
-//gzknu
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 using System;
 
 public class SetPanel : MonoBehaviour
@@ -236,7 +233,11 @@ public class SetPanel : MonoBehaviour
 		if (IsInitJiaoZhunPcvr) {
 			return;
 		}
-		//pcvr.GetInstance().InitFangXiangJiaoZhun();
+
+        if (pcvr.bIsHardWare)
+        {
+            pcvr.GetInstance().InitJiaoZhunSteer();
+        }
 		m_ZhujiemianXingXing.gameObject.SetActive(false);
 		IsInitJiaoZhunPcvr = true;
 
@@ -251,7 +252,6 @@ public class SetPanel : MonoBehaviour
 		JiaoZhunTexture.mainTexture = JiaoZhunTextureArray[JiaoZhunCount];
 	}
 
-#if GAME_GRADE
     void OnClickMoveBtInZhujiemian()
 	{
         if (IsInitJiaoZhunPcvr)
@@ -470,14 +470,14 @@ public class SetPanel : MonoBehaviour
 				}
             case 13:
                 {
-                    int speedVal = Convert.ToInt32(PlayerMinSpeed.text);
-                    speedVal += 10;
-                    if (speedVal > 80)
-                    {
-                        speedVal = 0;
-                    }
-                    PlayerMinSpeed.text = speedVal.ToString();
-                    ReadGameInfo.GetInstance().WritePlayerMinSpeedVal(speedVal);
+                    //int speedVal = Convert.ToInt32(PlayerMinSpeed.text);
+                    //speedVal += 10;
+                    //if (speedVal > 80)
+                    //{
+                    //    speedVal = 0;
+                    //}
+                    //PlayerMinSpeed.text = speedVal.ToString();
+                    //ReadGameInfo.GetInstance().WritePlayerMinSpeedVal(speedVal);
                     break;
                 }
             case 14:
@@ -526,7 +526,6 @@ public class SetPanel : MonoBehaviour
                 }
         }
     }
-#endif
 
 	public UILabel GameAudioVolumeLB;
 	void CloseAllQiNang()

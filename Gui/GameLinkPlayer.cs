@@ -3,6 +3,24 @@
 public class GameLinkPlayer : MonoBehaviour
 {
     /// <summary>
+    /// 其它端口看到的玩家信息.
+    /// </summary>
+    public GameObject[] mPlayerOtherMeshs = new GameObject[4];
+    Animator[] mPlayerOtherAnimators = new Animator[4];
+    /// <summary>
+    /// 玩家自己看到的mesh信息列表.
+    /// </summary>
+    public GameObject[] mPlayerMeshArray = new GameObject[4];
+    Animator[] mPlayerAnimators = new Animator[4];
+    /// <summary>
+    /// 背景Material列表.
+    /// </summary>
+    public Material[] mBJMaterials = new Material[4];
+    /// <summary>
+    /// 背景MeshRenderer.
+    /// </summary>
+    public MeshRenderer mBJMeshRenderer;
+    /// <summary>
     /// 服务器正在维护UI提示.
     /// </summary>
     public GameObject UISeverWeiHu;
@@ -21,15 +39,15 @@ public class GameLinkPlayer : MonoBehaviour
     /// <summary>
     /// 联机玩家UI列表.
     /// </summary>
-    public UITexture[] PlayerUITextureArray = new UITexture[4];
+    //public UITexture[] PlayerUITextureArray = new UITexture[4];
     /// <summary>
     /// 玩家昵称UI.
     /// </summary>
-    public Texture[] PlayerTexureArray = new Texture[4];
+    //public Texture[] PlayerTexureArray = new Texture[4];
     /// <summary>
     /// Ai昵称UI
     /// </summary>
-    public Texture[] AiTexureArray = new Texture[4];
+    //public Texture[] AiTexureArray = new Texture[4];
     bool IsClickStartBt = false;
     /// <summary>
     /// 记录开始按键时间.
@@ -39,9 +57,26 @@ public class GameLinkPlayer : MonoBehaviour
     public void Init(Loading loadingScript)
     {
         mLoadingCom = loadingScript;
+        for (int i = 0; i < mPlayerOtherMeshs.Length; i++)
+        {
+            if (mPlayerOtherMeshs.Length > i && mPlayerOtherMeshs[i] != null)
+            {
+                mPlayerOtherAnimators[i] = mPlayerOtherMeshs[i].GetComponent<Animator>();
+            }
+        }
+
+        for (int i = 0; i < mPlayerMeshArray.Length; i++)
+        {
+            if (mPlayerMeshArray.Length > i && mPlayerMeshArray[i] != null)
+            {
+                mPlayerAnimators[i] = mPlayerMeshArray[i].GetComponent<Animator>();
+            }
+        }
+
         SetActiveLinkNameParent(false);
         SetAcitveStartBt(false);
-        SetPlayerUITexture(0);
+        //SetPlayerUITexture(0);
+        SetPlayerUIMesh(0);
         SetActiveUICreateSever(true);
         SetActiveUISeverWeiHu(false);
         NetworkEvent.GetInstance().OnFailedToConnectToMasterServerEvent += OnFailedToConnectToMasterServerEvent;
@@ -95,14 +130,16 @@ public class GameLinkPlayer : MonoBehaviour
                     IndexPlayer = NetworkServerNet.GetInstance().IndexSpawnPlayer;
                     Debug.Log("GameLinkPlayer::update -> IndexPlayer == " + IndexPlayer);
                     SetActiveLinkNameParent(true);
-                    ChangeUINameScale(IndexPlayer);
+                    //ChangeUINameScale(IndexPlayer);
+                    SetUIPanelBeiJing(IndexPlayer);
                 }
 
                 if (PlayerLinkServerCount != NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie)
                 {
                     PlayerLinkServerCount = NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie;
                     Debug.Log("GameLinkPlayer::update -> PlayerLinkServerCount == " + PlayerLinkServerCount);
-                    SetPlayerUITexture(PlayerLinkServerCount);
+                    //SetPlayerUITexture(PlayerLinkServerCount);
+                    SetPlayerUIMesh(PlayerLinkServerCount);
                 }
             }
         }
@@ -142,17 +179,87 @@ public class GameLinkPlayer : MonoBehaviour
     /// <summary>
     /// 改变玩家昵称UI大小.
     /// </summary>
-    public void ChangeUINameScale(int index)
+    //public void ChangeUINameScale(int index)
+    //{
+    //    for (int i = 0; i < PlayerUITextureArray.Length; i++)
+    //    {
+    //        if (index == i)
+    //        {
+    //            PlayerUITextureArray[i].transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+    //        }
+    //        else
+    //        {
+    //            PlayerUITextureArray[i].transform.localScale = Vector3.one;
+    //        }
+    //    }
+    //}
+
+    /// <summary>
+    /// 设置联机玩家UI信息.
+    /// indexVal [0, 3].
+    /// </summary>
+    //void SetPlayerUITexture(int indexVal)
+    //{
+    //    for (int i = 0; i < PlayerUITextureArray.Length; i++)
+    //    {
+    //        if (i > indexVal)
+    //        {
+    //            PlayerUITextureArray[i].mainTexture = AiTexureArray[i];
+    //        }
+    //        else
+    //        {
+    //            PlayerUITextureArray[i].mainTexture = PlayerTexureArray[i];
+    //        }
+    //    }
+    //}
+
+    /// <summary>
+    /// 设置界面背景材质.
+    /// index[0,3]
+    /// </summary>
+    public void SetUIPanelBeiJing(int index)
     {
-        for (int i = 0; i < PlayerUITextureArray.Length; i++)
+        mBJMeshRenderer.material = mBJMaterials[index];
+        for (int i = 0; i < mBJMaterials.Length; i++)
         {
-            if (index == i)
+            mPlayerMeshArray[index].SetActive(index == i ? true : false);
+            if (i == index)
             {
-                PlayerUITextureArray[i].transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+                if (mPlayerAnimators[i] != null)
+                {
+                    mPlayerAnimators[i].ResetTrigger("IsPlay");
+                    mPlayerAnimators[i].SetTrigger("IsPlay");
+                }
             }
-            else
+
+            if (i < index)
             {
-                PlayerUITextureArray[i].transform.localScale = Vector3.one;
+                mPlayerOtherMeshs[i].SetActive(true);
+                if (mPlayerOtherAnimators[i] != null)
+                {
+                    mPlayerOtherAnimators[i].ResetTrigger("IsPlay");
+                    mPlayerOtherAnimators[i].SetTrigger("IsPlay");
+                }
+            }
+
+            if (i >= index)
+            {
+                mPlayerOtherMeshs[i].SetActive(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 设置联机玩家UI信息.
+    /// indexVal [0, 3].
+    /// </summary>
+    void SetPlayerUIMesh(int indexVal)
+    {
+        for (int i = 0; i < mBJMaterials.Length; i++)
+        {
+            if (i > indexVal)
+            {
+                mPlayerOtherMeshs[i].SetActive(false);
             }
         }
     }
@@ -169,26 +276,7 @@ public class GameLinkPlayer : MonoBehaviour
             HiddenSelf();
         }
     }
-
-    /// <summary>
-    /// 设置联机玩家UI信息.
-    /// indexVal [0, 4].
-    /// </summary>
-    public void SetPlayerUITexture(int indexVal)
-    {
-        for (int i = 0; i < PlayerUITextureArray.Length; i++)
-        {
-            if (i > indexVal)
-            {
-                PlayerUITextureArray[i].mainTexture = AiTexureArray[i];
-            }
-            else
-            {
-                PlayerUITextureArray[i].mainTexture = PlayerTexureArray[i];
-            }
-        }
-    }
-
+    
     public void HiddenSelf()
     {
         gameObject.SetActive(false);
