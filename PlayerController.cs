@@ -2175,6 +2175,10 @@ public class PlayerController : MonoBehaviour
                 mNetViewCom.RPC("RpcNetSendAmmoHitPlayer", RPCMode.All);
             }
         }
+        else
+        {
+            RpcNetSendAmmoHitPlayer();
+        }
     }
 
     /// <summary>
