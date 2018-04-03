@@ -475,6 +475,11 @@ public class NpcController : MonoBehaviour
     /// </summary>
     [Range(0f, 1f)]
     public float mRandFireVal = 0.5f;
+    /// <summary>
+    /// 发射子弹的冷却时间.
+    /// </summary>
+    [Range(0.1f, 100f)]
+    public float TimeLengQueFire = 1f;
     float mLastFireTime = 0f;
     void OnTimeDownStepEvent(float timeCur)
     {
@@ -493,7 +498,7 @@ public class NpcController : MonoBehaviour
             return;
         }
 
-        if (Time.realtimeSinceStartup - mLastFireTime < 1f)
+        if (Time.realtimeSinceStartup - mLastFireTime < TimeLengQueFire)
         {
             return;
         }
