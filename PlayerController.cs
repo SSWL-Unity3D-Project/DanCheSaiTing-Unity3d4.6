@@ -564,6 +564,7 @@ public class PlayerController : MonoBehaviour
         QuanShuMax = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.QuanShuMax;
         mNetSynGame.InitData(m_PlayerAnimator);
         SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddAiNpcTr(transform);
+        SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.AddPlayerTr(transform);
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.mNetPlayerComList.Add(this);
         mRankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.AddRankDt((RankManage.RankEnum)index, IsNetControlPort);
 

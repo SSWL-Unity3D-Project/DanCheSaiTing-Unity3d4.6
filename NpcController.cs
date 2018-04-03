@@ -444,10 +444,97 @@ public class NpcController : MonoBehaviour
         NpcState = npcState;
         name = npcState.ToString();
     }
-    
+
+    SSTimeDownCtrl mSSTimeDownCom;
     public void SetIsNetControlPort(bool isNetControl)
     {
         IsNetControlPort = isNetControl;
+        if (IsNetControlPort)
+        {
+            if (mSSTimeDownCom == null)
+            {
+                mSSTimeDownCom = gameObject.AddComponent<SSTimeDownCtrl>();
+                mSSTimeDownCom.OnTimeDownStepEvent += OnTimeDownStepEvent;
+                mSSTimeDownCom.Init(300f, 0.2f);
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// 导弹预制.
+    /// </summary>
+    public GameObject mDaoDanPrefab;
+    public Transform mDaoDanSpawnTr;
+    /// <summary>
+    /// 攻击距离属性.
+    /// </summary>
+    public float mMaxFireDis = 100f;
+    public float mMinFireDis = 3f;
+    /// <summary>
+    /// 发射子弹的概率.
+    /// </summary>
+    [Range(0f, 1f)]
+    public float mRandFireVal = 0.5f;
+    float mLastFireTime = 0f;
+    void OnTimeDownStepEvent(float timeCur)
+    {
+        //Debug.Log("timeCur ==== " + timeCur + ", npc == " + name);
+        if (PlayerController.GetInstance().m_UIController.m_IsGameOver || PlayerController.GetInstance().m_IsFinished)
+        {
+            if (mSSTimeDownCom != null)
+            {
+                mSSTimeDownCom.DestroySelf();
+            }
+            return;
+        }
+
+        if (PlayerController.GetInstance().timmerstar <= 5f)
+        {
+            return;
+        }
+
+        if (Time.realtimeSinceStartup - mLastFireTime < 1f)
+        {
+            return;
+        }
+
+        GameObject aimPlayer = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindPlayer(transform, mMaxFireDis, mMinFireDis);
+        if (aimPlayer != null)
+        {
+            mLastFireTime = Time.realtimeSinceStartup;
+            float randVal = UnityEngine.Random.Range(0, 100) / 100f;
+            if (randVal > mRandFireVal)
+            {
+                //概率没有随机上.
+                //Debug.Log("cannot fire to player!");
+                return;
+            }
+
+            //Debug.Log("Npc fire to player! player is " + aimPlayer.name);
+            if (mDaoDanPrefab == null || mDaoDanSpawnTr == null)
+            {
+                return;
+            }
+
+            GameObject ammo = null;
+            if (Network.peerType == NetworkPeerType.Server)
+            {
+                ammo = (GameObject)Network.Instantiate(mDaoDanPrefab, mDaoDanSpawnTr.position, mDaoDanSpawnTr.rotation, 0);
+            }
+            else
+            {
+                ammo = (GameObject)Instantiate(mDaoDanPrefab, mDaoDanSpawnTr.position, mDaoDanSpawnTr.rotation);
+            }
+
+            AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
+            ammoMoveCom.SetIsNetControlPort(true);
+            AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
+            ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.GenZongDan;
+            ammoDt.PosHit = aimPlayer.transform.position;
+            ammoDt.AimTr = aimPlayer.transform;
+            ammoMoveCom.InitMoveAmmo(ammoDt);
+        }
     }
 
     /// <summary>

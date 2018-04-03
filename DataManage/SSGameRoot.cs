@@ -122,9 +122,11 @@ public class SSGameRoot : MonoBehaviour
     bool IsFailedToConnectMasterServer = false;
     void OnFailedToConnectToMasterServerEvent()
     {
-        if (!IsFailedToConnectMasterServer)
+        if (!IsFailedToConnectMasterServer && SSGameCtrl.GetInstance().eGameMode == NetworkRootMovie.GameMode.Link)
         {
             Debug.Log("SSGameRoot -> OnFailedToConnectToMasterServerEvent...");
+            NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie = 0;
+            NetworkServerNet.GetInstance().LinkServerPlayerNum_Game = 0;
             SSGameCtrl.GetInstance().eGameMode = NetworkRootMovie.GameMode.NoLink; //强制修改联机状态.
             //玩家链接主服务器失败.
             mSSGameDataManage.mGameData.SpawnPlayer(0);

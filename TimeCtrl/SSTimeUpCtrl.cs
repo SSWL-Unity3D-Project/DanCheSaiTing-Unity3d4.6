@@ -11,7 +11,7 @@ public class SSTimeUpCtrl : MonoBehaviour
     /// </summary>
     public delegate void TimeUpOverEvent();
     public event TimeUpOverEvent OnTimeUpOverEvent;
-    public void OnTimeUpOver()
+    void OnTimeUpOver()
     {
         if (OnTimeUpOverEvent != null)
         {
