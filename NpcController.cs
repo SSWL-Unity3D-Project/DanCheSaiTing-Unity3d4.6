@@ -29,7 +29,11 @@ public class NpcController : MonoBehaviour
 	private RaycastHit hit;
 	private  LayerMask mask;
 	public float TimmerSet = 5.0f;
-	private float m_Timmer = 0.0f;
+    float TimeAddSpeedVal = 0f;
+    float TimeSubSpeedVal = 0f;
+    public float mSpeedAddMin = 1.2f;
+    public float mSpeedAddMax = 1.5f;
+    private float m_Timmer = 0.0f;
 	public PlayerController m_player;
 	private bool m_IsJiasu = false;
 	private bool m_IsJiansu = false;
@@ -117,7 +121,9 @@ public class NpcController : MonoBehaviour
 			m_NpcPathPoint[i] = m_NpcPath.FindChild(str).position;
 			mask = 1<<( LayerMask.NameToLayer("shexianjiance"));
 		}
-	}
+        TimeAddSpeedVal = TimmerSet * 2f;
+        TimeSubSpeedVal = TimmerSet;
+    }
 
     /// <summary>
     /// 运动的路程.
@@ -195,13 +201,15 @@ public class NpcController : MonoBehaviour
 				{
 					if(m_NpcIndex <= m_player.PathNum)
 					{
-						m_IsJiansu = false;
+                        TimmerSet = TimeAddSpeedVal;
+                        m_IsJiansu = false;
 						m_IsJiasu = true;
-						m_SpeedIndex = UnityEngine.Random.Range(1.2f, 1.5f);
+						m_SpeedIndex = UnityEngine.Random.Range(mSpeedAddMin, mSpeedAddMax);
 					}
 					else
-					{
-						m_IsJiasu = false;
+                    {
+                        TimmerSet = TimeSubSpeedVal;
+                        m_IsJiasu = false;
 						m_IsJiansu = true;
 						m_SpeedIndex = UnityEngine.Random.Range(0.5f, 0.8f);
 					}
