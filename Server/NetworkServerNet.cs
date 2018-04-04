@@ -211,6 +211,11 @@ public class NetworkServerNet : MonoBehaviour
                     if (Network.peerType == NetworkPeerType.Client)
                     {
                         RemoveClientHost(NetworkDisconnection.Disconnected);
+                        if (NetworkRootMovie.GetInstance() != null)
+                        {
+                            //循环动画场景中,玩家是客户端时需要重置masterServer信息.
+                            NetworkEvent.GetInstance().OnFailedToConnectToMasterServerTrigger();
+                        }
                     }
                     break;
                 }

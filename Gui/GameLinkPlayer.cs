@@ -290,9 +290,12 @@ public class GameLinkPlayer : MonoBehaviour
         {
             Debug.Log("GameLinkPlayer -> OnFailedToConnectToMasterServerEvent...");
             IsFailedToConnectMasterServer = true;
+            //因为网络故障强制切换为单机模式.
+            NetworkRootMovie.GetInstance().ePlayerSelectGameMode = NetworkRootMovie.GameMode.NoLink;
             SetActiveUISeverWeiHu(true);
             SetActiveUICreateSever(false);
             SetActiveLinkNameParent(false);
+            SetAcitveStartBt(false);
             mSSTimeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
             mSSTimeUpCom.OnTimeUpOverEvent += OnTimeUpOverServerWeiHuEvent;
             mSSTimeUpCom.Init(5f);
@@ -305,9 +308,23 @@ public class GameLinkPlayer : MonoBehaviour
         {
             Debug.Log("OnTimeUpOverServerWeiHuEvent...");
             mLoadingCom.mGameModeSelect.eGameMode = NetworkRootMovie.GameMode.NoLink; //强制修改为单机模式.
-            //产生选择游戏场景UI.
-            mLoadingCom.SpawnLevelSelectUI();
+            if (mLoadingCom.mLevelSelectUI != null)
+            {
+                Debug.Log("Reinit level select UI...");
+                mLoadingCom.mLevelSelectUI.Init(mLoadingCom);
+            }
+            else
+            {
+                //产生选择游戏场景UI.
+                Debug.Log("spawn level select UI...");
+                mLoadingCom.SpawnLevelSelectUI();
+            }
+
             SetActiveUISeverWeiHu(false);
+            if (NetworkServerNet.GetInstance().mRequestMasterServer != null)
+            {
+                NetworkServerNet.GetInstance().mRequestMasterServer.ClearMastServerHostList();
+            }
         }
     }
 }

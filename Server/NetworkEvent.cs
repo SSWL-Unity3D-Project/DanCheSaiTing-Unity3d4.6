@@ -61,6 +61,9 @@ public class NetworkEvent : MonoBehaviour
     /// </summary>
     public delegate void FailedToConnectToMasterServerEvent();
     public event FailedToConnectToMasterServerEvent OnFailedToConnectToMasterServerEvent;
+    /// <summary>
+    /// 网络出现故障.
+    /// </summary>
     public void OnFailedToConnectToMasterServerTrigger()
     {
         Debug.Log("NetworkEvent::OnFailedToConnectToMasterServerTrigger...");

@@ -10,7 +10,11 @@ public class Loading : SSUiRoot
     /// 选择游戏场景UI预制文件.
     /// </summary>
     public GameObject LevelSelectUIPrefab;
-    LevelSelectUI mLevelSelectUI;
+    /// <summary>
+    /// 游戏场景选择控制脚本.
+    /// </summary>
+    [HideInInspector]
+    public LevelSelectUI mLevelSelectUI;
     /// <summary>
     /// 选择联机游戏的玩家UI预制文件.
     /// </summary>
@@ -572,6 +576,7 @@ public class Loading : SSUiRoot
     {
         if (mLevelSelectUI == null)
         {
+            Debug.Log("SpawnLevelSelectUI...");
             GameObject obj = (GameObject)Instantiate(LevelSelectUIPrefab, mUICamera.transform);
             mLevelSelectUI = obj.GetComponent<LevelSelectUI>();
             mLevelSelectUI.Init(this);

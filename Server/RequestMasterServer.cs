@@ -53,6 +53,7 @@ public class RequestMasterServer : MonoBehaviour
     {
         eMasterComment = MasterServerComment.Movie;
         SetIsNetScene(true);
+        ClearMastServerHostList();
     }
 
     void Update()
@@ -73,6 +74,16 @@ public class RequestMasterServer : MonoBehaviour
     void RequestHostListLoop()
     {
         MasterServer.RequestHostList(NetworkServerNet.GetInstance().mGameTypeName);
+    }
+
+    /// <summary>
+    /// 清空由MasterServer.PollHostList获取的主机列表.
+    /// </summary>
+    public void ClearMastServerHostList()
+    {
+        Debug.Log("ClearMastServerHostList...");
+        MasterServer.ClearHostList();
+        RequestHostListLoop();
     }
 
     float RandConnectTime = Random.Range(3f, 10f);
@@ -339,7 +350,18 @@ public class RequestMasterServer : MonoBehaviour
     void OnFailedToConnectToMasterServer(NetworkConnectionError info)
     {
         Debug.Log("Could not connect to master server: " + info);
-        NetworkEvent.GetInstance().OnFailedToConnectToMasterServerTrigger();
+        switch (info)
+        {
+            case NetworkConnectionError.CreateSocketOrThreadFailure:
+                {
+                    break;
+                }
+            default:
+                {
+                    NetworkEvent.GetInstance().OnFailedToConnectToMasterServerTrigger();
+                    break;
+                }
+        }
     }
 
     void OnMasterServerEvent(MasterServerEvent msEvent)
