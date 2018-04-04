@@ -123,7 +123,7 @@ public class GameLinkPlayer : MonoBehaviour
                 }
             }
 
-            if (NetworkServerNet.GetInstance() != null)
+            if (NetworkServerNet.GetInstance() != null && !IsFailedToConnectMasterServer)
             {
                 if (IndexPlayer != NetworkServerNet.GetInstance().IndexSpawnPlayer)
                 {
@@ -292,6 +292,7 @@ public class GameLinkPlayer : MonoBehaviour
             IsFailedToConnectMasterServer = true;
             SetActiveUISeverWeiHu(true);
             SetActiveUICreateSever(false);
+            SetActiveLinkNameParent(false);
             mSSTimeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
             mSSTimeUpCom.OnTimeUpOverEvent += OnTimeUpOverServerWeiHuEvent;
             mSSTimeUpCom.Init(5f);

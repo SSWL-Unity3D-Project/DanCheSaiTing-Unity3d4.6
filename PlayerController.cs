@@ -694,6 +694,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (m_IsFinished || m_UIController.m_IsGameOver)
+        {
+            return;
+        }
+
         if (mSpeedDaoJuState == DaoJuCtrl.DaoJuType.FeiXingYi)
         {
             return;
