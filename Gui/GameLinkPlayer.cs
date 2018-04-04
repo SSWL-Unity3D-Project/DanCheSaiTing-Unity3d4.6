@@ -129,7 +129,10 @@ public class GameLinkPlayer : MonoBehaviour
                 {
                     IndexPlayer = NetworkServerNet.GetInstance().IndexSpawnPlayer;
                     Debug.Log("GameLinkPlayer::update -> IndexPlayer == " + IndexPlayer);
-                    SetActiveLinkNameParent(true);
+                    if (!LinkNameParent.activeInHierarchy)
+                    {
+                        SetActiveLinkNameParent(true);
+                    }
                     //ChangeUINameScale(IndexPlayer);
                     SetUIPanelBeiJing(IndexPlayer);
                 }
@@ -157,6 +160,10 @@ public class GameLinkPlayer : MonoBehaviour
         {
             //隐藏正在创建服务器的UI提示.
             SetActiveUICreateSever(false);
+            if (Network.peerType == NetworkPeerType.Server)
+            {
+                SetPlayerUIMesh(PlayerLinkServerCount);
+            }
         }
     }
 
@@ -255,6 +262,7 @@ public class GameLinkPlayer : MonoBehaviour
     /// </summary>
     void SetPlayerUIMesh(int indexVal)
     {
+        Debug.Log("SetPlayerUIMesh -> indexVal == " + indexVal);
         for (int i = 0; i < mBJMaterials.Length; i++)
         {
             if (i > indexVal)
