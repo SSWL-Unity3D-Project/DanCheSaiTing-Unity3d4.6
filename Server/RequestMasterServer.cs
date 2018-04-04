@@ -91,6 +91,11 @@ public class RequestMasterServer : MonoBehaviour
     void OnGUI()
     {
         HostData[] data = MasterServer.PollHostList();
+        if (data.Length < 0)
+        {
+            return;
+        }
+
         foreach (var element in data)
         {
 #if SHOW_NET_INFO
@@ -241,12 +246,15 @@ public class RequestMasterServer : MonoBehaviour
         int masterServerNum = 0;
         string ip = "";
         HostData[] data = MasterServer.PollHostList();
-        foreach (var element in data)
+        if (data.Length > 0)
         {
-            if (element.comment == MasterServerMovieComment)
+            foreach (var element in data)
             {
-                masterServerNum++;
-                ip = element.ip[0];
+                if (element.comment == MasterServerMovieComment)
+                {
+                    masterServerNum++;
+                    ip = element.ip[0];
+                }
             }
         }
 
@@ -277,7 +285,7 @@ public class RequestMasterServer : MonoBehaviour
         bool isCreatMasterServer = true;
         HostData[] data = MasterServer.PollHostList();
 
-        if (NetworkRootMovie.GetInstance() != null)
+        if (NetworkRootMovie.GetInstance() != null && data.Length > 0)
         {
             //Ñ­»·¶¯»­³¡¾°.
             foreach (var element in data)
