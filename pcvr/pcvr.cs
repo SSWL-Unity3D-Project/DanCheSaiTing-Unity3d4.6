@@ -50,11 +50,11 @@ public class pcvr : MonoBehaviour
             UpdatePcvrJiaoTaBanVal(jiaTaBan);
         }
 
-        int youMenVal = ((readBuf[2] & 0x0f) << 8) + readBuf[3];
-        UpdatePcvrPowerVal(youMenVal);
-
-        int fangXiangVal = ((readBuf[4] & 0x0f) << 8) + readBuf[5];
+        int fangXiangVal = ((readBuf[2] & 0x0f) << 8) + readBuf[3];
         UpdatePcvrSteerVal(fangXiangVal);
+
+        int youMenVal = ((readBuf[4] & 0x0f) << 8) + readBuf[5];
+        UpdatePcvrPowerVal(youMenVal);
         UpdatePlayerCoinDt();
     }
 
