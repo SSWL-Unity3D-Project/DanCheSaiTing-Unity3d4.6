@@ -160,10 +160,10 @@ public class GameLinkPlayer : MonoBehaviour
         {
             //隐藏正在创建服务器的UI提示.
             SetActiveUICreateSever(false);
-            if (Network.peerType == NetworkPeerType.Server)
+            /*if (Network.peerType == NetworkPeerType.Server)
             {
                 SetPlayerUIMesh(PlayerLinkServerCount);
-            }
+            }*/
         }
     }
 
@@ -225,7 +225,8 @@ public class GameLinkPlayer : MonoBehaviour
     /// index[0,3]
     /// </summary>
     public void SetUIPanelBeiJing(int index)
-    {
+	{
+		Debug.Log("SetUIPanelBeiJing -> index == " + index);
         mBJMeshRenderer.material = mBJMaterials[index];
         for (int i = 0; i < mBJMaterials.Length; i++)
         {
@@ -254,6 +255,11 @@ public class GameLinkPlayer : MonoBehaviour
                 mPlayerOtherMeshs[i].SetActive(false);
             }
         }
+
+		if (Network.peerType == NetworkPeerType.Server)
+		{
+			SetPlayerUIMesh(PlayerLinkServerCount);
+		}
     }
 
     /// <summary>
@@ -262,7 +268,7 @@ public class GameLinkPlayer : MonoBehaviour
     /// </summary>
     void SetPlayerUIMesh(int indexVal)
     {
-        Debug.Log("SetPlayerUIMesh -> indexVal == " + indexVal);
+		Debug.Log("SetPlayerUIMesh -> indexVal == " + indexVal + ", IndexPlayer == " + IndexPlayer);
         for (int i = 0; i < mBJMaterials.Length; i++)
         {
             if (i > indexVal)
