@@ -111,6 +111,17 @@ public class pcvr : MonoBehaviour
         BianMaQiMinVal = 30000;
     }
 
+    bool IsInitJiaoZhunJiaoTaBan = false;
+    public void InitJiaoZhunJiaoTaBan()
+    {
+        IsInitJiaoZhunJiaoTaBan = true;
+    }
+
+    public void EndJiaoZhunJiaoTaBan()
+    {
+        IsInitJiaoZhunJiaoTaBan = false;
+    }
+
     /// <summary>
     /// 保存脚踏板信息.
     /// </summary>
@@ -160,29 +171,32 @@ public class pcvr : MonoBehaviour
         }
         else
         {
-            float bianMaQiInput = 0f;
             BianMaQiCurVal = bianMaQiVal;
-            if (BianMaQiMinVal < BianMaQiMaxVal)
+            if (!IsInitJiaoZhunJiaoTaBan)
             {
-                //编码器(脚踏板)正接.
-                if (bianMaQiVal < BianMaQiMinVal)
+                float bianMaQiInput = 0f;
+                if (BianMaQiMinVal < BianMaQiMaxVal)
                 {
-                    bianMaQiVal = BianMaQiMinVal;
+                    //编码器(脚踏板)正接.
+                    if (bianMaQiVal < BianMaQiMinVal)
+                    {
+                        bianMaQiVal = BianMaQiMinVal;
+                    }
+                    bianMaQiInput = ((float)bianMaQiVal - BianMaQiMinVal) / (BianMaQiMaxVal - BianMaQiMinVal);
                 }
-                bianMaQiInput = ((float)bianMaQiVal - BianMaQiMinVal) / (BianMaQiMaxVal - BianMaQiMinVal);
-            }
-            else
-            {
-                //编码器(脚踏板)反接.
-                if (bianMaQiVal > BianMaQiMinVal)
+                else
                 {
-                    bianMaQiVal = BianMaQiMinVal;
+                    //编码器(脚踏板)反接.
+                    if (bianMaQiVal > BianMaQiMinVal)
+                    {
+                        bianMaQiVal = BianMaQiMinVal;
+                    }
+                    bianMaQiInput = ((float)BianMaQiMinVal - bianMaQiVal) / (BianMaQiMinVal - BianMaQiMaxVal);
                 }
-                bianMaQiInput = ((float)BianMaQiMinVal - bianMaQiVal) / (BianMaQiMinVal - BianMaQiMaxVal);
+                bianMaQiInput = Mathf.Clamp01(bianMaQiInput);
+                bianMaQiInput = bianMaQiInput < 0.01f ? 0f : bianMaQiInput;
+                mGetJiaoTaBan = bianMaQiInput;
             }
-            bianMaQiInput = Mathf.Clamp01(bianMaQiInput);
-            bianMaQiInput = bianMaQiInput < 0.01f ? 0f : bianMaQiInput;
-            mGetJiaoTaBan = bianMaQiInput;
         }
     }
 
@@ -205,20 +219,31 @@ public class pcvr : MonoBehaviour
     /// </summary>
     int CountYouMen = 100;
     float TimeYouMen;
+    bool IsInitJiaoZhunYouMen = false;
 
     /// <summary>
     /// 初始化油门校验.
     /// </summary>
-    public void InitCheckYouMenValInfo()
+    public void InitJiaoZhunYouMenValInfo()
     {
+        if (IsInitJiaoZhunYouMen)
+        {
+            return;
+        }
+        IsInitJiaoZhunYouMen = true;
         YouMenMinVal = 0;
         CountYouMen = 0;
+    }
+
+    public void EndJiaoZhunYouMen()
+    {
+        IsInitJiaoZhunYouMen = false;
     }
 
     /// <summary>
     /// 检测油门最小值信息.
     /// </summary>
-    void CheckYouMenValInfo()
+    void CheckYouMenMinValInfo()
     {
         if (!bIsHardWare)
         {
@@ -291,30 +316,35 @@ public class pcvr : MonoBehaviour
             return;
         }
         
-        float youMenInput = 0f;
         YouMenCurVal = youMenVal;
-        if (YouMenMinVal < YouMenMaxVal)
+        if (!IsInitJiaoZhunYouMen)
         {
-            //油门正接.
-            if (youMenVal < YouMenMinVal)
+            float youMenInput = 0f;
+            if (YouMenMinVal < YouMenMaxVal)
             {
-                youMenVal = YouMenMinVal;
+                //油门正接.
+                if (youMenVal < YouMenMinVal)
+                {
+                    youMenVal = YouMenMinVal;
+                }
+                youMenInput = ((float)youMenVal - YouMenMinVal) / (YouMenMaxVal - YouMenMinVal);
             }
-            youMenInput = ((float)youMenVal - YouMenMinVal) / (YouMenMaxVal - YouMenMinVal);
+            else
+            {
+                //油门反接.
+                if (youMenVal > YouMenMinVal)
+                {
+                    youMenVal = YouMenMinVal;
+                }
+                youMenInput = ((float)YouMenMinVal - youMenVal) / (YouMenMinVal - YouMenMaxVal);
+            }
+            youMenInput = Mathf.Clamp01(youMenInput);
+            mGetPower = youMenInput >= 0.05f ? 1f : 0f;
         }
         else
         {
-            //油门反接.
-            if (youMenVal > YouMenMinVal)
-            {
-                youMenVal = YouMenMinVal;
-            }
-            youMenInput = ((float)YouMenMinVal - youMenVal) / (YouMenMinVal - YouMenMaxVal);
+            CheckYouMenMinValInfo();
         }
-        youMenInput = Mathf.Clamp01(youMenInput);
-        mGetPower = youMenInput >= 0.05f ? 1f : 0f;
-
-        CheckYouMenValInfo();
     }
 
     [HideInInspector]
@@ -403,19 +433,23 @@ public class pcvr : MonoBehaviour
         switch (key)
         {
             case PcvrValState.ValMin:
-                SteerValMinAy = SteerValCurAy;
-                HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMin" , SteerValCurAy.ToString());
-                break;
-
+                {
+                    SteerValMinAy = SteerValCurAy;
+                    HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMin", SteerValCurAy.ToString());
+                    break;
+                }
             case PcvrValState.ValCenter:
-                SteerValCenAy = SteerValCurAy;
-                HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValCen", SteerValCurAy.ToString());
-                break;
-
+                {
+                    SteerValCenAy = SteerValCurAy;
+                    HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValCen", SteerValCurAy.ToString());
+                    break;
+                }
             case PcvrValState.ValMax:
-                SteerValMaxAy = SteerValCurAy;
-                HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMax", SteerValCurAy.ToString());
-                break;
+                {
+                    SteerValMaxAy = SteerValCurAy;
+                    HandleJson.GetInstance().WriteToFileXml(fileName, "SteerValMax", SteerValCurAy.ToString());
+                    break;
+                }
         }
     }
 

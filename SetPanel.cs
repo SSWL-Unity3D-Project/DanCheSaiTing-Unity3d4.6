@@ -192,19 +192,17 @@ public class SetPanel : MonoBehaviour
 
 	void ClickStartBtOneEvent(InputEventCtrl.ButtonState val)
 	{
-		if (val == InputEventCtrl.ButtonState.DOWN) {
+		if (val == InputEventCtrl.ButtonState.DOWN)
+        {
 			BtInfoLabel.text = "StartBtDown";
 		}
-		else {
+		else
+        {
 			BtInfoLabel.text = "StartBtUp";
-			if (IsInitJiaoZhunPcvr) {
-				if (JiaoZhunCount > 2) {
-					ResetJiaoZhunPcvr();
-				}
-				else {
-					UpdataJiaoZhunTexture();
-				}
-			}
+			if (IsInitJiaoZhunPcvr)
+            {
+                UpdataJiaoZhunTexture();
+            }
 		}
 	}
 
@@ -237,6 +235,8 @@ public class SetPanel : MonoBehaviour
         if (pcvr.bIsHardWare)
         {
             pcvr.GetInstance().InitJiaoZhunSteer();
+            pcvr.GetInstance().InitJiaoZhunYouMenValInfo();
+            pcvr.GetInstance().InitJiaoZhunJiaoTaBan();
         }
 		m_ZhujiemianXingXing.gameObject.SetActive(false);
 		IsInitJiaoZhunPcvr = true;
@@ -246,10 +246,62 @@ public class SetPanel : MonoBehaviour
 		JiaoZhunObj.SetActive(true);
 	}
 
+    enum JiaoZhunEnum
+    {
+        SteerMin,   //方向左极限.
+        SteerCen,   //方向中间值.
+        SteerMax,   //方向右极限.
+        YouMenMax,  //油门极限值.
+        JiaoTaBan,  //脚踏板(编码器)信息.
+    }
+
 	void UpdataJiaoZhunTexture()
 	{
-		JiaoZhunCount++;
-		JiaoZhunTexture.mainTexture = JiaoZhunTextureArray[JiaoZhunCount];
+        if (pcvr.bIsHardWare)
+        {
+            JiaoZhunEnum jiaoZhunSt = (JiaoZhunEnum)JiaoZhunCount;
+            switch (jiaoZhunSt)
+            {
+                case JiaoZhunEnum.SteerMin:
+                    {
+                        pcvr.GetInstance().SaveSteerVal(pcvr.PcvrValState.ValMin);
+                        break;
+                    }
+                case JiaoZhunEnum.SteerCen:
+                    {
+                        pcvr.GetInstance().SaveSteerVal(pcvr.PcvrValState.ValCenter);
+                        break;
+                    }
+                case JiaoZhunEnum.SteerMax:
+                    {
+                        pcvr.GetInstance().SaveSteerVal(pcvr.PcvrValState.ValMax);
+                        break;
+                    }
+                case JiaoZhunEnum.YouMenMax:
+                    {
+                        pcvr.GetInstance().SaveYouMenVal();
+                        break;
+                    }
+                case JiaoZhunEnum.JiaoTaBan:
+                    {
+                        pcvr.GetInstance().SaveJiaoTaBanVal();
+                        pcvr.GetInstance().EndJiaoZhunSteer();
+                        pcvr.GetInstance().EndJiaoZhunYouMen();
+                        pcvr.GetInstance().EndJiaoZhunJiaoTaBan();
+                        break;
+                    }
+            }
+        }
+
+        if (JiaoZhunCount < (int)JiaoZhunEnum.JiaoTaBan)
+        {
+            JiaoZhunCount++;
+            JiaoZhunTexture.mainTexture = JiaoZhunTextureArray[JiaoZhunCount];
+        }
+        else
+        {
+            ResetJiaoZhunPcvr();
+        }
 	}
 
     void OnClickMoveBtInZhujiemian()
