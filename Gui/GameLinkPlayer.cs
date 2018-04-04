@@ -263,16 +263,13 @@ public class GameLinkPlayer : MonoBehaviour
             }
             else
             {
-                if (Network.peerType == NetworkPeerType.Server)
+                if (i != IndexPlayer)
                 {
-                    if (i != IndexPlayer)
+                    mPlayerOtherMeshs[i].SetActive(true);
+                    if (mPlayerOtherAnimators[i] != null)
                     {
-                        mPlayerOtherMeshs[i].SetActive(true);
-                        if (mPlayerOtherAnimators[i] != null)
-                        {
-                            mPlayerOtherAnimators[i].ResetTrigger("IsPlay");
-                            mPlayerOtherAnimators[i].SetTrigger("IsPlay");
-                        }
+                        mPlayerOtherAnimators[i].ResetTrigger("IsPlay");
+                        mPlayerOtherAnimators[i].SetTrigger("IsPlay");
                     }
                 }
             }
