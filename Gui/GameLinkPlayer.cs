@@ -222,7 +222,7 @@ public class GameLinkPlayer : MonoBehaviour
         mBJMeshRenderer.material = mBJMaterials[index];
         for (int i = 0; i < mBJMaterials.Length; i++)
         {
-            mPlayerMeshArray[index].SetActive(index == i ? true : false);
+            mPlayerMeshArray[i].SetActive(index == i ? true : false);
             if (i == index)
             {
                 if (mPlayerAnimators[i] != null)
