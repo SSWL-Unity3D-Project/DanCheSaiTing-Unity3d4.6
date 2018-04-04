@@ -77,6 +77,7 @@ public class LevelSelectUI : MonoBehaviour
                 }
             }
         }
+        gameObject.SetActive(true);
     }
 
     void Update()
