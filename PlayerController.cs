@@ -900,7 +900,7 @@ public class PlayerController : MonoBehaviour
 
             if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0 || m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
             {
-                if (Time.time - TimeLastFaShaDaoDanUI > 10f && !m_UIController.m_IsGameOver && !m_IsFinished)
+                if (Time.time - TimeLastFaShaDaoDanUI > 5f && !m_UIController.m_IsGameOver && !m_IsFinished)
                 {
                     GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
                     if (aimNpc != null)
