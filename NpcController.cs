@@ -1,9 +1,23 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 
 public class NpcController : MonoBehaviour
 {
+    public NpcData[] mNpcDataArray = new NpcData[4];
+    /// <summary>
+    /// 喷气道具掉落预置.
+    /// </summary>
+    public GameObject PenQiPrefab;
+    /// <summary>
+    /// 喷气动画列表.
+    /// </summary>
+    [HideInInspector]
+    public Animator[] PenQiAniAy;
+    /// <summary>
+    /// 道具掉落点.
+    /// DaoJuDiaoLuoTr[x]: 0 喷气道具.
+    /// </summary>
+    public Transform[] DaoJuDiaoLuoTr;
     /// <summary>
     /// npc动画控制脚本.
     /// </summary>
@@ -35,7 +49,7 @@ public class NpcController : MonoBehaviour
     public float mSpeedAddMax = 1.5f;
     private float m_Timmer = 1000f;
 	public PlayerController m_player;
-	private bool m_IsJiasu = false;
+	private bool m_IsAddMoveSpeed = false;
 	private bool m_IsJiansu = false;
 	public float m_TopSpeedSet = 50.0f;
 	public float m_EndSpeedSet = 20.0f;
@@ -104,8 +118,24 @@ public class NpcController : MonoBehaviour
         for (int i = 0; i < NpcObjArray.Length; i++)
         {
             NpcObjArray[i].SetActive(index == i ? true : false);
+            if (index == i && mNpcDataArray[i] != null)
+            {
+                PenQiAniAy = mNpcDataArray[i].PenQiAniAy;
+            }
         }
         mRankDt = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.AddRankDt((RankManage.RankEnum)index, false);
+
+
+        if (PenQiAniAy != null && PenQiAniAy.Length > 0)
+        {
+            for (int i = 0; i < PenQiAniAy.Length; i++)
+            {
+                if (PenQiAniAy[i] != null)
+                {
+                    PenQiAniAy[i].transform.localScale = Vector3.zero;
+                }
+            }
+        }
     }
 
     void Start ()
@@ -202,21 +232,44 @@ public class NpcController : MonoBehaviour
 					if(m_NpcIndex <= m_player.PathNum)
 					{
                         TimmerSet = TimeAddSpeedVal;
+                        if (!m_IsAddMoveSpeed)
+                        {
+                            for (int i = 0; i < PenQiAniAy.Length; i++)
+                            {
+                                PenQiAniAy[i].transform.localScale = Vector3.one;
+                                PenQiAniAy[i].SetBool("IsPlay", true);
+                            }
+                        }
                         m_IsJiansu = false;
-						m_IsJiasu = true;
+						m_IsAddMoveSpeed = true;
 						m_SpeedIndex = UnityEngine.Random.Range(mSpeedAddMin, mSpeedAddMax);
 					}
 					else
                     {
                         TimmerSet = TimeSubSpeedVal;
-                        m_IsJiasu = false;
+                        if (m_IsAddMoveSpeed)
+                        {
+                            if (PenQiPrefab != null
+                                && DaoJuDiaoLuoTr.Length > 0
+                                && DaoJuDiaoLuoTr[0] != null)
+                            {
+                                Instantiate(PenQiPrefab, DaoJuDiaoLuoTr[0].position, DaoJuDiaoLuoTr[0].rotation);
+                            }
+
+                            for (int i = 0; i < PenQiAniAy.Length; i++)
+                            {
+                                PenQiAniAy[i].transform.localScale = Vector3.zero;
+                                PenQiAniAy[i].SetBool("IsPlay", false);
+                            }
+                        }
+                        m_IsAddMoveSpeed = false;
 						m_IsJiansu = true;
 						m_SpeedIndex = UnityEngine.Random.Range(0.5f, 0.8f);
 					}
 					m_Timmer = 0.0f;
 				}
 
-				if(m_IsJiasu)
+				if(m_IsAddMoveSpeed)
 				{
 					m_NpcSpeed = Mathf.Lerp(m_NpcSpeed, (m_player.SpeedMovePlayer * m_SpeedIndex) / 3.6f, 10f * Time.deltaTime);
 					if(m_NpcSpeed > m_TopSpeedSet)
@@ -633,6 +686,81 @@ public class NpcController : MonoBehaviour
         if (mRankDt != null)
         {
             mRankDt.UpdataDisMoveValue(disVal);
+        }
+    }
+    
+    /// <summary>
+    /// 发送Npc播放喷气动画的网络消息.
+    /// </summary>
+    void SendNpcPlayPenQiAni()
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcGetNpcPlayPenQiAni", RPCMode.Others);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Npc播放喷气动画的网络消息.
+    /// </summary>
+    [RPC]
+    void RpcGetNpcPlayPenQiAni()
+    {
+        for (int i = 0; i < PenQiAniAy.Length; i++)
+        {
+            PenQiAniAy[i].transform.localScale = Vector3.one;
+            PenQiAniAy[i].SetBool("IsPlay", true);
+        }
+    }
+
+    /// <summary>
+    /// 发送Npc关闭喷气动画的网络消息.
+    /// </summary>
+    void SendNpcClosePenQiAni()
+    {
+        if (Network.peerType == NetworkPeerType.Client || Network.peerType == NetworkPeerType.Server)
+        {
+            if (IsNetControlPort)
+            {
+                if (Network.peerType == NetworkPeerType.Server && NetworkServerNet.GetInstance().LinkServerPlayerNum_Movie <= 0)
+                {
+                    //没有玩家选择链接服务器进行联机游戏.
+                }
+                else
+                {
+                    mNetViewCom.RPC("RpcGetNpcClosePenQiAni", RPCMode.Others);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 接收Npc关闭喷气动画的网络消息.
+    /// </summary>
+    [RPC]
+    void RpcGetNpcClosePenQiAni()
+    {
+        if (PenQiPrefab != null
+            && DaoJuDiaoLuoTr.Length > 0
+            && DaoJuDiaoLuoTr[0] != null)
+        {
+            Instantiate(PenQiPrefab, DaoJuDiaoLuoTr[0].position, DaoJuDiaoLuoTr[0].rotation);
+        }
+
+        for (int i = 0; i < PenQiAniAy.Length; i++)
+        {
+            PenQiAniAy[i].transform.localScale = Vector3.zero;
+            PenQiAniAy[i].SetBool("IsPlay", false);
         }
     }
 }
