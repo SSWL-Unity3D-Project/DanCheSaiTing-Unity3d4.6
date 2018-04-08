@@ -1334,13 +1334,13 @@ public class PlayerController : MonoBehaviour
         //chuantouyangjiao
         if (rigidbody.velocity.magnitude * 3.6f > m_SpeedForXangle && rigidbody.velocity.magnitude * 3.6f < 90.0f)
         {
-            m_pChuan.localEulerAngles = new Vector3(-m_ParameterForXangle * rigidbody.velocity.magnitude * 3.6f * rigidbody.velocity.magnitude * 3.6f
-                , m_pChuan.localEulerAngles.y, m_pChuan.localEulerAngles.z);
+            m_pChuan.localEulerAngles = new Vector3(-m_ParameterForXangle * rigidbody.velocity.magnitude * 3.6f * rigidbody.velocity.magnitude * 3.6f,
+                m_pChuan.localEulerAngles.y, m_pChuan.localEulerAngles.z);
         }
         else if (rigidbody.velocity.magnitude * 3.6f >= 90.0f)
         {
-            m_pChuan.localEulerAngles = new Vector3(-m_ParameterForXangle * 90.0f * 90.0f
-                                                    , m_pChuan.localEulerAngles.y, m_pChuan.localEulerAngles.z);
+            m_pChuan.localEulerAngles = new Vector3(-m_ParameterForXangle * 90.0f * 90.0f,
+                m_pChuan.localEulerAngles.y, m_pChuan.localEulerAngles.z);
         }
         if (!canDrive)
         {
