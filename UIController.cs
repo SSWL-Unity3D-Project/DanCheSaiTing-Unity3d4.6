@@ -976,6 +976,11 @@ public class UIController : SSUiRoot
     /// </summary>
     public void SpawnChaoJiJiaSuUI()
     {
+        if (SSGameCtrl.GetInstance().mPlayerDataManage.PlayerCoinNum < SSGameCtrl.GetInstance().mPlayerDataManage.CoinNumFeiXing)
+        {
+            return;
+        }
+
         if (ChaoJiJiaSuObj != null)
         {
             return;
