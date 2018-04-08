@@ -84,6 +84,11 @@ public class Loading : SSUiRoot
 
 	void Start ()
     {
+		if (PlayerControllerForMoiew.GetInstance() != null)
+		{
+			PlayerControllerForMoiew.GetInstance().mLoadingCom = this;
+		}
+
         if (NetworkServerNet.GetInstance() != null)
         {
             NetworkServerNet.GetInstance().mRequestMasterServer.SetIsNetScene(true);

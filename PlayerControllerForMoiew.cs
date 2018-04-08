@@ -42,6 +42,10 @@ public class PlayerControllerForMoiew : MonoBehaviour
 	public AudioSource m_JiashiAudio;
 	public AudioSource m_EatJiashiAudio;
 	public static PlayerControllerForMoiew Instance = null;
+	public static PlayerControllerForMoiew GetInstance()
+	{
+		return Instance;
+	}
 
 	public GameObject m_HitWaterParticle;
 	public float m_BaozhaForward = 0.0f;
@@ -59,8 +63,11 @@ public class PlayerControllerForMoiew : MonoBehaviour
 	bool IsThreeScreen = false;
 	public iTweenEvent ITweenEventCom;
 	float HuiEffectSaturation;
+	[HideInInspector]
+	public Loading mLoadingCom;
 	void Awake()
 	{
+		Instance = this;
 		AudioListener.volume = (float)ReadGameInfo.GetInstance().ReadGameAudioVolume() / 10f;
 	}
 
@@ -82,7 +89,6 @@ public class PlayerControllerForMoiew : MonoBehaviour
         }
 
 		m_BeijingAudio.Play();
-		Instance = this;
 		//XkGameCtrl.IsLoadingLevel = false;
 		PlayerYinQingAd.Play();
 		m_HuanjingSenlin.Play();
@@ -96,11 +102,6 @@ public class PlayerControllerForMoiew : MonoBehaviour
 	{
 		//Debug.Log("DelayPcvrJiaMiJiaoYan...");
 		//pcvr.GetInstance().StartJiaoYanIO();
-	}
-
-	public static PlayerControllerForMoiew GetInstance()
-	{
-		return Instance;
 	}
 
 	public Vector3 StartPos;
@@ -130,13 +131,14 @@ public class PlayerControllerForMoiew : MonoBehaviour
 
 		m_HuiEffect.saturation = HuiEffectSaturation;
 		m_EndTexture.SetActive(false);
+		IsCheckUnloadUnusedAssets = false;
 		ITweenEventCom.Start();
 		Invoke("DelayOpenPlayerCamera", 0.5f);
 	}
 
 	void Update () 
 	{
-		UpdateEndTexture ();
+		UpdateEndTexture();
 		if (Time.frameCount % 200 == 0) {
 			GC.Collect();
 		}
@@ -358,6 +360,17 @@ public class PlayerControllerForMoiew : MonoBehaviour
 		{
 			m_HuiEffect.saturation = 0.0f;
 			m_EndTexture.SetActive(true);
+
+            if (mLoadingCom.mGameModeSelect != null || mLoadingCom.mLevelSelectUI != null)
+            {
+                for (int i = 0; i < HiddenEndImgArray.Length; i++)
+                {
+                    if (HiddenEndImgArray[i] != null)
+                    {
+                        HiddenEndImgArray[i].SetActive(false);
+                    }
+                }
+            }
 		}
 		if(other.tag == "jianyin")
 		{
@@ -411,65 +424,92 @@ public class PlayerControllerForMoiew : MonoBehaviour
 		tweenScaleCom.PlayForward();
 	}
 
+    /// <summary>
+    /// 循环动画结束后隐藏的UI信息.
+    /// </summary>
+    public GameObject[] HiddenEndImgArray;
 	void UpdateEndTexture()
 	{
 		if(m_EndTexture.activeSelf)
 		{
-			m_PlayerAnimator.SetBool("IsFinish",false);
-			m_PlayerAnimator.SetBool("IsRoot",true);
-			m_EndTextureTimmer+=Time.deltaTime;
-			if(!m_TitleAudio.isPlaying && !m_HasPlay)
+			m_PlayerAnimator.SetBool("IsFinish", false);
+			m_PlayerAnimator.SetBool("IsRoot", true);
+			m_EndTextureTimmer += Time.deltaTime;
+			if (mLoadingCom.mGameModeSelect != null || mLoadingCom.mLevelSelectUI != null)
 			{
-				m_TitleAudio.Play();
-				m_HasPlay = true;
-			}
-			if(m_EndTextureTimmer > m_EndTextureTimmerSet && !m_EndTextrues[0].activeSelf)
-			{
-				PlayTweenScale(m_EndTextrues[0]);
-			}
-			if(m_EndTextureTimmer > 2*m_EndTextureTimmerSet && !m_EndTextrues[1].activeSelf)
-			{
-				PlayTweenScale(m_EndTextrues[1]);
-			}
-			if(m_EndTextureTimmer > 3*m_EndTextureTimmerSet && !m_EndTextrues[2].activeSelf)
-			{
-				PlayTweenScale(m_EndTextrues[2]);
-			}
-			if(m_EndTextureTimmer > 4*m_EndTextureTimmerSet && !m_EndTextrues[3].activeSelf)
-			{
-				PlayTweenScale(m_EndTextrues[3]);
-			}
-			if(m_EndTextureTimmer > 5*m_EndTextureTimmerSet && !m_EndTextrues[4].activeSelf)
-			{
-				PlayTweenScale(m_EndTextrues[4]);
 				m_BeijingAudio.Stop();
-			}
-			m_LiangTimmer+=Time.deltaTime;
-			if(m_LiangTimmer<m_LiangTimmerSet)
-			{
-				m_LiangTitle.SetActive(true);
-			}
-			else if(m_LiangTimmer>=m_LiangTimmerSet && m_LiangTimmer<=2*m_LiangTimmerSet)
-			{
-				m_LiangTitle.SetActive(false);
+				if(m_EndTextureTimmer > 1.5f && !IsCheckUnloadUnusedAssets)
+				{
+					if (Loading.m_HasBegin) {
+						return;
+					}
+					StartCoroutine(CheckUnloadUnusedAssets());
+				}
 			}
 			else
 			{
-				m_LiangTimmer = 0.0f;
-			}
-			if(m_EndTextureTimmer>6.5f)
-			{
-				if (Loading.m_HasBegin) {
-					return;
+				if(!m_TitleAudio.isPlaying && !m_HasPlay)
+				{
+					m_TitleAudio.Play();
+					m_HasPlay = true;
 				}
-				StartCoroutine(CheckUnloadUnusedAssets());
+				
+				if(m_EndTextureTimmer > m_EndTextureTimmerSet && !m_EndTextrues[0].activeSelf)
+				{
+					PlayTweenScale(m_EndTextrues[0]);
+				}
+				
+				if(m_EndTextureTimmer > 2*m_EndTextureTimmerSet && !m_EndTextrues[1].activeSelf)
+				{
+					PlayTweenScale(m_EndTextrues[1]);
+				}
+				
+				if(m_EndTextureTimmer > 3*m_EndTextureTimmerSet && !m_EndTextrues[2].activeSelf)
+				{
+					PlayTweenScale(m_EndTextrues[2]);
+				}
+				
+				if(m_EndTextureTimmer > 4*m_EndTextureTimmerSet && !m_EndTextrues[3].activeSelf)
+				{
+					PlayTweenScale(m_EndTextrues[3]);
+				}
+				
+				if(m_EndTextureTimmer > 5*m_EndTextureTimmerSet && !m_EndTextrues[4].activeSelf)
+				{
+					PlayTweenScale(m_EndTextrues[4]);
+					m_BeijingAudio.Stop();
+				}
+				
+				m_LiangTimmer += Time.deltaTime;
+				if(m_LiangTimmer < m_LiangTimmerSet)
+				{
+					m_LiangTitle.SetActive(true);
+				}
+				else if(m_LiangTimmer >= m_LiangTimmerSet && m_LiangTimmer <= 2*m_LiangTimmerSet)
+				{
+					m_LiangTitle.SetActive(false);
+				}
+				else
+				{
+					m_LiangTimmer = 0.0f;
+				}
+				
+				if(m_EndTextureTimmer > 6.5f && !IsCheckUnloadUnusedAssets)
+				{
+					if (Loading.m_HasBegin) {
+						return;
+					}
+					StartCoroutine(CheckUnloadUnusedAssets());
+				}
 			}
 		}
 	}
 
+	bool IsCheckUnloadUnusedAssets = false;
 	IEnumerator CheckUnloadUnusedAssets()
 	{
 		bool isLoop = true;
+		IsCheckUnloadUnusedAssets = true;
 		GC.Collect();
 		AsyncOperation asyncVal = Resources.UnloadUnusedAssets();
 
