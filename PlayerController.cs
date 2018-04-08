@@ -2209,7 +2209,7 @@ public class PlayerController : MonoBehaviour
                 NetSendPlayAmmoHitPlayerAnimation();
                 Instantiate(AmmoLiZiPrefab, AmmoExpSpawnTr.position, AmmoExpSpawnTr.rotation);
             }
-            //TimeLastAmmoHit = Time.realtimeSinceStartup;
+            m_UIController.SpawnAmmoHitPlayerUI();
         }
     }
 

@@ -971,6 +971,7 @@ public class UIController : SSUiRoot
             Destroy(FaSheDaoDanObj);
         }
     }
+
     /// <summary>
     /// 产生使用超级加速UI.
     /// </summary>
@@ -1103,6 +1104,22 @@ public class UIController : SSUiRoot
         if (mJinYongAmmoUI != null)
         {
             Destroy(mJinYongAmmoUI);
+        }
+    }
+    
+    /// <summary>
+    /// 玩家被子弹击中的UI提示预制.
+    /// </summary>
+    public GameObject AmmoHitPlayerUIPrefab;
+    GameObject mAmmoHitPlayerUI;
+    /// <summary>
+    ///产生玩家被子弹击中的UI提示界面(删除必须在预制上添加DestroyThisTimed组件).
+    /// </summary>
+    public void SpawnAmmoHitPlayerUI()
+    {
+        if (mAmmoHitPlayerUI == null && AmmoHitPlayerUIPrefab != null)
+        {
+            mAmmoHitPlayerUI = (GameObject)Instantiate(AmmoHitPlayerUIPrefab, mUICamera.transform);
         }
     }
 }
