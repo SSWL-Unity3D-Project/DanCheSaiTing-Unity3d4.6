@@ -272,24 +272,7 @@ public class RankManage
         else
         {
             //x和y都没有到达终点.
-            retval = y.PathNodeCur.CompareTo(x.PathNodeCur);
-            if (retval == 0)
-            {
-                //x和y在相同路径点上.
-                retval = x.TimePathNodeCur.CompareTo(y.TimePathNodeCur);
-            }
-            else
-            {
-                int retvalTmp = y.DisMoveVal.CompareTo(x.DisMoveVal);
-                if (retvalTmp != retval)
-                {
-                    retval = retvalTmp;
-                    Debug.Log("fixRank -> xDis == " + x.DisMoveVal + ", yDis == " + y.DisMoveVal
-                        + ", xNode == " + x.PathNodeCur + ", yNode == " + y.PathNodeCur
-                        + ", xType == " + x.RankType + ", yType == " + y.RankType);
-                }
-            }
-
+            retval = y.DisMoveVal.CompareTo(x.DisMoveVal);
             float timeUsed = Time.time - TimeStartVal;
             x.TimeUsedVal = y.TimeUsedVal = timeUsed;
         }
