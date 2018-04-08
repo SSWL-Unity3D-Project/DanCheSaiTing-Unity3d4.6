@@ -22,7 +22,8 @@ public class Loading : SSUiRoot
     /// <summary>
     /// 联机玩家信息UI界面.
     /// </summary>
-    GameLinkPlayer mGameLinkPlayer;
+    [HideInInspector]
+    public GameLinkPlayer mGameLinkPlayer;
     /// <summary>
     /// 游戏模式选择UI预制文件.
     /// </summary>

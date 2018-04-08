@@ -78,6 +78,12 @@ public class LevelSelectUI : MonoBehaviour
             }
         }
         gameObject.SetActive(true);
+
+        if (loadingCom.mGameLinkPlayer != null)
+        {
+            loadingCom.mGameLinkPlayer.SetAcitveStartBt(false);
+            loadingCom.mGameLinkPlayer.SetActiveLinkNameParent(false);
+        }
     }
 
     void Update()

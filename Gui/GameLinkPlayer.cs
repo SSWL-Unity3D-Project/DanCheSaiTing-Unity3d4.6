@@ -123,7 +123,7 @@ public class GameLinkPlayer : MonoBehaviour
                 }
             }
 
-            if (NetworkServerNet.GetInstance() != null && !IsFailedToConnectMasterServer)
+            if (NetworkServerNet.GetInstance() != null)
             {
                 if (IndexPlayer != NetworkServerNet.GetInstance().IndexSpawnPlayer)
                 {
@@ -150,11 +150,24 @@ public class GameLinkPlayer : MonoBehaviour
 
     public void SetAcitveStartBt(bool isActive)
     {
+        if (isActive
+            && mLoadingCom.mLevelSelectUI != null
+            && mLoadingCom.mLevelSelectUI.gameObject.activeInHierarchy)
+        {
+            return;
+        }
         StartBtObj.SetActive(isActive);
     }
 
     public void SetActiveLinkNameParent(bool isActive)
     {
+        if (isActive
+            && mLoadingCom.mLevelSelectUI != null
+            && mLoadingCom.mLevelSelectUI.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         LinkNameParent.SetActive(isActive);
         if (isActive)
         {
