@@ -33,7 +33,7 @@ public class NpcController : MonoBehaviour
     float TimeSubSpeedVal = 0f;
     public float mSpeedAddMin = 1.2f;
     public float mSpeedAddMax = 1.5f;
-    private float m_Timmer = 0.0f;
+    private float m_Timmer = 1000f;
 	public PlayerController m_player;
 	private bool m_IsJiasu = false;
 	private bool m_IsJiansu = false;

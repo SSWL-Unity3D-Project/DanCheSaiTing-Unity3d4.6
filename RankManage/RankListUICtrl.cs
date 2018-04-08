@@ -22,6 +22,8 @@ public class RankListUICtrl : MonoBehaviour
         RankManage.RankData rankDt = null;
         SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.RankDtManage.SortRankDtList();
         float pathDis = SSGameCtrl.GetInstance().mSSGameRoot.mSSGameDataManage.mGameData.DistancePath;
+        float wangChengDuTmp = 1000f;
+        int disValTmp = 10000000;
 
         for (int i = 0; i < 4; i++)
 		{
@@ -53,6 +55,18 @@ public class RankListUICtrl : MonoBehaviour
                 {
                     wanChengDu = wanChengDu > 1f ? 1f : wanChengDu;
                 }
+
+                if (disVal > disValTmp)
+                {
+                    disVal = disValTmp;
+                }
+                disValTmp = disVal;
+
+                if (wanChengDu > wangChengDuTmp)
+                {
+                    wanChengDu = wangChengDuTmp;
+                }
+                wangChengDuTmp = wanChengDu;
                 mRankDtUIArray[i].ShowWanChengDuInfo((int)(wanChengDu * 100f));
 
                 if (rankDt.IsMoveToFinishPoint || wanChengDu >= 1f)
