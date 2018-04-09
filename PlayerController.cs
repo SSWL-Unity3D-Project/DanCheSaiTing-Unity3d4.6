@@ -2522,7 +2522,7 @@ public class PlayerController : MonoBehaviour
         DaoDanSpawnCount = 0;
         mZhangAiWuObj = zhangAiWu;
         SpawnDaoDanAmmo();
-        Invoke("SpawnDaoDanAmmo", 0.5f);
+        //Invoke("SpawnDaoDanAmmo", 0.5f);
     }
 
     public void SpawnDaoDanAmmo()
@@ -2607,7 +2607,7 @@ public class PlayerController : MonoBehaviour
         DiLeiDt.AmmoSpawnCount = 0;
         DiLeiDt.mZhangAiWuObj = zhangAiWu;
         SpawnDiLeiAmmo();
-        Invoke("SpawnDiLeiAmmo", 0.5f);
+        //Invoke("SpawnDiLeiAmmo", 0.5f);
     }
 
     public void SpawnDiLeiAmmo()
