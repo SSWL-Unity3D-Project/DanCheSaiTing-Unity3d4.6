@@ -2193,7 +2193,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("RpcNetSendAmmoHitPlayer -> " + name + "::OnAmmoHitPlayer...");
         if (XuanYunTXPrefab != null && XuanYunTxSpawnTr != null)
         {
-            if (XuanYunTXObj != null)
+            if (XuanYunTXObj == null)
             {
                 XuanYunTXObj = (GameObject)Instantiate(XuanYunTXPrefab);
                 XuanYunTXObj.transform.parent = XuanYunTxSpawnTr;
