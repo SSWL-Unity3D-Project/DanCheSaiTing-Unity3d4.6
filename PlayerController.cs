@@ -2534,7 +2534,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 障碍物道具.
     /// </summary>
-    GameObject mZhangAiWuObj;
+    //GameObject mZhangAiWuObj;
     int DaoDanSpawnCount = 0;
     /// <summary>
     /// 当主角吃上导弹道具.
@@ -2542,7 +2542,7 @@ public class PlayerController : MonoBehaviour
     public void OnPlayerHitDaoDanDaoJu(GameObject zhangAiWu)
     {
         DaoDanSpawnCount = 0;
-        mZhangAiWuObj = zhangAiWu;
+        //mZhangAiWuObj = zhangAiWu;
         SpawnDaoDanAmmo();
         //Invoke("SpawnDaoDanAmmo", 0.5f);
     }
@@ -2580,19 +2580,22 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (mZhangAiWuObj != null)
-            {
-                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.PuTong;
-                ammoDt.PosHit = mZhangAiWuObj.transform.position;
-                ammoDt.AimTr = mZhangAiWuObj.transform;
-                ammoMoveCom.InitMoveAmmo(ammoDt);
-            }
-            else
-            {
-                ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.PuTong;
-                ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(50f, 120f)) + ammo.transform.position;
-                ammoMoveCom.InitMoveAmmo(ammoDt);
-            }
+            ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.PuTong;
+            ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(50f, 120f)) + ammo.transform.position;
+            ammoMoveCom.InitMoveAmmo(ammoDt);
+            //if (mZhangAiWuObj != null)
+            //{
+            //    ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.PuTong;
+            //    ammoDt.PosHit = mZhangAiWuObj.transform.position;
+            //    ammoDt.AimTr = mZhangAiWuObj.transform;
+            //    ammoMoveCom.InitMoveAmmo(ammoDt);
+            //}
+            //else
+            //{
+            //    ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.PuTong;
+            //    ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(50f, 120f)) + ammo.transform.position;
+            //    ammoMoveCom.InitMoveAmmo(ammoDt);
+            //}
         }
         DaoDanSpawnCount++;
     }
