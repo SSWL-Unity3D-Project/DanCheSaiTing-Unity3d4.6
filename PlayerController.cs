@@ -2564,7 +2564,7 @@ public class PlayerController : MonoBehaviour
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         ammoMoveCom.SetIsNetControlPort(true);
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
-        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinDaoDanDisNpc);
+        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
         if (aimNpc != null)
         {
             isFollowNpc = true;
@@ -2649,7 +2649,7 @@ public class PlayerController : MonoBehaviour
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         ammoDt.HightVal = UnityEngine.Random.Range(2.5f, 5f);
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
-        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinDaoDanDisNpc);
+        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
 
         if (aimNpc != null)
         {
