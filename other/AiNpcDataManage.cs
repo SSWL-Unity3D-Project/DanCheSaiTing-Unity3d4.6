@@ -36,7 +36,7 @@ public class AiNpcDataManage : MonoBehaviour
     /// <summary>
     /// 玩家查找可攻击对象.
     /// </summary>
-    public GameObject FindAiNpc(Transform tr, float disValMax)
+    public GameObject FindAiNpc(Transform tr, float disValMax, float disValMin = 3f)
     {
         GameObject obj = null;
         float disVal = 0f;
@@ -46,7 +46,7 @@ public class AiNpcDataManage : MonoBehaviour
             if (AiNpcTrList.Count > i && AiNpcTrList[i] != null && tr != AiNpcTrList[i])
             {
                 disVal = Vector3.Distance(tr.position, AiNpcTrList[i].position);
-                if (disVal < disValMax && disVal > 3f && Vector3.Dot(AiNpcTrList[i].forward, AiNpcTrList[i].position - tr.position) > 0f)
+                if (disVal < disValMax && disVal > disValMin && Vector3.Dot(AiNpcTrList[i].forward, AiNpcTrList[i].position - tr.position) > 0f)
                 {
                     if (disValTmp >= disVal)
                     {

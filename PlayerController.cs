@@ -141,6 +141,18 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float DaoDanDisNpc = 100f;
     /// <summary>
+    /// 导弹射击npc的最小有效距离.
+    /// </summary>
+    public float MinDaoDanDisNpc = 50f;
+    /// <summary>
+    /// 最大超级加速的有效距离.
+    /// </summary>
+    public float MaxChaoJiJiaSuDisNpc = 50f;
+    /// <summary>
+    /// 最小超级加速的有效距离.
+    /// </summary>
+    public float MinChaoJiJiaSuDisNpc = 25f;
+    /// <summary>
     /// 道具掉落点.
     /// DaoJuDiaoLuoTr[x]: 0 喷气道具, 1 飞行翼道具, 2 风框道具, 3 双翼飞行道具.
     /// </summary>
@@ -888,21 +900,31 @@ public class PlayerController : MonoBehaviour
             //    }
             //}
 
-            if (Time.frameCount % 3 == 0 && !m_UIController.m_IsGameOver && !m_IsFinished)
+            if (!m_UIController.m_IsGameOver && !m_IsFinished)
             {
-                if (Time.time - TimeLastChaoJiJiaSuUI > 30f && mSpeedDaoJuState != DaoJuCtrl.DaoJuType.FeiXingYi)
+                if (Time.time - TimeLastChaoJiJiaSuUI > 1f
+                    && m_UIController.ChaoJiJiaSuObj == null
+                    && mSpeedDaoJuState != DaoJuCtrl.DaoJuType.FeiXingYi)
                 {
-                    //30秒触发一次.
-                    TimeLastChaoJiJiaSuUI = Time.time;
-                    m_UIController.SpawnChaoJiJiaSuUI();
+                    GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, MaxChaoJiJiaSuDisNpc, MinChaoJiJiaSuDisNpc);
+                    if (aimNpc != null)
+                    {
+                        //30秒触发一次.
+                        TimeLastChaoJiJiaSuUI = Time.time;
+                        m_UIController.SpawnChaoJiJiaSuUI();
+                    }
                 }
             }
 
             if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0 || m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
             {
-                if (Time.time - TimeLastFaShaDaoDanUI > 5f && !m_UIController.m_IsGameOver && !m_IsFinished)
+                if (Time.time - TimeLastFaShaDaoDanUI > 1f
+                    && m_UIController.ChaoJiJiaSuObj == null
+                    && m_UIController.FaSheDaoDanObj == null
+                    && !m_UIController.m_IsGameOver
+                    && !m_IsFinished)
                 {
-                    GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+                    GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinDaoDanDisNpc);
                     if (aimNpc != null)
                     {
                         //10秒内不允许再提示发射导弹.
@@ -2542,7 +2564,7 @@ public class PlayerController : MonoBehaviour
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         ammoMoveCom.SetIsNetControlPort(true);
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
-        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinDaoDanDisNpc);
         if (aimNpc != null)
         {
             isFollowNpc = true;
@@ -2627,7 +2649,7 @@ public class PlayerController : MonoBehaviour
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         ammoDt.HightVal = UnityEngine.Random.Range(2.5f, 5f);
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
-        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinDaoDanDisNpc);
 
         if (aimNpc != null)
         {

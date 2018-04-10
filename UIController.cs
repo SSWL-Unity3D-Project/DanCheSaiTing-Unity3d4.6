@@ -12,12 +12,14 @@ public class UIController : SSUiRoot
     /// 发射导弹提示UI预制.
     /// </summary>
     public GameObject FaSheDaoDanPrefab;
-    GameObject FaSheDaoDanObj;
+    [HideInInspector]
+    public GameObject FaSheDaoDanObj;
     /// <summary>
     /// 使用超级加速UI预制.
     /// </summary>
     public GameObject ChaoJiJiaSuPrefab;
-    GameObject ChaoJiJiaSuObj;
+    [HideInInspector]
+    public GameObject ChaoJiJiaSuObj;
     /// <summary>
     /// 播放请投币动画控制组件当玩家想耗币加速时.
     /// </summary>
