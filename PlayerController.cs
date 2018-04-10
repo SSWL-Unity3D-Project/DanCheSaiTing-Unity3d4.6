@@ -141,9 +141,13 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float DaoDanDisNpc = 100f;
     /// <summary>
-    /// 导弹射击npc的最小有效距离.
+    /// 提示发射导弹射击npc的最小有效距离.
     /// </summary>
     public float MinDaoDanDisNpc = 50f;
+    /// <summary>
+    /// 套圈提示导弹射击npc的最小有效距离.
+    /// </summary>
+    public float MinTaoQuanDaoDanDisNpc = 3f;
     /// <summary>
     /// 最大超级加速的有效距离.
     /// </summary>
@@ -677,19 +681,25 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (m_UIController.mTaoQuanUI == null)
+        {
+            return;
+        }
+
         if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum > 0)
         {
             m_UIController.mPlayerDaoJuManageUI.DaoDanNum--;
-            GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
-            OnPlayerHitDaoDanDaoJu(zhangAiWuObj);
+            //GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
+            //OnPlayerHitDaoDanDaoJu(zhangAiWuObj);
+            OnPlayerHitDaoDanDaoJu(null);
             return;
         }
 
         if (m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
         {
             m_UIController.mPlayerDaoJuManageUI.DiLeiNum--;
-            GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
-            OnPlayerHitDiLeiDaoJu(zhangAiWuObj);
+            //GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
+            OnPlayerHitDiLeiDaoJu(null);
             return;
         }
     }
@@ -899,6 +909,11 @@ public class PlayerController : MonoBehaviour
             //        m_UIController.RemoveJinYongAmmo();
             //    }
             //}
+
+            if (Time.frameCount % 3 == 0)
+            {
+                CheckPlayerIsCanFire();
+            }
 
             if (!m_UIController.m_IsGameOver && !m_IsFinished)
             {
@@ -2561,10 +2576,17 @@ public class PlayerController : MonoBehaviour
         {
             ammo = (GameObject)Instantiate(DaoDanPrefab, SpawnDaoDanTr[indexVal].position, SpawnDaoDanTr[indexVal].rotation);
         }
+
         AmmoMoveCtrl ammoMoveCom = ammo.GetComponent<AmmoMoveCtrl>();
         ammoMoveCom.SetIsNetControlPort(true);
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
-        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+        //GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinTaoQuanDaoDanDisNpc);
+        GameObject aimNpc = null;
+        if (m_UIController.mTaoQuanUI != null && m_UIController.mTaoQuanUI.mAimTr != null)
+        {
+            aimNpc = m_UIController.mTaoQuanUI.mAimTr.gameObject;
+        }
+
         if (aimNpc != null)
         {
             isFollowNpc = true;
@@ -2652,7 +2674,12 @@ public class PlayerController : MonoBehaviour
         AmmoMoveCtrl.AmmoDt ammoDt = new AmmoMoveCtrl.AmmoDt();
         ammoDt.HightVal = UnityEngine.Random.Range(2.5f, 5f);
         ammoDt.AmmoState = AmmoMoveCtrl.AmmoType.DiLei;
-        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc);
+        //GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinTaoQuanDaoDanDisNpc);
+        GameObject aimNpc = null;
+        if (m_UIController.mTaoQuanUI != null && m_UIController.mTaoQuanUI.mAimTr != null)
+        {
+            aimNpc = m_UIController.mTaoQuanUI.mAimTr.gameObject;
+        }
 
         if (aimNpc != null)
         {
@@ -2662,17 +2689,19 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (DiLeiDt.mZhangAiWuObj != null)
-            {
-                ammoDt.PosHit = DiLeiDt.mZhangAiWuObj.transform.position;
-                ammoDt.AimTr = DiLeiDt.mZhangAiWuObj.transform;
-                ammoMoveCom.InitMoveAmmo(ammoDt);
-            }
-            else
-            {
-                ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(40f, 65f)) + ammo.transform.position;
-                ammoMoveCom.InitMoveAmmo(ammoDt);
-            }
+            //if (DiLeiDt.mZhangAiWuObj != null)
+            //{
+            //    ammoDt.PosHit = DiLeiDt.mZhangAiWuObj.transform.position;
+            //    ammoDt.AimTr = DiLeiDt.mZhangAiWuObj.transform;
+            //    ammoMoveCom.InitMoveAmmo(ammoDt);
+            //}
+            //else
+            //{
+            //    ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(40f, 65f)) + ammo.transform.position;
+            //    ammoMoveCom.InitMoveAmmo(ammoDt);
+            //}
+            ammoDt.PosHit = (ammo.transform.forward * UnityEngine.Random.Range(40f, 65f)) + ammo.transform.position;
+            ammoMoveCom.InitMoveAmmo(ammoDt);
         }
         DiLeiDt.AmmoSpawnCount++;
     }
@@ -3242,5 +3271,37 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("RpcGetPlayAmmoHitPlayerAnimation...");
         mPlayerAnimation.PlayAmmoHitAnimation();
+    }
+
+    void CheckPlayerIsCanFire()
+    {
+        GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinTaoQuanDaoDanDisNpc);
+        if (aimNpc != null)
+        {
+            bool isCreatTaoQuanUI = false;
+            if (m_UIController.mTaoQuanUI == null)
+            {
+                isCreatTaoQuanUI = true;
+            }
+            else
+            {
+                if (m_UIController.mTaoQuanUI.mAimTr != aimNpc.transform)
+                {
+                    isCreatTaoQuanUI = true;
+                }
+            }
+
+            if (isCreatTaoQuanUI)
+            {
+                m_UIController.SpawnTaoQuanUI(aimNpc.transform, transform, MinTaoQuanDaoDanDisNpc, DaoDanDisNpc);
+            }
+        }
+        else
+        {
+            if (m_UIController.mTaoQuanUI != null)
+            {
+                m_UIController.mTaoQuanUI.DestroySelf();
+            }
+        }
     }
 }
