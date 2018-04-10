@@ -195,14 +195,14 @@ public class SetPanel : MonoBehaviour
 		if (val == InputEventCtrl.ButtonState.DOWN)
         {
 			BtInfoLabel.text = "StartBtDown";
-		}
-		else
-        {
-			BtInfoLabel.text = "StartBtUp";
-			if (IsInitJiaoZhunPcvr)
+            if (IsInitJiaoZhunPcvr)
             {
                 UpdataJiaoZhunTexture();
             }
+        }
+		else
+        {
+			BtInfoLabel.text = "StartBtUp";
 		}
 	}
 
