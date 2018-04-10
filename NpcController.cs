@@ -219,6 +219,11 @@ public class NpcController : MonoBehaviour
         int pathNum = (m_NpcPathNum + 1) % m_NpcPath.childCount;
         if (PlayerController.GetInstance().timmerstar > 5.0f)
         {
+            if (IsPlayAmmoHitNpc)
+            {
+                return;
+            }
+
             if (Time.time - TimeLastRandPlayer > TimeRandPlayer)
             {
                 TimeLastRandPlayer = Time.time;
