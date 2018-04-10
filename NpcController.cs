@@ -43,7 +43,10 @@ public class NpcController : MonoBehaviour
 	private RaycastHit hit;
 	private  LayerMask mask;
 	public float TimmerSet = 5.0f;
-    float TimeAddSpeedVal = 0f;
+    /// <summary>
+    /// npc加速持续时间.
+    /// </summary>
+    public float TimeAddSpeedVal = 10f;
     float TimeSubSpeedVal = 0f;
     public float mSpeedAddMin = 1.2f;
     public float mSpeedAddMax = 1.5f;
@@ -151,7 +154,7 @@ public class NpcController : MonoBehaviour
 			m_NpcPathPoint[i] = m_NpcPath.FindChild(str).position;
 			mask = 1<<( LayerMask.NameToLayer("shexianjiance"));
 		}
-        TimeAddSpeedVal = TimmerSet * 2f;
+        //TimeAddSpeedVal = TimmerSet * 2f;
         TimeSubSpeedVal = TimmerSet;
     }
 
