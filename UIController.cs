@@ -1132,6 +1132,10 @@ public class UIController : SSUiRoot
     [HideInInspector]
     public AmmoTaoQuanUI mTaoQuanUI;
     /// <summary>
+    /// 左下角UIAnchor信息.
+    /// </summary>
+    public Transform UIAnchorBL;
+    /// <summary>
     /// 产生套圈UI提示界面.
     /// </summary>
     public void SpawnTaoQuanUI(Transform trAim, Transform trPlayer, float minDis, float maxDis)
@@ -1144,7 +1148,7 @@ public class UIController : SSUiRoot
 
         if (mTaoQuanUI == null && TaoQuanUIPrefab != null)
         {
-            GameObject obj = (GameObject)Instantiate(TaoQuanUIPrefab, mUICamera.transform);
+            GameObject obj = (GameObject)Instantiate(TaoQuanUIPrefab, UIAnchorBL);
             mTaoQuanUI = obj.GetComponent<AmmoTaoQuanUI>();
             mTaoQuanUI.Init(trAim, trPlayer, minDis, maxDis);
         }

@@ -692,15 +692,20 @@ public class PlayerController : MonoBehaviour
             //GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
             //OnPlayerHitDaoDanDaoJu(zhangAiWuObj);
             OnPlayerHitDaoDanDaoJu(null);
-            return;
         }
-
-        if (m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
+        else if (m_UIController.mPlayerDaoJuManageUI.DiLeiNum > 0)
         {
             m_UIController.mPlayerDaoJuManageUI.DiLeiNum--;
             //GameObject zhangAiWuObj = SSGameCtrl.GetInstance().mPlayerDataManage.mDaoJuZhangAiWuData.FindZhangAiWu(transform);
             OnPlayerHitDiLeiDaoJu(null);
-            return;
+        }
+
+        if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum <= 0 && m_UIController.mPlayerDaoJuManageUI.DiLeiNum <= 0)
+        {
+            if (m_UIController.mTaoQuanUI != null)
+            {
+                m_UIController.mTaoQuanUI.DestroySelf();
+            }
         }
     }
 
@@ -2245,6 +2250,11 @@ public class PlayerController : MonoBehaviour
                 IsAmmoHitPlayer = true;
                 NetSendPlayAmmoHitPlayerAnimation();
                 Instantiate(AmmoLiZiPrefab, AmmoExpSpawnTr.position, AmmoExpSpawnTr.rotation);
+                if (m_UIController.mTaoQuanUI != null)
+                {
+                    //受攻击后禁用导弹.
+                    m_UIController.mTaoQuanUI.DestroySelf();
+                }
             }
             m_UIController.SpawnAmmoHitPlayerUI();
         }
@@ -3275,6 +3285,16 @@ public class PlayerController : MonoBehaviour
 
     void CheckPlayerIsCanFire()
     {
+        if (m_UIController.mPlayerDaoJuManageUI.DaoDanNum <= 0 && m_UIController.mPlayerDaoJuManageUI.DiLeiNum <= 0)
+        {
+            return;
+        }
+
+        if (IsAmmoHitPlayer)
+        {
+            return;
+        }
+
         GameObject aimNpc = SSGameCtrl.GetInstance().mPlayerDataManage.mAiNpcData.FindAiNpc(transform, DaoDanDisNpc, MinTaoQuanDaoDanDisNpc);
         if (aimNpc != null)
         {

@@ -33,7 +33,7 @@ public class AmmoTaoQuanUI : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
 	// Update is called once per frame
 	void Update ()
     {
@@ -48,12 +48,11 @@ public class AmmoTaoQuanUI : MonoBehaviour
             DestroySelf();
             return;
         }
-        
+
         Vector3 aimPos = Camera.main.WorldToScreenPoint(mAimTr.position);
-        aimPos.z = 0f;
+        aimPos.z = 500f;
         aimPos.x = (1360f * aimPos.x) / Screen.width;
         aimPos.y = (768f * aimPos.y) / Screen.height;
-        //Debug.Log("startPos **** "+startPos);
-        transform.position = aimPos;
+        transform.localPosition = aimPos;
     }
 }
