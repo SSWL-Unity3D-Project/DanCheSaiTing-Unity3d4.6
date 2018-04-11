@@ -57,6 +57,10 @@ public class pcvrTXManage : MonoBehaviour
     }
     CaiPiaoPrintCmd[] CaiPiaoPrintCmdVal = new CaiPiaoPrintCmd[2];
     /// <summary>
+    /// 记录全票/半票命令信息.
+    /// </summary>
+    CaiPiaoPrintCmd[] CaiPiaoPrintCmdRecord = new CaiPiaoPrintCmd[2];
+    /// <summary>
     /// 彩票打印数量.
     /// </summary>
     [HideInInspector]
@@ -1006,6 +1010,7 @@ public class pcvrTXManage : MonoBehaviour
         CaiPiaoPrintCmdVal[(int)indexCaiPiaoJi] = printCmd;
         if (printCmd == CaiPiaoPrintCmd.QuanPiaoPrint || printCmd == CaiPiaoPrintCmd.BanPiaoPrint)
         {
+            CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi] = printCmd;
             CaiPiaoCountPrint[(int)indexCaiPiaoJi] = caiPiaoCount;
             CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] = CaiPiaoPrintState.Null;
         }
@@ -1027,7 +1032,7 @@ public class pcvrTXManage : MonoBehaviour
 
                     if (CaiPiaoCountPrint[(int)indexCaiPiaoJi] > 0 && CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] <= 3)
                     {
-                        SetCaiPiaoPrintCmd(CaiPiaoPrintCmd.QuanPiaoPrint, indexCaiPiaoJi, CaiPiaoCountPrint[(int)indexCaiPiaoJi]);
+                        SetCaiPiaoPrintCmd(CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi], indexCaiPiaoJi, CaiPiaoCountPrint[(int)indexCaiPiaoJi]);
                     }
                     break;
                 }
