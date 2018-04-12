@@ -30,6 +30,7 @@ public class SSTimeDownCtrl : MonoBehaviour
     /// </summary>
     public void Init(float maxTime, float step = 1f)
     {
+        LastTimeVal = Time.realtimeSinceStartup;
         MaxTimeVal = maxTime;
         mTimeStepVal = step;
         IsInitDownTime = true;

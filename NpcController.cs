@@ -512,7 +512,7 @@ public class NpcController : MonoBehaviour
             if (mSSTimeDownCom == null)
             {
                 mSSTimeDownCom = gameObject.AddComponent<SSTimeDownCtrl>();
-                mSSTimeDownCom.OnTimeDownStepEvent += OnTimeDownStepEvent;
+                mSSTimeDownCom.OnTimeDownStepEvent += OnTimeDownStepEventCheckFire;
                 mSSTimeDownCom.Init(300f, 0.2f);
             }
         }
@@ -539,9 +539,13 @@ public class NpcController : MonoBehaviour
     [Range(0.1f, 100f)]
     public float TimeLengQueFire = 1f;
     float mLastFireTime = 0f;
-    void OnTimeDownStepEvent(float timeCur)
+    void OnTimeDownStepEventCheckFire(float timeCur)
     {
-        //Debug.Log("timeCur ==== " + timeCur + ", npc == " + name);
+        //if (name == "Npc01")
+        //{
+        //    Debug.Log("timeCur ==== " + timeCur + ", npc == " + name + ", realtimeSinceStartup" + Time.realtimeSinceStartup);
+        //}
+
         if (PlayerController.GetInstance().m_UIController.m_IsGameOver || PlayerController.GetInstance().m_IsFinished)
         {
             if (mSSTimeDownCom != null)
