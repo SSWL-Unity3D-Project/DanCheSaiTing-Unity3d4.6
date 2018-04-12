@@ -30,6 +30,7 @@ public class SSTimeDownCtrl : MonoBehaviour
     /// </summary>
     public void Init(float maxTime, float step = 1f)
     {
+        //Debug.Log("realtimeSinceStartup ==== " + Time.realtimeSinceStartup);
         LastTimeVal = Time.realtimeSinceStartup;
         MaxTimeVal = maxTime;
         mTimeStepVal = step;
@@ -43,8 +44,9 @@ public class SSTimeDownCtrl : MonoBehaviour
             return;
         }
 
+        //Debug.Log("realtimeSinceStartup ==== ********** " + Time.realtimeSinceStartup);
         float dTime = Time.realtimeSinceStartup - LastTimeVal;
-        if (dTime >= mTimeStepVal)
+        if (dTime >= mTimeStepVal || dTime < 0f)
         {
             LastTimeVal = Time.realtimeSinceStartup;
             MaxTimeVal -= dTime;

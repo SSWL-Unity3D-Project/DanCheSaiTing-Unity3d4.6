@@ -543,7 +543,7 @@ public class NpcController : MonoBehaviour
     {
         //if (name == "Npc01")
         //{
-        //    Debug.Log("timeCur ==== " + timeCur + ", npc == " + name + ", realtimeSinceStartup" + Time.realtimeSinceStartup);
+        //    Debug.Log("timeCur ==== " + timeCur + ", npc == " + name + ", realtimeSinceStartup " + Time.realtimeSinceStartup);
         //}
 
         if (PlayerController.GetInstance().m_UIController.m_IsGameOver || PlayerController.GetInstance().m_IsFinished)
