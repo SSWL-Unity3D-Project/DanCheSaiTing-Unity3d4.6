@@ -373,9 +373,6 @@ public class NpcController : MonoBehaviour
                     RandTimeFinish = UnityEngine.Random.Range(0.5f, 2.5f);
                     mRankDt.UpdateRankDtTimeFinish(Time.time);
                     SendNpcUpdateRankDtTimeFinish(Time.time);
-                }
-                else
-                {
                     IsMoveToFinishPoint = true;
                 }
             }
