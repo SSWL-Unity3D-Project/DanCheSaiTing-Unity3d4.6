@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class AmmoTaoQuanUI : MonoBehaviour
 {
+    /// <summary>
+    /// 提示圈是否为3d.
+    /// </summary>
+    public bool IsTiShiQuan3D = false;
     /// <summary>
     /// 瞄准对象.
     /// </summary>
@@ -23,6 +26,11 @@ public class AmmoTaoQuanUI : MonoBehaviour
         mDisMinVal = minDis;
         mDisMaxVal = maxDis;
         IsInit = true;
+        if (IsTiShiQuan3D)
+        {
+            transform.parent = mAimTr;
+            transform.localPosition = Vector3.zero;
+        }
     }
 
     public void DestroySelf()
@@ -49,10 +57,13 @@ public class AmmoTaoQuanUI : MonoBehaviour
             return;
         }
 
-        Vector3 aimPos = Camera.main.WorldToScreenPoint(mAimTr.position);
-        aimPos.z = 500f;
-        aimPos.x = (1360f * aimPos.x) / Screen.width;
-        aimPos.y = (768f * aimPos.y) / Screen.height;
-        transform.localPosition = aimPos;
+        if (!IsTiShiQuan3D)
+        {
+            Vector3 aimPos = Camera.main.WorldToScreenPoint(mAimTr.position);
+            aimPos.z = 500f;
+            aimPos.x = (1360f * aimPos.x) / Screen.width;
+            aimPos.y = (768f * aimPos.y) / Screen.height;
+            transform.localPosition = aimPos;
+        }
     }
 }

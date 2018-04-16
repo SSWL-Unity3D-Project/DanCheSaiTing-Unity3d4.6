@@ -915,7 +915,7 @@ public class PlayerController : MonoBehaviour
             //    }
             //}
 
-            if (Time.frameCount % 3 == 0)
+            if (Time.frameCount % 3 == 0 && !m_IsFinished && !m_UIController.m_IsGameOver)
             {
                 CheckPlayerIsCanFire();
             }
