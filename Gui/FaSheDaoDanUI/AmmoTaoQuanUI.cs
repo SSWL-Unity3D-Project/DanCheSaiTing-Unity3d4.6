@@ -29,6 +29,11 @@ public class AmmoTaoQuanUI : MonoBehaviour
         if (IsTiShiQuan3D)
         {
             transform.parent = mAimTr;
+            NpcController npcCtrl = trAim.GetComponent<NpcController>();
+            if (npcCtrl != null && npcCtrl.TiShiQuanTr != null)
+            {
+                transform.parent = npcCtrl.TiShiQuanTr;
+            }
             transform.localPosition = Vector3.zero;
         }
     }

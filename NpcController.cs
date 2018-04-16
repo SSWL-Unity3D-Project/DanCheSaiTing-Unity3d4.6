@@ -3,6 +3,10 @@ using System;
 
 public class NpcController : MonoBehaviour
 {
+    /// <summary>
+    /// 提示圈的父级点.
+    /// </summary>
+    public Transform TiShiQuanTr;
     public NpcData[] mNpcDataArray = new NpcData[4];
     /// <summary>
     /// 喷气道具掉落预置.
