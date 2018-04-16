@@ -34,6 +34,14 @@ public class AmmoTaoQuanUI : MonoBehaviour
             {
                 transform.parent = npcCtrl.TiShiQuanTr;
             }
+            else
+            {
+                PlayerController playerCtrl = trAim.GetComponent<PlayerController>();
+                if (playerCtrl != null && playerCtrl.TiShiQuanTr != null)
+                {
+                    transform.parent = playerCtrl.TiShiQuanTr;
+                }
+            }
             transform.localPosition = Vector3.zero;
         }
     }

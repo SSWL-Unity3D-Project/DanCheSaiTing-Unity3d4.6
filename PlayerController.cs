@@ -5,6 +5,10 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
+    /// 提示圈的父级点.
+    /// </summary>
+    public Transform TiShiQuanTr;
+    /// <summary>
     /// 主角动画控制脚本.
     /// </summary>
     public PlayerAnimationCtrl mPlayerAnimation;
