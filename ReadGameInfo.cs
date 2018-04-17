@@ -1,6 +1,4 @@
-﻿#define USE_HANDLE_JSON
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 using System;
 
 public class ReadGameInfo : MonoBehaviour 
@@ -21,11 +19,10 @@ public class ReadGameInfo : MonoBehaviour
 	 * 游戏音量(0-10).
 	 */
 	int GameAudioVolume;
-	#if USE_HANDLE_JSON
 	HandleJson mHandleJson;
     [HideInInspector]
     public string mFileName = "GameConfig.xml";
-	#endif
+
 	static public ReadGameInfo GetInstance()
 	{
 		if (Instance == null)
@@ -43,10 +40,7 @@ public class ReadGameInfo : MonoBehaviour
     /// </summary>
 	void InitGameInfo()
     {
-#if USE_HANDLE_JSON
         mHandleJson = HandleJson.GetInstance();
-#endif
-
         m_pInsertCoinNum = "0";		
 		int gameModeSt = PlayerPrefs.GetInt("GAME_MODE");
 		if (gameModeSt != 0 && gameModeSt != 1) {
@@ -74,9 +68,7 @@ public class ReadGameInfo : MonoBehaviour
 			PlayerPrefs.SetInt("GameAudioVolume", 7);
 			PlayerPrefs.Save();
 		}
-
-		
-		#if USE_HANDLE_JSON
+        
 		string readInfo = mHandleJson.ReadFromFileXml(mFileName, "GameAudioVolume");
 		if (readInfo == null || readInfo == "") {
 			readInfo = "7";
@@ -88,14 +80,6 @@ public class ReadGameInfo : MonoBehaviour
 			value = 7;
 			mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", value.ToString());
 		}
-		#else
-		value = PlayerPrefs.GetInt("GameAudioVolume");
-		if (value < 0 || value > 10) {
-			value = 7;
-			PlayerPrefs.SetInt("GameAudioVolume", value);
-			PlayerPrefs.Save();
-		}
-		#endif
 		GameAudioVolume = value;
 	}
 	public void FactoryReset()
@@ -113,12 +97,7 @@ public class ReadGameInfo : MonoBehaviour
 	}
 	public void WriteGameAudioVolume(int value)
 	{
-		#if USE_HANDLE_JSON
 		mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", value.ToString());
-		#else
-		PlayerPrefs.SetInt("GameAudioVolume", value);
-		PlayerPrefs.Save();
-		#endif
 		GameAudioVolume = value;
 		AudioListener.volume = (float)value / 10f;
 	}
