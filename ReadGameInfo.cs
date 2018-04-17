@@ -43,13 +43,6 @@ public class ReadGameInfo : MonoBehaviour
         mHandleJson = HandleJson.GetInstance();
         m_pInsertCoinNum = "0";
 
-		int coinStart = PlayerPrefs.GetInt("START_COIN");
-		if (coinStart == 0) {
-			coinStart = 1;
-			PlayerPrefs.SetInt("START_COIN", coinStart);
-		}
-		m_pStarCoinNum = coinStart.ToString();
-
 		GameRecordVal = PlayerPrefs.GetInt("GAME_RECORD");
 		
 		int value = PlayerPrefs.GetInt("PlayerMinSpeedVal");
@@ -87,6 +80,22 @@ public class ReadGameInfo : MonoBehaviour
         }
         int gameModeSt = value; //0->运营模式, 1->免费模式.
         m_pGameMode = gameModeSt == 0 ? ReadGameInfo.GameMode.Oper.ToString() : ReadGameInfo.GameMode.Free.ToString();
+
+        //START_COIN
+        readInfo = mHandleJson.ReadFromFileXml(mFileName, "START_COIN");
+        if (readInfo == null || readInfo == "")
+        {
+            readInfo = "1";
+            mHandleJson.WriteToFileXml(mFileName, "START_COIN", readInfo);
+        }
+
+        int coinStart = Convert.ToInt32(readInfo);
+        if (coinStart <= 0 || coinStart > 99)
+        {
+            coinStart = 1;
+            mHandleJson.WriteToFileXml(mFileName, "START_COIN", coinStart.ToString());
+        }
+        m_pStarCoinNum = coinStart.ToString();
     }
 	public void FactoryReset()
 	{
@@ -126,8 +135,8 @@ public class ReadGameInfo : MonoBehaviour
 	public void WriteStarCoinNumSet(string value)
 	{
 		int coinStart = Convert.ToInt32(value);
-		PlayerPrefs.SetInt("START_COIN", coinStart);
-		m_pStarCoinNum = coinStart.ToString();
+        mHandleJson.WriteToFileXml(mFileName, "START_COIN", coinStart.ToString());
+        m_pStarCoinNum = coinStart.ToString();
 	}
 	public void WriteGameStarMode(string value)
 	{
