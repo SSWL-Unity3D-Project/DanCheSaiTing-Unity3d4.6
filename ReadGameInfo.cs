@@ -42,14 +42,11 @@ public class ReadGameInfo : MonoBehaviour
     {
         mHandleJson = HandleJson.GetInstance();
         m_pInsertCoinNum = "0";
-
-		GameRecordVal = PlayerPrefs.GetInt("GAME_RECORD");
-		
-		int value = PlayerPrefs.GetInt("PlayerMinSpeedVal");
-		if (value < 0) {
-			value = 0;
-		}
-		PlayerMinSpeedVal = value;
+		//int value = PlayerPrefs.GetInt("PlayerMinSpeedVal");
+		//if (value < 0) {
+		//	value = 0;
+		//}
+		//PlayerMinSpeedVal = value;
         
 		string readInfo = mHandleJson.ReadFromFileXml(mFileName, "GameAudioVolume");
 		if (readInfo == null || readInfo == "") {
@@ -57,7 +54,7 @@ public class ReadGameInfo : MonoBehaviour
 			mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", readInfo);
 		}
 
-		value = Convert.ToInt32(readInfo);
+        int value = Convert.ToInt32(readInfo);
 		if (value < 0 || value > 10) {
 			value = 7;
 			mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", value.ToString());
@@ -96,6 +93,15 @@ public class ReadGameInfo : MonoBehaviour
             mHandleJson.WriteToFileXml(mFileName, "START_COIN", coinStart.ToString());
         }
         m_pStarCoinNum = coinStart.ToString();
+
+        //GAME_RECORD
+        readInfo = mHandleJson.ReadFromFileXml(mFileName, "GAME_RECORD");
+        if (readInfo == null || readInfo == "")
+        {
+            readInfo = "180";
+            mHandleJson.WriteToFileXml(mFileName, "GAME_RECORD", readInfo);
+        }
+        GameRecordVal = Convert.ToInt32(readInfo);
     }
 	public void FactoryReset()
 	{
@@ -150,8 +156,8 @@ public class ReadGameInfo : MonoBehaviour
 	}
 	public void WriteGameRecord(int value)
 	{
-		PlayerPrefs.SetInt("GAME_RECORD", value);
-		GameRecordVal = value;
+        mHandleJson.WriteToFileXml(mFileName, "GAME_RECORD", value.ToString());
+        GameRecordVal = value;
 	}
 	public int ReadPlayerMinSpeedVal()
 	{
@@ -159,7 +165,7 @@ public class ReadGameInfo : MonoBehaviour
 	}
 	public void WritePlayerMinSpeedVal(int value)
 	{
-		PlayerPrefs.SetInt("PlayerMinSpeedVal", value);
+		//PlayerPrefs.SetInt("PlayerMinSpeedVal", value);
 		PlayerMinSpeedVal = value;
 	}
 //	void OnGUI()
