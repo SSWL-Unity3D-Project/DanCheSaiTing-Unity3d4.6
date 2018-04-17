@@ -593,8 +593,8 @@ public class SetPanel : MonoBehaviour
 		ReadGameInfo.GetInstance().FactoryReset();
 		PlayerMinSpeed.text = "0";
 		m_CoinForStar.text = "1";
-		m_GameModeDuigou1.enabled = true;
-		m_GameModeDuigou2.enabled = false;
+		m_GameModeDuigou1.enabled = false;
+		m_GameModeDuigou2.enabled = true;
 		GameAudioVolume = 7;
 		GameAudioVolumeLB.text = GameAudioVolume.ToString();
 

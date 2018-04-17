@@ -41,13 +41,7 @@ public class ReadGameInfo : MonoBehaviour
 	void InitGameInfo()
     {
         mHandleJson = HandleJson.GetInstance();
-        m_pInsertCoinNum = "0";		
-		int gameModeSt = PlayerPrefs.GetInt("GAME_MODE");
-		if (gameModeSt != 0 && gameModeSt != 1) {
-			gameModeSt = 1; //0->运营模式, 1->免费模式.
-			PlayerPrefs.SetInt("GAME_MODE", gameModeSt);
-		}
-		m_pGameMode = gameModeSt == 0 ? ReadGameInfo.GameMode.Oper.ToString() : ReadGameInfo.GameMode.Free.ToString();
+        m_pInsertCoinNum = "0";
 
 		int coinStart = PlayerPrefs.GetInt("START_COIN");
 		if (coinStart == 0) {
@@ -63,11 +57,6 @@ public class ReadGameInfo : MonoBehaviour
 			value = 0;
 		}
 		PlayerMinSpeedVal = value;
-
-		if (!PlayerPrefs.HasKey("GameAudioVolume")) {
-			PlayerPrefs.SetInt("GameAudioVolume", 7);
-			PlayerPrefs.Save();
-		}
         
 		string readInfo = mHandleJson.ReadFromFileXml(mFileName, "GameAudioVolume");
 		if (readInfo == null || readInfo == "") {
@@ -81,11 +70,28 @@ public class ReadGameInfo : MonoBehaviour
 			mHandleJson.WriteToFileXml(mFileName, "GameAudioVolume", value.ToString());
 		}
 		GameAudioVolume = value;
-	}
+
+        //GAME_MODE
+        readInfo = mHandleJson.ReadFromFileXml(mFileName, "GAME_MODE");
+        if (readInfo == null || readInfo == "")
+        {
+            readInfo = "1";
+            mHandleJson.WriteToFileXml(mFileName, "GAME_MODE", readInfo);
+        }
+
+        value = Convert.ToInt32(readInfo);
+        if (value != 0 && value != 1)
+        {
+            value = 1;
+            mHandleJson.WriteToFileXml(mFileName, "GAME_MODE", value.ToString());
+        }
+        int gameModeSt = value; //0->运营模式, 1->免费模式.
+        m_pGameMode = gameModeSt == 0 ? ReadGameInfo.GameMode.Oper.ToString() : ReadGameInfo.GameMode.Free.ToString();
+    }
 	public void FactoryReset()
 	{
 		WriteStarCoinNumSet("1");
-		WriteGameStarMode(GameMode.Oper.ToString());
+		WriteGameStarMode(GameMode.Free.ToString());
 		WriteInsertCoinNum("0");
 		WriteGameRecord(180);
 		WritePlayerMinSpeedVal(0);
@@ -126,8 +132,8 @@ public class ReadGameInfo : MonoBehaviour
 	public void WriteGameStarMode(string value)
 	{
 		int gameModeSt = value == GameMode.Oper.ToString() ? 0 : 1;
-		PlayerPrefs.SetInt("GAME_MODE", gameModeSt);
-		m_pGameMode = value;
+        mHandleJson.WriteToFileXml(mFileName, "GAME_MODE", gameModeSt.ToString());
+        m_pGameMode = value;
 	}
 	public void WriteInsertCoinNum(string value)
 	{
